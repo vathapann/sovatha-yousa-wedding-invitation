@@ -1,0 +1,9 @@
+{
+  // Cloudflare Worker that serves the invitation as static assets.
+  // Docs: https://developers.cloudflare.com/workers/static-assets/
+  "name": "sovatha-yousa-wedding",
+  "compatibility_date": "2025-01-01",
+  "assets": {
+    "directory": "./public"
+  }
+}

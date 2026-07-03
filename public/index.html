@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yousa &amp; Sovatha — November 2026</title>
+  <meta name="description"
+    content="Together with their families, Yousa & Sovatha invite you to celebrate their wedding — Sunday, 22 November 2026, Pursat." />
+
+  <!--
+  ──────────────────────────────────────────────────────────────
+  EDIT QUICK-START  (search for "EDIT:" through the file)
+  ──────────────────────────────────────────────────────────────
+  • Names ......... "Yousa" & "Sovatha"  (hero + footer + <title>)
+  • Date .......... Sunday, 22 November 2026  ← also WEDDING_DATE in script.js
+  • Photos ........ drop files in assets/gallery/ and update the <img src>
+  • Map ........... paste your Google Maps embed URL in the venue <iframe>
+  • Music ......... put an mp3 at assets/music.mp3 (see <audio> below)
+  • Bilingual ..... every text carries data-en / data-km. The 🌐 toggle swaps
+                    them. Edit BOTH strings when you change copy.
+  ──────────────────────────────────────────────────────────────
+-->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;500;600&family=Noto+Serif+Khmer:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- ═══════════════ TOP CONTROLS (music + language) ═══════════════ -->
+  <div class="controls">
+    <button class="pill-btn icon-btn music-btn" id="musicBtn" type="button" aria-label="Play music" title="Play music">
+      <svg id="musicIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18V5l12-2v13" />
+        <circle cx="6" cy="18" r="3" />
+        <circle cx="18" cy="16" r="3" />
+      </svg>
+    </button>
+    <button class="pill-btn" id="langToggle" type="button" aria-label="Switch language">
+      ខ្មែរ
+    </button>
+  </div>
+
+  <!-- background music — EDIT: place your file at assets/music.mp3 -->
+  <audio id="bgMusic" loop preload="none" src="assets/music.mp3"></audio>
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <header class="hero">
+    <div class="hero-inner">
+      <!-- Personalized greeting — filled from ?g=ID (see GUESTS in script.js). Hidden on the bare link. -->
+      <p class="greeting" id="greeting" hidden></p>
+      <p class="eyebrow" data-en="Together with their families" data-km="រួមជាមួយក្រុមគ្រួសារទាំងសងខាង">
+        Together with their families
+      </p>
+      <h1 class="hero-names">
+        Sovatha<span class="hero-amp">and</span>Yousa
+      </h1>
+      <p class="hero-date" data-en='23 <span class="dot">·</span> 11 <span class="dot">·</span> 2026'
+        data-km='២៣ <span class="dot">·</span> ១១ <span class="dot">·</span> ២០២៦'>
+        23 <span class="dot">·</span> 11 <span class="dot">·</span> 2026
+      </p>
+    </div>
+
+    <div class="scroll-cue" data-en="Scroll" data-km="អូសចុះក្រោម">
+      Scroll
+    </div>
+  </header>
+
+  <!-- ═══════════════ COUNTDOWN ═══════════════ -->
+  <section class="section center" id="countdown-sec">
+    <div class="wrap reveal">
+      <p class="script" data-en="Counting the days" data-km="រាប់ថ្ងៃ">
+        Counting the days
+      </p>
+      <h2 class="title" data-en="Until we say “I do”" data-km="រហូតដល់ថ្ងៃពិធីមង្គលការ">
+        Until we say &ldquo;I do&rdquo;
+      </h2>
+      <div class="countdown" id="countdown" aria-live="polite">
+        <div class="count-unit">
+          <div class="count-num" id="cd-days">—</div>
+          <div class="count-label" data-en="Days" data-km="ថ្ងៃ">Days</div>
+        </div>
+        <div class="count-unit">
+          <div class="count-num" id="cd-hours">—</div>
+          <div class="count-label" data-en="Hours" data-km="ម៉ោង">Hours</div>
+        </div>
+        <div class="count-unit">
+          <div class="count-num" id="cd-mins">—</div>
+          <div class="count-label" data-en="Minutes" data-km="នាទី">
+            Minutes
+          </div>
+        </div>
+        <div class="count-unit">
+          <div class="count-num" id="cd-secs">—</div>
+          <div class="count-label" data-en="Seconds" data-km="វិនាទី">
+            Seconds
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sprig-divider" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2c2 4 2 8 0 11-2-3-2-7 0-11zM12 13c4-1 7 1 9 4-4 1-7-1-9-4zM12 13c-4-1-7 1-9 4 4 1 7-1 9-4z" />
+    </svg>
+  </div>
+
+  <!-- ═══════════════ WEDDING STORY ═══════════════ -->
+  <section class="section">
+    <div class="wrap reveal">
+      <div class="center">
+        <p class="script" data-en="Our journey" data-km="ដំណើររបស់យើង">
+          Our journey
+        </p>
+        <h2 class="title" data-en="How we fell in love" data-km="របៀបដែលយើងស្រឡាញ់គ្នា">
+          How we fell in love
+        </h2>
+        <p class="muted" style="max-width: 540px; margin: 0 auto 34px"
+          data-en="A few small moments that, looking back, were quietly leading us to this one."
+          data-km="ពេលវេលាតូចៗ ដែលនៅពេលក្រឡេកមើលថយក្រោយ បាននាំយើងមកដល់ថ្ងៃនេះ។">
+          A few small moments that, looking back, were quietly leading us to
+          this one.
+        </p>
+      </div>
+      <div class="timeline">
+        <div class="t-item">
+          <div class="t-when">2021</div>
+          <div class="t-what">
+            <h3 data-en="We first met" data-km="ការជួបគ្នាដំបូង">
+              We first met
+            </h3>
+            <p data-en="A chance meeting by the sea, and a first conversation that ran far too long."
+              data-km="ការជួបគ្នាដោយចៃដន្យក្បែរសមុទ្រ និងការសន្ទនាដំបូងដ៏វែងឆ្ងាយ។">
+              A chance meeting by the sea, and a first conversation that ran
+              far too long.
+            </p>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-when">2023</div>
+          <div class="t-what">
+            <h3 data-en="Our first trip" data-km="ដំណើរកម្សាន្តដំបូង">
+              Our first trip
+            </h3>
+            <p data-en="Salt air, long walks, and the moment we knew this was something to keep."
+              data-km="ខ្យល់សមុទ្រ ការដើរលេង និងពេលដែលយើងដឹងថានេះជាអ្វីដ៏ពិសេស។">
+              Salt air, long walks, and the moment we knew this was something
+              to keep.
+            </p>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-when">2025</div>
+          <div class="t-what">
+            <h3 data-en="The proposal" data-km="ការសុំរៀបការ">
+              The proposal
+            </h3>
+            <p data-en="On a quiet shore at sunset — and a very easy “yes.”"
+              data-km="នៅឆ្នេរស្ងប់ស្ងាត់ពេលថ្ងៃលិច — និងពាក្យ «យល់ព្រម» ដ៏ងាយស្រួល។">
+              On a quiet shore at sunset — and a very easy &ldquo;yes.&rdquo;
+            </p>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-when">2026</div>
+          <div class="t-what">
+            <h3 data-en="We marry" data-km="យើងរៀបការ">We marry</h3>
+            <p data-en="Surrounded by the people we love, we make it forever."
+              data-km="ដោយមានមនុស្សជាទីស្រឡាញ់នៅជុំវិញ យើងធ្វើឲ្យវាស្ថិតស្ថេរជារៀងរហូត។">
+              Surrounded by the people we love, we make it forever.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PHOTO GALLERY ═══════════════ -->
+  <section class="section tint">
+    <div class="wrap-wide reveal">
+      <div class="center">
+        <p class="script" data-en="Moments" data-km="ការចងចាំ">Moments</p>
+        <h2 class="title" data-en="A few of our favourites" data-km="រូបភាពដ៏ពិសេសមួយចំនួន">
+          A few of our favourites
+        </h2>
+      </div>
+      <!-- EDIT: drop photos in assets/gallery/ and swap each src. The picsum links are placeholders. -->
+      <div class="gallery" id="gallery">
+        <figure class="gallery-item">
+          <img src="https://picsum.photos/seed/wed1/700/900" alt="Couple photo" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="https://picsum.photos/seed/wed2/700/700" alt="Couple photo" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="https://picsum.photos/seed/wed3/700/820" alt="Couple photo" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="https://picsum.photos/seed/wed4/700/760" alt="Couple photo" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="https://picsum.photos/seed/wed5/700/940" alt="Couple photo" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="https://picsum.photos/seed/wed6/700/700" alt="Couple photo" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="https://picsum.photos/seed/wed7/700/840" alt="Couple photo" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="https://picsum.photos/seed/wed8/700/720" alt="Couple photo" loading="lazy" />
+        </figure>
+        <figure class="gallery-item">
+          <img src="https://picsum.photos/seed/wed9/700/900" alt="Couple photo" loading="lazy" />
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ EVENT SCHEDULE ═══════════════ -->
+  <section class="section">
+    <div class="wrap reveal">
+      <div class="center">
+        <p class="script" data-en="The day" data-km="ថ្ងៃពិធី">The day</p>
+        <h2 class="title" data-en="Sunday, 23 November" data-km="ថ្ងៃអាទិត្យ ២៣ វិច្ឆិកា">
+          Sunday, 23 November
+        </h2>
+      </div>
+      <div class="timeline">
+        <div class="t-item">
+          <div class="t-when">3:30</div>
+          <div class="t-what">
+            <h3 data-en="Arrival" data-km="ការមកដល់">Arrival</h3>
+            <p data-en="Doors open. Find a seat, say hello." data-km="ទ្វារបើក។ សូមរកកន្លែងអង្គុយ និងស្វាគមន៍គ្នា។">
+              Doors open. Find a seat, say hello.
+            </p>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-when">4:00</div>
+          <div class="t-what">
+            <h3 data-en="Ceremony" data-km="ពិធីមង្គលការ">Ceremony</h3>
+            <p data-en="The part we’ve been waiting for. Please be seated by 3:50."
+              data-km="ពេលដែលយើងទន្ទឹងរង់ចាំ។ សូមអញ្ជើញអង្គុយមុនម៉ោង ៣:៥០។">
+              The part we&rsquo;ve been waiting for. Please be seated by 3:50.
+            </p>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-when">5:00</div>
+          <div class="t-what">
+            <h3 data-en="Cocktails" data-km="ភេសជ្ជៈ">Cocktails</h3>
+            <p data-en="Drinks, canapés and photographs by the water."
+              data-km="ភេសជ្ជៈ អាហារសម្រន់ និងការថតរូបក្បែរទឹក។">
+              Drinks, canapés and photographs by the water.
+            </p>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-when">6:30</div>
+          <div class="t-what">
+            <h3 data-en="Reception &amp; dinner" data-km="ពិធីជប់លៀង">
+              Reception &amp; dinner
+            </h3>
+            <p data-en="Dinner, speeches and dancing well into the night."
+              data-km="អាហារពេលល្ងាច សុន្ទរកថា និងការរាំរហូតដល់យប់ជ្រៅ។">
+              Dinner, speeches and dancing well into the night.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ VENUE & MAP ═══════════════ -->
+  <section class="section blush">
+    <div class="wrap-wide reveal">
+      <div class="center">
+        <p class="script" data-en="Find us" data-km="ទីតាំង">Find us</p>
+        <h2 class="title" data-en="The venue" data-km="ទីកន្លែងប្រារព្ធ">
+          The venue
+        </h2>
+      </div>
+      <div class="venue-card">
+        <div class="venue-info">
+          <!-- EDIT: real venue name & address in both languages -->
+          <h3 data-en="[Venue Name]" data-km="[ឈ្មោះទីកន្លែង]">
+            [Venue Name]
+          </h3>
+          <p class="addr" data-en="[Street Address], Pursat, Cambodia" data-km="[អាសយដ្ឋាន], ខេត្តពោធិ៍សាត់, កម្ពុជា">
+            [Street Address], Pursat, Cambodia
+          </p>
+          <p class="muted"
+            data-en="Parking is available on site. For guests travelling in, we’ve held a small block of rooms nearby."
+            data-km="មានកន្លែងចតរថយន្ត។ សម្រាប់ភ្ញៀវដែលធ្វើដំណើរឆ្ងាយ យើងបានកក់បន្ទប់មួយចំនួននៅក្បែរនោះ។">
+            Parking is available on site. For guests travelling in,
+            we&rsquo;ve held a small block of rooms nearby.
+          </p>
+          <!-- EDIT: paste your Google Maps place/directions link -->
+          <a class="btn btn-primary" href="https://maps.google.com" target="_blank" rel="noopener"
+            data-en="Get directions" data-km="ទទួលទិសដៅ">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <span>Get directions</span>
+          </a>
+        </div>
+        <div class="map-embed-wrap">
+          <!-- EDIT: replace src with your venue's Google Maps embed URL (Maps → Share → Embed a map) -->
+          <iframe class="map-embed" title="Venue map" src="https://www.google.com/maps?q=Pursat,Cambodia&output=embed"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ DRESS CODE ═══════════════ -->
+  <section class="section">
+    <div class="wrap reveal">
+      <div class="dress-grid">
+        <div>
+          <p class="script" data-en="What to wear" data-km="ការស្លៀកពាក់">
+            What to wear
+          </p>
+          <h2 class="title" data-en="Dress code" data-km="ក្រមស្លៀកពាក់">
+            Dress code
+          </h2>
+          <p class="muted"
+            data-en="Coastal formal. Think soft, breezy fabrics in our ocean-and-blush palette. Flat or block heels are best — some of the celebration is on grass and sand."
+            data-km="ផ្លូវការបែបឆ្នេរ។ សូមជ្រើសរើសសម្លៀកបំពាក់ស្រាលៗ តាមពណ៌សមុទ្រ និងផ្កាឈូក។ ស្បែកជើងកែងរាបគឺល្អបំផុត។">
+            Coastal formal. Think soft, breezy fabrics in our ocean-and-blush
+            palette. Flat or block heels are best — some of the celebration is
+            on grass and sand.
+          </p>
+        </div>
+        <div>
+          <p class="muted" style="margin-bottom: 6px" data-en="Our colour palette" data-km="ពណ៌ដែលយើងស្នើ">
+            Our colour palette
+          </p>
+          <div class="swatches">
+            <div class="swatch">
+              <i style="background: #1e4c6b"></i><span>Deep</span>
+            </div>
+            <div class="swatch">
+              <i style="background: #3e7cb1"></i><span>Ocean</span>
+            </div>
+            <div class="swatch">
+              <i style="background: #a9d6e5"></i><span>Sky</span>
+            </div>
+            <div class="swatch">
+              <i style="background: #e9a9a0"></i><span>Blush</span>
+            </div>
+            <div class="swatch">
+              <i style="background: #efe6d9"></i><span>Sand</span>
+            </div>
+            <div class="swatch">
+              <i style="background: #ffffff"></i><span>White</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ GUESTBOOK / WISHES ═══════════════ -->
+  <section class="section">
+    <div class="wrap reveal">
+      <div class="center">
+        <p class="script" data-en="Leave us a note" data-km="ទុកសារ">
+          Leave us a note
+        </p>
+        <h2 class="title" data-en="Guestbook &amp; wishes" data-km="សៀវភៅជូនពរ">
+          Guestbook &amp; wishes
+        </h2>
+        <p class="muted" style="max-width: 480px; margin: 0 auto 26px"
+          data-en="Share a blessing, a memory, or a word of love." data-km="ចែករំលែកពរជ័យ ការចងចាំ ឬពាក្យស្នេហា។">
+          Share a blessing, a memory, or a word of love.
+        </p>
+      </div>
+      <div class="card">
+        <form id="wishForm" novalidate>
+          <div class="field">
+            <label data-en="Your name" data-km="ឈ្មោះរបស់អ្នក">Your name</label><input type="text" name="who"
+              required />
+          </div>
+          <div class="field">
+            <label data-en="Your wish" data-km="ពាក្យជូនពរ">Your wish</label><textarea name="message"
+              required></textarea>
+          </div>
+          <div class="center">
+            <button class="btn btn-blush" type="submit" data-en="Send wish" data-km="ផ្ញើពរ">
+              <span>Send wish</span>
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="wishes" id="wishes"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PHOTO SHARING ═══════════════ -->
+  <section class="section blush">
+    <div class="wrap reveal">
+      <div class="center">
+        <p class="script" data-en="Share the moments" data-km="ចែករំលែករូបភាព">
+          Share the moments
+        </p>
+        <h2 class="title" data-en="Guest photo album" data-km="អាល់ប៊ុមរូបភាពភ្ញៀវ">
+          Guest photo album
+        </h2>
+        <p class="muted" style="max-width: 520px; margin: 0 auto 26px"
+          data-en="Snap something lovely during the day and add it to our shared album."
+          data-km="ថតរូបស្អាតៗនៅថ្ងៃពិធី ហើយបញ្ចូលទៅក្នុងអាល់ប៊ុមរួមរបស់យើង។">
+          Snap something lovely during the day and add it to our shared album.
+        </p>
+      </div>
+      <div class="card">
+        <div class="share-drop" id="shareDrop" tabindex="0" role="button" aria-label="Add photos">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 9 12 4 17 9" />
+            <line x1="12" y1="4" x2="12" y2="16" />
+          </svg>
+          <p style="margin: 0; font-weight: 700; color: var(--deep)" data-en="Tap to add your photos"
+            data-km="ចុចដើម្បីបញ្ចូលរូបភាព">
+            Tap to add your photos
+          </p>
+          <p class="muted" style="margin: 4px 0 0; font-size: 0.85rem" data-en="Or drag &amp; drop images here"
+            data-km="ឬអូសរូបភាពមកទីនេះ">
+            Or drag &amp; drop images here
+          </p>
+          <input type="file" id="shareInput" accept="image/*" multiple hidden />
+        </div>
+        <div class="share-preview" id="sharePreview"></div>
+        <p class="muted center" style="font-size: 0.82rem; margin: 18px 0 0"
+          data-en="Previews show on your device. To collect photos for everyone, connect a shared album (see note in the code)."
+          data-km="រូបភាពបង្ហាញនៅលើឧបករណ៍របស់អ្នក។ ដើម្បីប្រមូលរូបភាពរួមគ្នា សូមភ្ជាប់អាល់ប៊ុមរួម។">
+          Previews show on your device. To collect photos for everyone,
+          connect a shared album (see note in the code).
+        </p>
+        <div class="center" style="margin-top: 16px">
+          <!-- EDIT: paste your shared Google Photos / Immich album link -->
+          <a class="btn btn-ghost" id="albumLink" href="#" target="_blank" rel="noopener"
+            data-en="Open the shared album" data-km="បើកអាល់ប៊ុមរួម"><span>Open the shared album</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CONTACT ═══════════════ -->
+  <section class="section">
+    <div class="wrap reveal">
+      <div class="center">
+        <p class="script" data-en="Questions?" data-km="មានសំណួរ?">
+          Questions?
+        </p>
+        <h2 class="title" data-en="Get in touch" data-km="ទំនាក់ទំនង">
+          Get in touch
+        </h2>
+      </div>
+      <div class="contact-grid">
+        <!-- EDIT: names, roles and links -->
+        <div class="contact-card">
+          <div class="avatar">S</div>
+          <h3 data-en="Sovatha" data-km="សុវត្ថា">Sovatha</h3>
+          <p class="role" data-en="The groom" data-km="កូនកម្លោះ">
+            The groom
+          </p>
+          <div class="contact-links">
+            <a href="tel:+855000000000" aria-label="Call Sovatha"><svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z" />
+              </svg></a>
+            <a href="https://t.me/" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24"
+                fill="currentColor">
+                <path
+                  d="M21.9 4.3l-3.3 15.5c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-4.9L18 6.6c.4-.3-.1-.5-.6-.2L7.4 12.7l-4.8-1.5c-1-.3-1-1 .2-1.5l18.7-7.2c.9-.3 1.6.2 1.3 1.8z" />
+              </svg></a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="avatar">Y</div>
+          <h3 data-en="Yousa" data-km="យូសា">Yousa</h3>
+          <p class="role" data-en="The bride" data-km="កូនក្រមុំ">
+            The bride
+          </p>
+          <div class="contact-links">
+            <a href="tel:+855000000000" aria-label="Call Yousa"><svg viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z" />
+              </svg></a>
+            <a href="https://t.me/" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24"
+                fill="currentColor">
+                <path
+                  d="M21.9 4.3l-3.3 15.5c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-4.9L18 6.6c.4-.3-.1-.5-.6-.2L7.4 12.7l-4.8-1.5c-1-.3-1-1 .2-1.5l18.7-7.2c.9-.3 1.6.2 1.3 1.8z" />
+              </svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <footer>
+    <p class="fscript" data-en="With love" data-km="ដោយក្ដីស្រឡាញ់">
+      With love
+    </p>
+    <p class="fnames">Yousa &amp; Sovatha</p>
+    <p class="fmeta">23 · 11 · 2026 &nbsp;·&nbsp; Pursat</p>
+    <p class="credit" data-en="We can’t wait to celebrate with you." data-km="យើងទន្ទឹងរង់ចាំប្រារព្ធជាមួយអ្នក។">
+      We can&rsquo;t wait to celebrate with you.
+    </p>
+  </footer>
+
+  <!-- ═══════════════ LIGHTBOX ═══════════════ -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+    <button class="lb-prev" id="lbPrev" aria-label="Previous">&#8249;</button>
+    <img id="lbImg" src="" alt="" />
+    <button class="lb-next" id="lbNext" aria-label="Next">&#8250;</button>
+  </div>
+
+  <!-- Site logic: countdown, language toggle, music, greeting, guestbook, lightbox -->
+  <script src="script.js"></script>
+
+  <!-- ═══════════ ANIMATION LAYER — swap ONE line per test scenario ═══════════ -->
+  <!-- Each module in animate/ is self-contained. See animate/README.md -->
+  <!-- full-scene.js already loads them all; keep the singles off to avoid double-loading -->
+  <script src="animate/fireflies.js"></script>
+  <script src="animate/petals.js"></script>
+  <script src="animate/mist-rays.js"></script>
+  <script src="animate/bird.js"></script>
+  <!-- <script src="animate/waterfall.js"></script> -->
+  <!-- <script src="animate/full-scene.js"></script> -->
+  <!-- scope any module to just the hero, e.g.: -->
+  <!-- <script src="animate/petals.js" data-target=".hero" data-count="30"></script> -->
+</body>
+
+</html>
