@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; }
+</style>
+</helmet>
+<div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:100px;padding:80px 90px;background:#eef1f3;min-height:100vh;font-family:'Jost',sans-serif">
+
+  <!-- ===== Option 1a ===== -->
+  <div id="1a" style="display:flex;flex-direction:column;align-items:center;gap:22px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'Jost',sans-serif;font-weight:500;letter-spacing:.14em;font-size:12px;color:#fff;background:#37505e;border-radius:100px;padding:5px 12px">1a</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;color:#37505e">Coastal Dawn</div>
+      </div>
+      <div style="font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8397a2">Cool &middot; airy &middot; soft blue &amp; blush</div>
+    </div>
+    <div style="position:relative;width:426px;height:872px;background:#1c2b33;border-radius:56px;padding:14px;box-shadow:0 40px 90px rgba(30,50,70,.28), 0 8px 24px rgba(0,0,0,.14)">
+      <div style="position:absolute;top:26px;left:50%;transform:translateX(-50%);width:120px;height:30px;background:#1c2b33;border-radius:0 0 18px 18px;z-index:20"></div>
+      <div style="width:398px;height:844px;border-radius:44px;overflow:hidden;background:#f3f8fb;position:relative">
+        <dc-import name="Invitation" variant="a" palette="{{ paletteA }}" hint-size="398px,844px" style="width:398px;height:844px"></dc-import>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Option 1b ===== -->
+  <div id="1b" style="display:flex;flex-direction:column;align-items:center;gap:22px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-family:'Jost',sans-serif;font-weight:500;letter-spacing:.14em;font-size:12px;color:#fff;background:#4a3a33;border-radius:100px;padding:5px 12px">1b</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;color:#4a3a33">Sunset Tide</div>
+      </div>
+      <div style="font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#93796b">Warm &middot; dreamy &middot; terracotta &amp; gold</div>
+    </div>
+    <div style="position:relative;width:426px;height:872px;background:#2a211c;border-radius:56px;padding:14px;box-shadow:0 40px 90px rgba(74,58,51,.26), 0 8px 24px rgba(0,0,0,.14)">
+      <div style="position:absolute;top:26px;left:50%;transform:translateX(-50%);width:120px;height:30px;background:#2a211c;border-radius:0 0 18px 18px;z-index:20"></div>
+      <div style="width:398px;height:844px;border-radius:44px;overflow:hidden;background:#faf5ef;position:relative">
+        <dc-import name="Invitation" variant="b" palette="{{ paletteB }}" hint-size="398px,844px" style="width:398px;height:844px"></dc-import>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      paletteA: {
+        pageBg: '#f3f8fb',
+        sectionBg: '#e8f1f7',
+        ink: '#37505e',
+        sub: '#728a97',
+        primary: '#a9c7dd',
+        blush: '#f3d9dd',
+        deep: '#7fa8c2',
+        accent: '#cfe0d6',
+        line: '#d6e3ec',
+        onDark: '#ffffff',
+      },
+      paletteB: {
+        pageBg: '#faf5ef',
+        sectionBg: '#f4ebe1',
+        ink: '#4a3a33',
+        sub: '#93796b',
+        primary: '#9db9c9',
+        blush: '#e4b3a0',
+        deep: '#6b8ba0',
+        accent: '#d9bf94',
+        line: '#e8dccd',
+        onDark: '#fff8f2',
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

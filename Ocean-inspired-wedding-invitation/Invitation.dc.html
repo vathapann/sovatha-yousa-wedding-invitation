@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="image-slot.js"></script>
+<style>
+  @keyframes waveA { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes waveB { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  @keyframes petalFall {
+    0%   { transform: translate(0, -30px) rotate(0deg); opacity: 0; }
+    12%  { opacity: .85; }
+    50%  { transform: translate(24px, 360px) rotate(140deg); opacity: .7; }
+    100% { transform: translate(-10px, 760px) rotate(280deg); opacity: 0; }
+  }
+  @keyframes nudge { 0%,100% { transform: translateY(0); opacity:.45; } 50% { transform: translateY(7px); opacity:1; } }
+  @keyframes floatSlow { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  image-slot::part(placeholder) { font-family: 'Jost', sans-serif; }
+  [data-inv-started="false"] * { animation-play-state: paused !important; }
+  [data-inv-started="false"] [data-scrollhint] { opacity: 0 !important; }
+  [data-inv-started="true"] [data-taphint] { opacity: 0; transform: translateX(-50%) translateY(12px); pointer-events: none; }
+</style>
+</helmet>
+<div ref="{{ scrollRef }}" data-inv-started="{{ startedStr }}" style="width:100%;height:100%;overflow-y:auto;overflow-x:hidden;background:{{ pal.pageBg }};font-family:'Jost',sans-serif;color:{{ pal.ink }};-webkit-font-smoothing:antialiased;position:relative">
+
+  <!-- ============ HERO ============ -->
+  <section style="position:relative;height:812px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+    <image-slot data-parallax-bg id="hero-{{ variant }}" shape="rect" fit="cover" src="garden.png" placeholder="Drop a dreamy couple or ocean photo" style="position:absolute;inset:0;width:100%;height:100%;transform:scale(1.15);transform-origin:center;will-change:transform"></image-slot>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,.30), rgba(255,255,255,.10) 42%, rgba(255,255,255,.58));z-index:1"></div>
+
+    <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2">
+      <div style="position:absolute;top:-30px;left:9%;width:12px;height:16px;background:{{ pal.blush }};border-radius:82% 0 82% 0;opacity:.7;animation:petalFall 12s linear infinite"></div>
+      <div style="position:absolute;top:-30px;left:24%;width:9px;height:13px;background:{{ pal.primary }};border-radius:82% 0 82% 0;opacity:.6;animation:petalFall 15s linear infinite;animation-delay:3s"></div>
+      <div style="position:absolute;top:-30px;left:41%;width:14px;height:18px;background:{{ pal.blush }};border-radius:82% 0 82% 0;opacity:.65;animation:petalFall 10s linear infinite;animation-delay:1.5s"></div>
+      <div style="position:absolute;top:-30px;left:58%;width:10px;height:14px;background:{{ pal.primary }};border-radius:82% 0 82% 0;opacity:.55;animation:petalFall 13s linear infinite;animation-delay:5s"></div>
+      <div style="position:absolute;top:-30px;left:73%;width:12px;height:16px;background:{{ pal.blush }};border-radius:82% 0 82% 0;opacity:.7;animation:petalFall 11s linear infinite;animation-delay:2.4s"></div>
+      <div style="position:absolute;top:-30px;left:88%;width:9px;height:12px;background:{{ pal.primary }};border-radius:82% 0 82% 0;opacity:.6;animation:petalFall 14s linear infinite;animation-delay:6.5s"></div>
+    </div>
+
+    <div data-parallax-title style="position:relative;z-index:3;padding:0 28px;will-change:transform">
+      <div style="font-family:'Jost',sans-serif;letter-spacing:.42em;font-size:11px;text-transform:uppercase;color:{{ pal.ink }};opacity:.8;margin-bottom:26px">Together with their families</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:64px;line-height:1;color:{{ pal.ink }}">Sovatha</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;font-size:32px;color:{{ pal.deep }};margin:6px 0">and</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:64px;line-height:1;color:{{ pal.ink }}">Yousa</div>
+      <div style="width:56px;height:1px;background:{{ pal.deep }};opacity:.55;margin:28px auto"></div>
+      <div style="font-family:'Jost',sans-serif;letter-spacing:.34em;font-size:13px;text-transform:uppercase;color:{{ pal.ink }}">23 &middot; 11 &middot; 2026</div>
+    </div>
+
+    <div data-taphint style="position:absolute;bottom:86px;left:50%;transform:translateX(-50%);z-index:5;display:flex;align-items:center;gap:9px;font-family:'Jost',sans-serif;letter-spacing:.28em;font-size:10px;text-transform:uppercase;color:{{ pal.ink }};background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.7);border-radius:100px;padding:11px 22px;transition:opacity .7s ease, transform .7s ease">Tap to begin</div>
+    <div data-scrollhint style="position:absolute;bottom:30px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;transition:opacity .6s ease">
+      <div style="font-family:'Jost',sans-serif;letter-spacing:.28em;font-size:9px;text-transform:uppercase;color:{{ pal.ink }};opacity:.7">Scroll</div>
+      <div style="width:1px;height:22px;background:{{ pal.deep }};opacity:.5;animation:nudge 1.8s ease-in-out infinite"></div>
+    </div>
+
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" style="position:absolute;bottom:-1px;left:0;width:200%;height:130px;z-index:2;animation:waveA 20s linear infinite">
+      <path d="M0,60 C120,20 240,20 360,60 C480,100 600,100 720,60 C840,20 960,20 1080,60 C1200,100 1320,100 1440,60 L1440,120 L0,120 Z" fill="{{ pal.deep }}" opacity="0.30"></path>
+    </svg>
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" style="position:absolute;bottom:-1px;left:0;width:200%;height:110px;z-index:2;animation:waveB 15s linear infinite">
+      <path d="M0,60 C120,20 240,20 360,60 C480,100 600,100 720,60 C840,20 960,20 1080,60 C1200,100 1320,100 1440,60 L1440,120 L0,120 Z" fill="{{ pal.primary }}" opacity="0.55"></path>
+    </svg>
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" style="position:absolute;bottom:-1px;left:0;width:200%;height:88px;z-index:2;animation:waveA 11s linear infinite">
+      <path d="M0,70 C120,35 240,35 360,70 C480,105 600,105 720,70 C840,35 960,35 1080,70 C1200,105 1320,105 1440,70 L1440,120 L0,120 Z" fill="{{ pal.sectionBg }}"></path>
+    </svg>
+  </section>
+
+  <!-- ============ COUNTDOWN ============ -->
+  <section style="background:{{ pal.sectionBg }};padding:60px 28px 66px;text-align:center;position:relative">
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .9s ease, transform .9s ease">
+      <div style="font-family:'Jost',sans-serif;letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:{{ pal.deep }};margin-bottom:14px">The wait begins</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.1;color:{{ pal.ink }};margin:0 0 30px">Counting down<br>to forever</h2>
+      <div style="display:flex;justify-content:center;gap:14px">
+        <div style="display:flex;flex-direction:column;gap:6px;min-width:60px">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:500;color:{{ pal.deep }};line-height:1">{{ days }}</div>
+          <div style="font-family:'Jost',sans-serif;letter-spacing:.2em;font-size:10px;text-transform:uppercase;color:{{ pal.sub }}">Days</div>
+        </div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:38px;color:{{ pal.primary }};line-height:1.1">:</div>
+        <div style="display:flex;flex-direction:column;gap:6px;min-width:52px">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:500;color:{{ pal.deep }};line-height:1">{{ hours }}</div>
+          <div style="font-family:'Jost',sans-serif;letter-spacing:.2em;font-size:10px;text-transform:uppercase;color:{{ pal.sub }}">Hours</div>
+        </div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:38px;color:{{ pal.primary }};line-height:1.1">:</div>
+        <div style="display:flex;flex-direction:column;gap:6px;min-width:52px">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:500;color:{{ pal.deep }};line-height:1">{{ minutes }}</div>
+          <div style="font-family:'Jost',sans-serif;letter-spacing:.2em;font-size:10px;text-transform:uppercase;color:{{ pal.sub }}">Mins</div>
+        </div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:38px;color:{{ pal.primary }};line-height:1.1">:</div>
+        <div style="display:flex;flex-direction:column;gap:6px;min-width:52px">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:500;color:{{ pal.deep }};line-height:1">{{ seconds }}</div>
+          <div style="font-family:'Jost',sans-serif;letter-spacing:.2em;font-size:10px;text-transform:uppercase;color:{{ pal.sub }}">Secs</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OUR STORY ============ -->
+  <section style="background:{{ pal.pageBg }};padding:64px 28px">
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .9s ease, transform .9s ease;text-align:center">
+      <div style="font-family:'Jost',sans-serif;letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:{{ pal.deep }};margin-bottom:14px">Our story</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.12;color:{{ pal.ink }};margin:0 0 24px">Two tides that<br>found each other</h2>
+      <image-slot id="story-{{ variant }}" shape="rounded" radius="180" fit="cover" placeholder="Drop a favorite photo of you two" style="display:block;width:230px;height:290px;margin:0 auto 26px;box-shadow:0 20px 50px rgba(0,0,0,.10)"></image-slot>
+      <p style="font-family:'Jost',sans-serif;font-weight:300;font-size:15px;line-height:1.85;color:{{ pal.sub }};max-width:300px;margin:0 auto">It began by the sea &mdash; a quiet morning, salt in the air, and a conversation that never quite ended. Six years, countless sunsets, and one very certain question later, we&rsquo;re ready to say forever.</p>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:{{ pal.deep }};margin-top:26px">&ldquo;You are my favorite tide.&rdquo;</div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section style="background:{{ pal.sectionBg }};padding:60px 24px">
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .9s ease, transform .9s ease;text-align:center;margin-bottom:26px">
+      <div style="font-family:'Jost',sans-serif;letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:{{ pal.deep }};margin-bottom:14px">Moments</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.12;color:{{ pal.ink }};margin:0">A few of our<br>favorite frames</h2>
+    </div>
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity 1s ease .1s, transform 1s ease .1s;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:100px;gap:10px">
+      <image-slot id="g1-{{ variant }}" shape="rounded" radius="14" placeholder="photo" style="grid-row:span 2"></image-slot>
+      <image-slot id="g2-{{ variant }}" shape="rounded" radius="14" placeholder="photo"></image-slot>
+      <image-slot id="g3-{{ variant }}" shape="rounded" radius="14" placeholder="photo"></image-slot>
+      <image-slot id="g4-{{ variant }}" shape="rounded" radius="14" placeholder="photo"></image-slot>
+      <image-slot id="g5-{{ variant }}" shape="rounded" radius="14" placeholder="photo" style="grid-row:span 2"></image-slot>
+      <image-slot id="g6-{{ variant }}" shape="rounded" radius="14" placeholder="photo"></image-slot>
+    </div>
+  </section>
+
+  <!-- ============ SCHEDULE ============ -->
+  <section style="background:{{ pal.pageBg }};padding:64px 30px">
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .9s ease, transform .9s ease;text-align:center;margin-bottom:34px">
+      <div style="font-family:'Jost',sans-serif;letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:{{ pal.deep }};margin-bottom:14px">The day</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.12;color:{{ pal.ink }};margin:0">Order of the day</h2>
+    </div>
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity 1s ease, transform 1s ease;display:flex;flex-direction:column">
+      <div style="display:flex;gap:18px">
+        <div style="width:66px;text-align:right;font-family:'Cormorant Garamond',serif;font-size:22px;color:{{ pal.deep }};padding-top:2px">3:00</div>
+        <div style="flex:1;border-left:1px solid {{ pal.line }};padding:0 0 30px 20px;position:relative">
+          <div style="position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;background:{{ pal.deep }}"></div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:23px;color:{{ pal.ink }};margin-bottom:3px">The Ceremony</div>
+          <div style="font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:{{ pal.sub }}">Seaside lawn &middot; arrive 15 minutes early</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:18px">
+        <div style="width:66px;text-align:right;font-family:'Cormorant Garamond',serif;font-size:22px;color:{{ pal.deep }};padding-top:2px">4:30</div>
+        <div style="flex:1;border-left:1px solid {{ pal.line }};padding:0 0 30px 20px;position:relative">
+          <div style="position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;background:{{ pal.deep }}"></div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:23px;color:{{ pal.ink }};margin-bottom:3px">Cocktail Hour</div>
+          <div style="font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:{{ pal.sub }}">Terrace &middot; drinks &amp; ocean breeze</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:18px">
+        <div style="width:66px;text-align:right;font-family:'Cormorant Garamond',serif;font-size:22px;color:{{ pal.deep }};padding-top:2px">6:00</div>
+        <div style="flex:1;border-left:1px solid {{ pal.line }};padding:0 0 30px 20px;position:relative">
+          <div style="position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;background:{{ pal.deep }}"></div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:23px;color:{{ pal.ink }};margin-bottom:3px">Dinner &amp; Reception</div>
+          <div style="font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:{{ pal.sub }}">Grand hall &middot; toasts &amp; feasting</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:18px">
+        <div style="width:66px;text-align:right;font-family:'Cormorant Garamond',serif;font-size:22px;color:{{ pal.deep }};padding-top:2px">9:00</div>
+        <div style="flex:1;padding:0 0 0 20px;position:relative">
+          <div style="position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;background:{{ pal.deep }}"></div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:23px;color:{{ pal.ink }};margin-bottom:3px">First Dance &amp; Party</div>
+          <div style="font-family:'Jost',sans-serif;font-weight:300;font-size:13px;color:{{ pal.sub }}">Dance under the stars until late</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VENUE ============ -->
+  <section style="background:{{ pal.sectionBg }};padding:60px 28px;text-align:center">
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .9s ease, transform .9s ease">
+      <div style="font-family:'Jost',sans-serif;letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:{{ pal.deep }};margin-bottom:14px">Where</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.12;color:{{ pal.ink }};margin:0 0 6px">Azure Bay Estate</h2>
+      <div style="font-family:'Jost',sans-serif;font-weight:300;font-size:14px;color:{{ pal.sub }};line-height:1.7;margin-bottom:22px">14 Shoreline Drive<br>Coastal Cove, by the sea</div>
+      <image-slot id="map-{{ variant }}" shape="rounded" radius="18" fit="cover" placeholder="Drop a map or venue photo" style="display:block;width:100%;height:210px;box-shadow:0 18px 44px rgba(0,0,0,.10)"></image-slot>
+      <div style="display:inline-block;margin-top:24px;font-family:'Jost',sans-serif;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:{{ pal.deep }};border:1px solid {{ pal.deep }};border-radius:100px;padding:12px 26px">Get directions</div>
+    </div>
+  </section>
+
+  <!-- ============ DRESS CODE ============ -->
+  <section style="background:{{ pal.pageBg }};padding:62px 28px;text-align:center">
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity .9s ease, transform .9s ease">
+      <div style="font-family:'Jost',sans-serif;letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:{{ pal.deep }};margin-bottom:14px">Attire</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.12;color:{{ pal.ink }};margin:0 0 16px">Coastal formal</h2>
+      <p style="font-family:'Jost',sans-serif;font-weight:300;font-size:15px;line-height:1.8;color:{{ pal.sub }};max-width:290px;margin:0 auto 28px">We&rsquo;d love to see you in soft ocean tones &mdash; think seafoam, blush, sand and sky. Flat or block heels for the lawn.</p>
+      <div style="display:flex;justify-content:center;gap:14px">
+        <div style="width:42px;height:42px;border-radius:50%;background:{{ pal.primary }};box-shadow:0 6px 16px rgba(0,0,0,.10)"></div>
+        <div style="width:42px;height:42px;border-radius:50%;background:{{ pal.blush }};box-shadow:0 6px 16px rgba(0,0,0,.10)"></div>
+        <div style="width:42px;height:42px;border-radius:50%;background:{{ pal.accent }};box-shadow:0 6px 16px rgba(0,0,0,.10)"></div>
+        <div style="width:42px;height:42px;border-radius:50%;background:{{ pal.deep }};box-shadow:0 6px 16px rgba(0,0,0,.10)"></div>
+        <div style="width:42px;height:42px;border-radius:50%;background:#ffffff;border:1px solid {{ pal.line }};box-shadow:0 6px 16px rgba(0,0,0,.06)"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <section style="position:relative;background:{{ pal.deep }};padding:96px 28px 60px;text-align:center;overflow:hidden">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" style="position:absolute;top:-1px;left:0;width:200%;height:80px;transform:scaleY(-1);animation:waveB 16s linear infinite">
+      <path d="M0,70 C120,35 240,35 360,70 C480,105 600,105 720,70 C840,35 960,35 1080,70 C1200,105 1320,105 1440,70 L1440,120 L0,120 Z" fill="{{ pal.pageBg }}"></path>
+    </svg>
+    <div data-reveal style="opacity:0;transform:translateY(26px);transition:opacity 1s ease, transform 1s ease;position:relative;z-index:2">
+      <div style="font-family:'Jost',sans-serif;letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:{{ pal.onDark }};opacity:.85;margin-bottom:18px">With all our love</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1.35;color:{{ pal.onDark }};margin-bottom:26px">We can&rsquo;t wait to<br>celebrate with you</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:40px;color:{{ pal.onDark }}">Sovatha &amp; Yousa</div>
+      <div style="width:56px;height:1px;background:{{ pal.onDark }};opacity:.4;margin:26px auto"></div>
+      <div style="font-family:'Jost',sans-serif;letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:{{ pal.onDark }};opacity:.85;margin-bottom:26px">23 &middot; 11 &middot; 2026</div>
+      <div style="display:inline-block;font-family:'Jost',sans-serif;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:{{ pal.deep }};background:{{ pal.onDark }};border-radius:100px;padding:13px 30px">RSVP by 1 October</div>
+      <div style="font-family:'Jost',sans-serif;font-size:11px;color:{{ pal.onDark }};opacity:.7;margin-top:24px;letter-spacing:.1em">#SovathaMeetsYousa</div>
+    </div>
+  </section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:812},&quot;palette&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;object&quot;},&quot;variant&quot;:{&quot;editor&quot;:null,&quot;default&quot;:&quot;a&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  scrollRef = React.createRef();
+  state = { days: '--', hours: '--', minutes: '--', seconds: '--', started: false };
+
+  tick() {
+    const target = new Date('2026-11-23T15:00:00');
+    let diff = Math.max(0, target.getTime() - Date.now());
+    const d = Math.floor(diff / 86400000); diff -= d * 86400000;
+    const h = Math.floor(diff / 3600000); diff -= h * 3600000;
+    const m = Math.floor(diff / 60000); diff -= m * 60000;
+    const s = Math.floor(diff / 1000);
+    const pad = (n) => String(n).padStart(2, '0');
+    this.setState({ days: String(d), hours: pad(h), minutes: pad(m), seconds: pad(s) });
+  }
+
+  componentDidMount() {
+    this.tick();
+    this._t = setInterval(() => this.tick(), 1000);
+
+    const root = this.scrollRef.current;
+    if (!root) return;
+
+    // Motion gate: nothing animates until the first touch / interaction
+    this._start = () => this.startAnim();
+    ['touchstart', 'pointerdown', 'click', 'wheel'].forEach((ev) =>
+      root.addEventListener(ev, this._start, { passive: true }));
+
+    // Parallax
+    const bg = root.querySelector('[data-parallax-bg]');
+    const title = root.querySelector('[data-parallax-title]');
+    this._onScroll = () => {
+      const y = root.scrollTop;
+      if (bg) bg.style.transform = 'translateY(' + (y * 0.35).toFixed(1) + 'px) scale(1.15)';
+      if (title) {
+        title.style.transform = 'translateY(' + (y * -0.12).toFixed(1) + 'px)';
+        title.style.opacity = String(Math.max(0, 1 - y / 520));
+      }
+    };
+    root.addEventListener('scroll', this._onScroll, { passive: true });
+  }
+
+  startAnim() {
+    if (this.state.started) return;
+    this.setState({ started: true });
+    const root = this.scrollRef.current;
+    if (!root) return;
+    const reveals = root.querySelectorAll('[data-reveal]');
+    this._io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'none';
+          this._io.unobserve(e.target);
+        }
+      });
+    }, { root: root, threshold: 0.14 });
+    reveals.forEach((el) => this._io.observe(el));
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._t);
+    if (this._io) this._io.disconnect();
+    const root = this.scrollRef.current;
+    if (root && this._onScroll) root.removeEventListener('scroll', this._onScroll);
+  }
+
+  renderVals() {
+    const pal = this.props.palette || {};
+    return {
+      pal,
+      variant: this.props.variant || 'a',
+      startedStr: this.state.started ? 'true' : 'false',
+      days: this.state.days,
+      hours: this.state.hours,
+      minutes: this.state.minutes,
+      seconds: this.state.seconds,
+      scrollRef: this.scrollRef,
+    };
+  }
+}
+</script>
+</body>
+</html>
