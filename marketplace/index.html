@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wedding Invitation Templates — Choose Yours</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&family=Noto+Sans+Khmer:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app">
+
+    <nav class="topbar">
+      <a class="brand" href="#home">Wedding Templates</a>
+      <div class="topbar-links">
+        <a href="#home" class="nav-link" data-nav="home" data-en="Home" data-km="ទំព័រដើម">Home</a>
+        <a href="#templates" class="nav-link" data-nav="templates" data-en="Templates" data-km="គំរូ">Templates</a>
+        <a href="#features" class="nav-link" data-nav="features" data-en="Features" data-km="លក្ខណៈពិសេស">Features</a>
+        <a href="#offer" class="nav-link" data-nav="offer" data-en="What We Offer" data-km="អ្វីដែលយើងផ្តល់ជូន">What We Offer</a>
+      </div>
+      <div class="topbar-actions">
+        <button id="langToggle" class="lang-btn" data-en="ខ្មែរ" data-km="English">ខ្មែរ</button>
+        <a class="icon-btn" href="mailto:sovathapann@gmail.com" aria-label="Contact us">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+    </nav>
+
+    <header class="hero-block" id="home">
+      <p class="eyebrow" data-en="Handpicked Designs" data-km="គំរូជ្រើសរើសយ៉ាងម៉ត់ចត់">Handpicked Designs</p>
+      <h1 class="headline" data-en="Wedding Invitation<br><em>Templates</em>" data-km="គំរូ<br><em>ប័ណ្ណអញ្ជើញអាពាហ៍ពិពាហ៍</em>">Wedding Invitation<br><em>Templates</em></h1>
+      <p class="hero-sub" data-en="Pick a design, preview it live, and buy it customized with your names and date." data-km="ជ្រើសរើសគំរូមួយ សាកល្បងមើលផ្ទាល់ រួចទិញដែលកែសម្រួលតាមឈ្មោះ និងកាលបរិច្ឆេទរបស់អ្នក។">Pick a design, preview it live, and buy it customized with your names and date.</p>
+
+      <div class="searchbar-wrap">
+        <div class="searchbar">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <input id="templateSearch" type="text" data-en-placeholder="Search templates..." data-km-placeholder="ស្វែងរកគំរូ..." placeholder="Search templates..." autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="chips-row" id="chipsRow">
+        <button class="chip active" data-tag="all" data-en="All" data-km="ទាំងអស់">All</button>
+        <button class="chip" data-tag="garden" data-en="Garden" data-km="សួនច្បារ">Garden</button>
+        <button class="chip" data-tag="evening" data-en="Evening" data-km="ល្ងាច">Evening</button>
+        <button class="chip" data-tag="minimal" data-en="Minimal" data-km="សាមញ្ញ">Minimal</button>
+        <button class="chip" data-tag="journey" data-en="Journey" data-km="ដំណើរ">Journey</button>
+        <button class="chip" data-tag="formal" data-en="Formal" data-km="ផ្លូវការ">Formal</button>
+        <button class="chip" data-tag="classic" data-en="Classic" data-km="បុរាណ">Classic</button>
+      </div>
+    </header>
+
+    <section id="templates" class="templates-section">
+      <div class="section-row">
+        <h2 class="section-title-left" data-en="Templates" data-km="គំរូទាំងអស់">Templates</h2>
+        <span class="view-all" id="resultCount"></span>
+      </div>
+      <main id="catalog" class="catalog">
+        <p class="loading" data-en="Loading templates…" data-km="កំពុងផ្ទុកគំរូ...">Loading templates…</p>
+      </main>
+    </section>
+
+    <section id="features" class="features-section">
+      <h2 class="section-title" data-en="Features" data-km="លក្ខណៈពិសេស">Features</h2>
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <h3 data-en="Bilingual by default" data-km="ភាសាពីរជាមុន">Bilingual by default</h3>
+          <p data-en="Every template supports English and Khmer text with a one-tap language toggle." data-km="រាល់គំរូទាំងអស់គាំទ្រអក្សរអង់គ្លេស និងខ្មែរ ជាមួយប៊ូតុងប្តូរភាសាតែមួយចុច។">Every template supports English and Khmer text with a one-tap language toggle.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg></div>
+          <h3 data-en="Live preview before you buy" data-km="មើលសាកល្បងផ្ទាល់មុនទិញ">Live preview before you buy</h3>
+          <p data-en="Click Preview on any template to see the real, working invitation first." data-km="ចុច &quot;មើលសាកល្បង&quot; នៅលើគំរូណាមួយ ដើម្បីមើលប័ណ្ណអញ្ជើញពិតប្រាកដជាមុនសិន។">Click Preview on any template to see the real, working invitation first.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+          <h3 data-en="Fast checkout" data-km="ការទូទាត់លឿន">Fast checkout</h3>
+          <p data-en="Secure payment via Stripe — no account needed, just pick a template and pay." data-km="ការទូទាត់សុវត្ថិភាពតាមរយៈ Stripe — មិនចាំបាច់មានគណនី គ្រាន់តែជ្រើសរើសគំរូ ហើយបង់ប្រាក់។">Secure payment via Stripe — no account needed, just pick a template and pay.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M11 18h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          <h3 data-en="Mobile-friendly" data-km="ងាយស្រួលប្រើលើទូរស័ព្ទ">Mobile-friendly</h3>
+          <p data-en="Every design is responsive, so guests can RSVP from their phones." data-km="រចនាបថទាំងអស់ឆ្លើយតបបានល្អ ដូច្នេះភ្ញៀវអាចបញ្ជាក់ការចូលរួមតាមទូរស័ព្ទ។">Every design is responsive, so guests can RSVP from their phones.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="offer" class="offer-section">
+      <h2 class="section-title" data-en="What We Offer" data-km="អ្វីដែលយើងផ្តល់ជូន">What We Offer</h2>
+      <p class="offer-copy" data-en="Choose a ready-made template, and we customize it with your names, date, venue, and photos. You get a fully hosted, shareable invitation link — no coding, no design work, delivered within 24 hours of purchase." data-km="ជ្រើសរើសគំរូដែលរួចរាល់ រួចយើងកែសម្រួលឱ្យសមស្របតាមឈ្មោះ កាលបរិច្ឆេទ ទីតាំង និងរូបភាពរបស់អ្នក។ អ្នកនឹងទទួលបានតំណប័ណ្ណអញ្ជើញដែលបង្ហោះរួចរាល់ អាចចែករំលែកបាន — មិនចាំបាច់សរសេរកូដ ឬរចនា ដឹកជញ្ជូនក្នុងរយៈពេល 24 ម៉ោងក្រោយពេលទិញ។">
+        Choose a ready-made template, and we customize it with your names, date, venue,
+        and photos. You get a fully hosted, shareable invitation link — no coding, no
+        design work, delivered within 24 hours of purchase.
+      </p>
+    </section>
+
+    <footer class="store-footer">
+      <p><span data-en="Questions? Email" data-km="មានសំណួរ? អ៊ីមែល">Questions? Email</span> <a href="mailto:sovathapann@gmail.com">sovathapann@gmail.com</a></p>
+      <p><a href="/LICENSE.md" data-en="Template License Terms" data-km="លក្ខខណ្ឌអាជ្ញាប័ណ្ណគំរូ">Template License Terms</a></p>
+    </footer>
+
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>

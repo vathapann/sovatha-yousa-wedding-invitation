@@ -1,9 +1,12 @@
 {
-  // Cloudflare Worker that serves the invitation as static assets.
+  // Cloudflare Worker serving the template marketplace: static storefront +
+  // template previews via assets, plus /api/* checkout routes via the Worker.
   // Docs: https://developers.cloudflare.com/workers/static-assets/
   "name": "sovatha-yousa-wedding",
   "compatibility_date": "2025-01-01",
+  "main": "src/worker.js",
   "assets": {
-    "directory": "./public"
+    "directory": "./marketplace",
+    "binding": "ASSETS"
   }
 }

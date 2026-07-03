@@ -1,0 +1,342 @@
+<!--
+  © Wedding Templates (sovathapann@gmail.com). "Golden Botanical" template.
+  Licensed for single-event personal use by the purchasing couple only.
+  Redistribution, resale, or reuse of this source as a template for other
+  couples/events is prohibited without written permission. See /LICENSE.md.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovatha &amp; Yousa · 23 Nov 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     PALETTE — swap these values to re-theme the whole invitation.
+     "Golden Botanical" — warm gold + sage, garden-inspired.
+     ============================================================ */
+  :root{
+    --page:#fdfbf6; --section:#f6f1e6; --ink:#3a3226; --sub:#8a7d63;
+    --primary:#c9a45c; --blush:#a9bfa0; --deep:#7c6a3f;
+    --accent:#d9e0d0; --line:#e8e0cb; --ondark:#fffdf5;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:#dfe6ea;
+    font-family:'Jost',sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  /* Phone-width column, centered; full-bleed on small screens */
+  .invite{
+    max-width:480px;margin:0 auto;background:var(--page);
+    position:relative;overflow:hidden;
+    box-shadow:0 30px 80px rgba(30,50,70,.18);
+  }
+  h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.12;color:var(--ink);margin:0 0 18px;}
+  .eyebrow{font-family:'Jost',sans-serif;letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:var(--deep);margin-bottom:14px;}
+  section{position:relative;}
+
+  /* ---- Photo placeholder. To use a real photo: set a background-image,
+         e.g. style="background-image:url('me.jpg')" on the .ph element. ---- */
+  .ph{
+    background-color:var(--section);
+    background-image:linear-gradient(135deg,rgba(55,80,94,.05) 25%,transparent 25%,transparent 50%,rgba(55,80,94,.05) 50%,rgba(55,80,94,.05) 75%,transparent 75%);
+    background-size:18px 18px;background-position:center;background-repeat:no-repeat;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ph[style*="url"]{background-size:cover;}
+  .ph span{font-family:'Jost',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);opacity:.8;}
+  .ph[style*="url"] span{display:none;}
+
+  /* ---- HERO ---- */
+  .hero{height:100vh;min-height:640px;max-height:900px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;}
+  .hero-bg{position:absolute;inset:0;transform:scale(1.15);transform-origin:center;will-change:transform;}
+  .hero-wash{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(255,255,255,.30),rgba(255,255,255,.10) 42%,rgba(255,255,255,.58));}
+  .hero-title{position:relative;z-index:3;padding:0 28px;will-change:transform,opacity;}
+  .hero .kicker{letter-spacing:.42em;font-size:11px;text-transform:uppercase;color:var(--ink);opacity:.8;margin-bottom:26px;}
+  .hero .n{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:64px;line-height:1;color:var(--ink);}
+  .hero .amp{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:32px;color:var(--deep);margin:6px 0;}
+  .hero .rule{width:56px;height:1px;background:var(--deep);opacity:.55;margin:28px auto;}
+  .hero .date{letter-spacing:.34em;font-size:13px;text-transform:uppercase;color:var(--ink);}
+  .scrollhint{position:absolute;bottom:30px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .scrollhint .lbl{letter-spacing:.28em;font-size:9px;text-transform:uppercase;color:var(--ink);opacity:.7;}
+  .scrollhint .bar{width:1px;height:22px;background:var(--deep);opacity:.5;animation:nudge 1.8s ease-in-out infinite;}
+
+  .petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2;}
+  .petal{position:absolute;top:-30px;border-radius:82% 0 82% 0;animation:petalFall linear infinite;}
+
+  .waves{position:absolute;bottom:-1px;left:0;width:200%;z-index:2;}
+  .waves path{stroke:none;}
+
+  /* ---- COUNTDOWN ---- */
+  .countdown{background:var(--section);padding:60px 28px 66px;text-align:center;}
+  .clock{display:flex;justify-content:center;gap:14px;}
+  .clock .unit{display:flex;flex-direction:column;gap:6px;min-width:56px;}
+  .clock .num{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:500;color:var(--deep);line-height:1;}
+  .clock .lab{letter-spacing:.2em;font-size:10px;text-transform:uppercase;color:var(--sub);}
+  .clock .sep{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--primary);line-height:1.1;}
+
+  /* ---- STORY ---- */
+  .story{background:var(--page);padding:64px 28px;text-align:center;}
+  .story .frame{width:230px;height:290px;margin:0 auto 26px;border-radius:180px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.10);}
+  .story p{font-weight:300;font-size:15px;line-height:1.85;color:var(--sub);max-width:300px;margin:0 auto;}
+  .story .quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--deep);margin-top:26px;}
+
+  /* ---- GALLERY ---- */
+  .gallery{background:var(--section);padding:60px 24px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:100px;gap:10px;}
+  .grid .ph{border-radius:14px;overflow:hidden;}
+  .tall{grid-row:span 2;}
+
+  /* ---- SCHEDULE ---- */
+  .schedule{background:var(--page);padding:64px 30px;}
+  .row{display:flex;gap:18px;}
+  .row .time{width:66px;text-align:right;font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--deep);padding-top:2px;}
+  .row .body{flex:1;border-left:1px solid var(--line);padding:0 0 30px 20px;position:relative;}
+  .row:last-child .body{border-left:0;padding-bottom:0;}
+  .row .dot{position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--deep);}
+  .row .t{font-family:'Cormorant Garamond',serif;font-size:23px;color:var(--ink);margin-bottom:3px;}
+  .row .d{font-weight:300;font-size:13px;color:var(--sub);}
+
+  /* ---- VENUE ---- */
+  .venue{background:var(--section);padding:60px 28px;text-align:center;}
+  .venue .addr{font-weight:300;font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:22px;}
+  .venue .map{width:100%;height:210px;border-radius:18px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.10);}
+  .btn{display:inline-block;margin-top:24px;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--deep);border:1px solid var(--deep);border-radius:100px;padding:12px 26px;text-decoration:none;}
+
+  /* ---- DRESS ---- */
+  .dress{background:var(--page);padding:62px 28px;text-align:center;}
+  .dress p{font-weight:300;font-size:15px;line-height:1.8;color:var(--sub);max-width:290px;margin:0 auto 28px;}
+  .swatches{display:flex;justify-content:center;gap:14px;}
+  .swatches i{width:42px;height:42px;border-radius:50%;box-shadow:0 6px 16px rgba(0,0,0,.10);display:block;}
+
+  /* ---- FOOTER ---- */
+  .footer{position:relative;background:var(--deep);padding:96px 28px 60px;text-align:center;overflow:hidden;}
+  .footer .waves{top:-1px;bottom:auto;transform:scaleY(-1);height:80px;}
+  .footer .inner{position:relative;z-index:2;}
+  .footer .kick{letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:var(--ondark);opacity:.85;margin-bottom:18px;}
+  .footer .big{font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1.35;color:var(--ondark);margin-bottom:26px;}
+  .footer .names{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:40px;color:var(--ondark);}
+  .footer .rule{width:56px;height:1px;background:var(--ondark);opacity:.4;margin:26px auto;}
+  .footer .date{letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:var(--ondark);opacity:.85;margin-bottom:26px;}
+  .footer .rsvp{display:inline-block;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--deep);background:var(--ondark);border-radius:100px;padding:13px 30px;text-decoration:none;}
+  .footer .tag{font-size:11px;color:var(--ondark);opacity:.7;margin-top:24px;letter-spacing:.1em;}
+
+  /* ---- Reveal on scroll ---- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ---- Motion gate: everything frozen until the first touch ---- */
+  .invite:not(.started) *{animation-play-state:paused !important;}
+  .taphint{position:absolute;left:50%;bottom:88px;transform:translateX(-50%);z-index:5;display:flex;align-items:center;gap:9px;font-family:'Jost',sans-serif;letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:var(--ink);background:rgba(255,255,255,.5);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border:1px solid rgba(255,255,255,.7);border-radius:100px;padding:12px 24px;cursor:pointer;transition:opacity .7s ease,transform .7s ease;}
+  .taphint::before,.taphint::after{content:"";width:14px;height:1px;background:var(--deep);opacity:.5;}
+  .taphint.gone{opacity:0;transform:translateX(-50%) translateY(12px);pointer-events:none;}
+  .invite:not(.started) .scrollhint{opacity:0;}
+  .scrollhint{transition:opacity .6s ease;}
+
+  @keyframes waveA{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @keyframes waveB{from{transform:translateX(-50%);}to{transform:translateX(0);}}
+  @keyframes petalFall{
+    0%{transform:translate(0,-30px) rotate(0);opacity:0;}
+    12%{opacity:.85;}
+    50%{transform:translate(24px,45vh) rotate(140deg);opacity:.7;}
+    100%{transform:translate(-10px,95vh) rotate(280deg);opacity:0;}
+  }
+  @keyframes nudge{0%,100%{transform:translateY(0);opacity:.45;}50%{transform:translateY(7px);opacity:1;}}
+  .footer .waves{animation:waveB 16s linear infinite;}
+</style>
+</head>
+<body>
+<div class="invite">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <!-- To use your own photo, add: style="...url('your-photo.jpg')" to .hero-bg -->
+    <div class="hero-bg ph" id="heroBg"><span>couple / garden photo</span></div>
+    <div class="hero-wash"></div>
+    <div class="petals">
+      <div class="petal" style="left:9%;width:12px;height:16px;background:var(--blush);opacity:.7;animation-duration:12s;"></div>
+      <div class="petal" style="left:24%;width:9px;height:13px;background:var(--primary);opacity:.6;animation-duration:15s;animation-delay:3s;"></div>
+      <div class="petal" style="left:41%;width:14px;height:18px;background:var(--blush);opacity:.65;animation-duration:10s;animation-delay:1.5s;"></div>
+      <div class="petal" style="left:58%;width:10px;height:14px;background:var(--primary);opacity:.55;animation-duration:13s;animation-delay:5s;"></div>
+      <div class="petal" style="left:73%;width:12px;height:16px;background:var(--blush);opacity:.7;animation-duration:11s;animation-delay:2.4s;"></div>
+      <div class="petal" style="left:88%;width:9px;height:12px;background:var(--primary);opacity:.6;animation-duration:14s;animation-delay:6.5s;"></div>
+    </div>
+    <div class="hero-title" id="heroTitle">
+      <div class="kicker">Together with their families</div>
+      <div class="n">Sovatha</div>
+      <div class="amp">and</div>
+      <div class="n">Yousa</div>
+      <div class="rule"></div>
+      <div class="date">23 &middot; 11 &middot; 2026</div>
+    </div>
+    <div class="taphint" id="taphint">Tap to begin</div>
+    <div class="scrollhint"><div class="lbl">Scroll</div><div class="bar"></div></div>
+    <svg class="waves" style="height:130px;animation:waveA 20s linear infinite" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,60 C120,20 240,20 360,60 C480,100 600,100 720,60 C840,20 960,20 1080,60 C1200,100 1320,100 1440,60 L1440,120 L0,120 Z" fill="var(--deep)" opacity="0.30"></path></svg>
+    <svg class="waves" style="height:110px;animation:waveB 15s linear infinite" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,60 C120,20 240,20 360,60 C480,100 600,100 720,60 C840,20 960,20 1080,60 C1200,100 1320,100 1440,60 L1440,120 L0,120 Z" fill="var(--primary)" opacity="0.55"></path></svg>
+    <svg class="waves" style="height:88px;animation:waveA 11s linear infinite" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,70 C120,35 240,35 360,70 C480,105 600,105 720,70 C840,35 960,35 1080,70 C1200,105 1320,105 1440,70 L1440,120 L0,120 Z" fill="var(--section)"></path></svg>
+  </section>
+
+  <!-- ============ COUNTDOWN ============ -->
+  <section class="countdown">
+    <div class="reveal">
+      <div class="eyebrow">The wait begins</div>
+      <h2>Counting down<br>to forever</h2>
+      <div class="clock">
+        <div class="unit"><div class="num" id="cd-d">--</div><div class="lab">Days</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-h">--</div><div class="lab">Hours</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-m">--</div><div class="lab">Mins</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-s">--</div><div class="lab">Secs</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STORY ============ -->
+  <section class="story">
+    <div class="reveal">
+      <div class="eyebrow">Our story</div>
+      <h2>Two roots that<br>grew together</h2>
+      <div class="frame"><div class="ph" style="width:100%;height:100%"><span>your photo</span></div></div>
+      <p>It began in a garden &mdash; a quiet afternoon, sunlight through the leaves, and a conversation that never quite ended. Six years, countless seasons, and one very certain question later, we&rsquo;re ready to say forever.</p>
+      <div class="quote">&ldquo;You are my favorite bloom.&rdquo;</div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="gallery">
+    <div class="reveal" style="text-align:center;margin-bottom:26px">
+      <div class="eyebrow">Moments</div>
+      <h2 style="margin:0">A few of our<br>favorite frames</h2>
+    </div>
+    <div class="reveal grid">
+      <div class="ph tall"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph tall"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SCHEDULE ============ -->
+  <section class="schedule">
+    <div class="reveal" style="text-align:center;margin-bottom:34px">
+      <div class="eyebrow">The day</div>
+      <h2 style="margin:0">Order of the day</h2>
+    </div>
+    <div class="reveal">
+      <div class="row"><div class="time">3:00</div><div class="body"><div class="dot"></div><div class="t">The Ceremony</div><div class="d">Seaside lawn &middot; arrive 15 minutes early</div></div></div>
+      <div class="row"><div class="time">4:30</div><div class="body"><div class="dot"></div><div class="t">Cocktail Hour</div><div class="d">Terrace &middot; drinks among the vines</div></div></div>
+      <div class="row"><div class="time">6:00</div><div class="body"><div class="dot"></div><div class="t">Dinner &amp; Reception</div><div class="d">Grand hall &middot; toasts &amp; feasting</div></div></div>
+      <div class="row"><div class="time">9:00</div><div class="body"><div class="dot"></div><div class="t">First Dance &amp; Party</div><div class="d">Dance under the stars until late</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ VENUE ============ -->
+  <section class="venue">
+    <div class="reveal">
+      <div class="eyebrow">Where</div>
+      <h2 style="margin:0 0 6px">Willowmere Garden Estate</h2>
+      <div class="addr">14 Willow Lane<br>Green Hollow, in the garden</div>
+      <div class="map"><div class="ph" style="width:100%;height:100%"><span>map / venue photo</span></div></div>
+      <a class="btn" href="#">Get directions</a>
+    </div>
+  </section>
+
+  <!-- ============ DRESS ============ -->
+  <section class="dress">
+    <div class="reveal">
+      <div class="eyebrow">Attire</div>
+      <h2 style="margin:0 0 16px">Garden formal</h2>
+      <p>We&rsquo;d love to see you in soft garden tones &mdash; think sage, ivory, gold and blush. Flat or block heels for the lawn.</p>
+      <div class="swatches">
+        <i style="background:var(--primary)"></i>
+        <i style="background:var(--blush)"></i>
+        <i style="background:var(--accent)"></i>
+        <i style="background:var(--deep)"></i>
+        <i style="background:#fff;border:1px solid var(--line);box-shadow:0 6px 16px rgba(0,0,0,.06)"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <section class="footer">
+    <svg class="waves" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,70 C120,35 240,35 360,70 C480,105 600,105 720,70 C840,35 960,35 1080,70 C1200,105 1320,105 1440,70 L1440,120 L0,120 Z" fill="var(--page)"></path></svg>
+    <div class="reveal inner">
+      <div class="kick">With all our love</div>
+      <div class="big">We can&rsquo;t wait to<br>celebrate with you</div>
+      <div class="names">Sovatha &amp; Yousa</div>
+      <div class="rule"></div>
+      <div class="date">23 &middot; 11 &middot; 2026</div>
+      <a class="rsvp" href="#">RSVP by 1 October</a>
+      <div class="tag">#SovathaMeetsYousa</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  (function(){
+    var invite = document.querySelector('.invite');
+
+    // Countdown (shows a static value immediately; only ticks after start)
+    var target = new Date('2026-11-23T15:00:00').getTime();
+    var pad = function(n){ return String(n).padStart(2,'0'); };
+    function render(){
+      var diff = Math.max(0, target - Date.now());
+      var d = Math.floor(diff/86400000); diff -= d*86400000;
+      var h = Math.floor(diff/3600000); diff -= h*3600000;
+      var m = Math.floor(diff/60000); diff -= m*60000;
+      var s = Math.floor(diff/1000);
+      document.getElementById('cd-d').textContent = d;
+      document.getElementById('cd-h').textContent = pad(h);
+      document.getElementById('cd-m').textContent = pad(m);
+      document.getElementById('cd-s').textContent = pad(s);
+    }
+    render();
+
+    // Hero parallax (scroll-driven; harmless before start)
+    var bg = document.getElementById('heroBg');
+    var title = document.getElementById('heroTitle');
+    window.addEventListener('scroll', function(){
+      var y = window.scrollY || window.pageYOffset;
+      if(y < 900){
+        bg.style.transform = 'translateY(' + (y*0.35).toFixed(1) + 'px) scale(1.15)';
+        title.style.transform = 'translateY(' + (y*-0.12).toFixed(1) + 'px)';
+        title.style.opacity = String(Math.max(0, 1 - y/520));
+      }
+    }, { passive:true });
+
+    // Motion gate: nothing animates until the first user interaction
+    var started = false;
+    function start(){
+      if(started) return; started = true;
+      invite.classList.add('started');
+      var hint = document.getElementById('taphint'); if(hint) hint.classList.add('gone');
+      setInterval(render, 1000);
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold:0.14 });
+      document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+    }
+    ['touchstart','pointerdown','click','keydown','wheel'].forEach(function(ev){
+      window.addEventListener(ev, start, { passive:true });
+    });
+  })();
+</script>
+
+<p style="text-align:center; font-size:0.75rem; color:#999; padding:1rem 0; margin:0;">
+  Template © <a href="/" style="color:inherit;">Wedding Templates</a> — licensed for personal use only.
+</p>
+</body>
+</html>

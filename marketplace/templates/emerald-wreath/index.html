@@ -1,0 +1,352 @@
+<!--
+  © Wedding Templates (sovathapann@gmail.com). "Emerald Wreath" template.
+  Licensed for single-event personal use by the purchasing couple only.
+  Redistribution, resale, or reuse of this source as a template for other
+  couples/events is prohibited without written permission. See /LICENSE.md.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovatha &amp; Yousa · 23 Nov 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Mrs+Saint+Delafield&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     PALETTE — swap these values to re-theme the whole invitation.
+     "Emerald Wreath" — soft sage watercolor, botanical wreath frame,
+     gold geometric line accents. Formal stationery feel.
+     ============================================================ */
+  :root{
+    --page:#f4f6f2; --section:#e9eee3; --ink:#2f4a3a; --sub:#6f8570;
+    --primary:#c9a05a; --blush:#9fb79a; --deep:#3f5c48;
+    --accent:#dce4d5; --line:#cfd9c8; --ondark:#f4f6f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:#e3e9dd;
+    font-family:'Jost',sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .invite{
+    max-width:520px;margin:0 auto;background:var(--page);
+    position:relative;overflow:hidden;
+    box-shadow:0 30px 80px rgba(30,50,40,.16);
+  }
+  h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.12;color:var(--ink);margin:0 0 18px;}
+  .eyebrow{font-family:'Jost',sans-serif;letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:var(--deep);margin-bottom:14px;}
+  .caps{letter-spacing:.2em;text-transform:uppercase;}
+  .script{font-family:'Mrs Saint Delafield',cursive;}
+  section{position:relative;}
+
+  /* ---- Photo placeholder ---- */
+  .ph{
+    background-color:var(--section);
+    background-image:linear-gradient(135deg,rgba(63,92,72,.06) 25%,transparent 25%,transparent 50%,rgba(63,92,72,.06) 50%,rgba(63,92,72,.06) 75%,transparent 75%);
+    background-size:18px 18px;background-position:center;background-repeat:no-repeat;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ph[style*="url"]{background-size:cover;}
+  .ph span{font-family:'Jost',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);opacity:.8;}
+  .ph[style*="url"] span{display:none;}
+
+  /* ---- SAVE THE DATE (wreath panel) ---- */
+  .savedate{
+    padding:80px 30px;text-align:center;
+    background:radial-gradient(120% 90% at 50% 0%, #eef2e9 0%, var(--page) 60%);
+  }
+  .wreath{position:relative;width:260px;height:260px;margin:0 auto 8px;}
+  .wreath .leaf{position:absolute;top:50%;left:50%;width:9px;height:20px;margin:-10px 0 0 -4.5px;border-radius:0 100% 0 100%;transform-origin:50% 128px;}
+  .wreath-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .wreath-text .script{font-size:32px;color:var(--primary);line-height:1;}
+  .wreath-text .sub-script{font-family:'Mrs Saint Delafield',cursive;font-size:16px;color:var(--sub);margin-top:6px;}
+  .wreath-text .names{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;letter-spacing:.06em;color:var(--ink);margin-top:14px;}
+  .wreath-text .when{font-size:12px;letter-spacing:.14em;color:var(--sub);margin-top:10px;}
+  .wreath-text .where{font-size:11px;letter-spacing:.14em;color:var(--sub);margin-top:4px;text-transform:uppercase;}
+
+  /* ---- INVITATION DETAILS PANEL ---- */
+  .invitepanel{background:var(--page);padding:70px 34px;text-align:center;}
+  .frame-line{width:100%;height:auto;display:block;}
+  .frame-line--top{margin-bottom:22px;}
+  .frame-line--bottom{margin-top:26px;}
+  .invitepanel .together{font-size:11px;letter-spacing:.24em;color:var(--sub);margin-bottom:16px;}
+  .invitepanel .name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24px;letter-spacing:.08em;color:var(--ink);}
+  .invitepanel .and{font-family:'Mrs Saint Delafield',cursive;font-size:20px;color:var(--sub);margin:4px 0;}
+  .invitepanel .invite-line{font-size:11px;letter-spacing:.2em;color:var(--sub);margin:18px 0 8px;}
+  .invitepanel .celebration{font-family:'Mrs Saint Delafield',cursive;font-size:34px;color:var(--deep);margin:6px 0 18px;}
+  .daterow{display:flex;align-items:center;justify-content:center;gap:14px;font-size:12px;letter-spacing:.14em;color:var(--sub);margin-bottom:20px;}
+  .daterow .big{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--ink);letter-spacing:0;}
+  .daterow .div{width:1px;height:26px;background:var(--line);}
+  .invitepanel .venue{font-size:12px;letter-spacing:.1em;color:var(--sub);line-height:1.9;}
+  .invitepanel .venue strong{color:var(--ink);font-weight:600;}
+  .invitepanel .reception{font-family:'Mrs Saint Delafield',cursive;font-size:22px;color:var(--sub);margin-top:24px;}
+
+  /* ---- COUNTDOWN ---- */
+  .countdown{background:var(--section);padding:60px 28px 66px;text-align:center;}
+  .clock{display:flex;justify-content:center;gap:14px;}
+  .clock .unit{display:flex;flex-direction:column;gap:6px;min-width:56px;}
+  .clock .num{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:500;color:var(--deep);line-height:1;}
+  .clock .lab{letter-spacing:.2em;font-size:10px;text-transform:uppercase;color:var(--sub);}
+  .clock .sep{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--primary);line-height:1.1;}
+
+  /* ---- STORY ---- */
+  .story{background:var(--page);padding:64px 28px;text-align:center;}
+  .story .frame{width:230px;height:290px;margin:0 auto 26px;border-radius:6px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.10);}
+  .story p{font-weight:300;font-size:15px;line-height:1.85;color:var(--sub);max-width:300px;margin:0 auto;}
+  .story .quote{font-family:'Mrs Saint Delafield',cursive;font-size:26px;color:var(--deep);margin-top:20px;}
+
+  /* ---- GALLERY ---- */
+  .gallery{background:var(--section);padding:60px 24px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:100px;gap:10px;}
+  .grid .ph{border-radius:6px;overflow:hidden;}
+  .tall{grid-row:span 2;}
+
+  /* ---- SCHEDULE ---- */
+  .schedule{background:var(--page);padding:64px 30px;}
+  .row{display:flex;gap:18px;}
+  .row .time{width:66px;text-align:right;font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--deep);padding-top:2px;}
+  .row .body{flex:1;border-left:1px solid var(--line);padding:0 0 30px 20px;position:relative;}
+  .row:last-child .body{border-left:0;padding-bottom:0;}
+  .row .dot{position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--deep);}
+  .row .t{font-family:'Cormorant Garamond',serif;font-size:23px;color:var(--ink);margin-bottom:3px;}
+  .row .d{font-weight:300;font-size:13px;color:var(--sub);}
+
+  /* ---- VENUE ---- */
+  .venue-sec{background:var(--section);padding:60px 28px;text-align:center;}
+  .venue-sec .addr{font-weight:300;font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:22px;}
+  .venue-sec .map{width:100%;height:210px;border-radius:6px;overflow:hidden;box-shadow:0 18px 44px rgba(0,0,0,.10);}
+  .btn{display:inline-block;margin-top:24px;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--deep);border:1px solid var(--deep);border-radius:100px;padding:12px 26px;text-decoration:none;}
+
+  /* ---- ATTIRE ---- */
+  .dress{background:var(--page);padding:62px 28px;text-align:center;}
+  .dress p{font-weight:300;font-size:15px;line-height:1.8;color:var(--sub);max-width:290px;margin:0 auto 28px;}
+  .swatches{display:flex;justify-content:center;gap:14px;}
+  .swatches i{width:42px;height:42px;border-radius:50%;box-shadow:0 6px 16px rgba(0,0,0,.10);display:block;}
+
+  /* ---- FOOTER ---- */
+  .footer{position:relative;background:var(--deep);padding:96px 28px 60px;text-align:center;overflow:hidden;}
+  .footer .inner{position:relative;z-index:2;}
+  .footer .kick{letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:var(--ondark);opacity:.85;margin-bottom:18px;}
+  .footer .big{font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1.35;color:var(--ondark);margin-bottom:26px;}
+  .footer .names{font-family:'Mrs Saint Delafield',cursive;font-size:44px;color:var(--ondark);}
+  .footer .rule{width:56px;height:1px;background:var(--ondark);opacity:.4;margin:26px auto;}
+  .footer .date{letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:var(--ondark);opacity:.85;margin-bottom:26px;}
+  .footer .rsvp{display:inline-block;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--deep);background:var(--ondark);border-radius:100px;padding:13px 30px;text-decoration:none;}
+  .footer .tag{font-size:11px;color:var(--ondark);opacity:.7;margin-top:24px;letter-spacing:.1em;}
+
+  /* ---- Reveal on scroll ---- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ---- Motion gate ---- */
+  .invite:not(.started) *{animation-play-state:paused !important;}
+</style>
+</head>
+<body>
+<div class="invite" id="invite">
+
+  <!-- ============ SAVE THE DATE (wreath) ============ -->
+  <section class="savedate reveal">
+    <div class="wreath">
+      <div class="leaf" style="transform:rotate(0deg) translateY(-118px);background:var(--deep);opacity:.85;"></div>
+      <div class="leaf" style="transform:rotate(24deg) translateY(-120px);background:var(--blush);opacity:.8;height:17px;"></div>
+      <div class="leaf" style="transform:rotate(48deg) translateY(-116px);background:var(--deep);opacity:.85;"></div>
+      <div class="leaf" style="transform:rotate(72deg) translateY(-122px);background:var(--blush);opacity:.8;height:18px;"></div>
+      <div class="leaf" style="transform:rotate(96deg) translateY(-118px);background:var(--deep);opacity:.85;"></div>
+      <div class="leaf" style="transform:rotate(120deg) translateY(-120px);background:var(--blush);opacity:.8;height:17px;"></div>
+      <div class="leaf" style="transform:rotate(144deg) translateY(-116px);background:var(--deep);opacity:.85;"></div>
+      <div class="leaf" style="transform:rotate(168deg) translateY(-122px);background:var(--blush);opacity:.8;height:18px;"></div>
+      <div class="leaf" style="transform:rotate(192deg) translateY(-118px);background:var(--deep);opacity:.85;"></div>
+      <div class="leaf" style="transform:rotate(216deg) translateY(-120px);background:var(--blush);opacity:.8;height:17px;"></div>
+      <div class="leaf" style="transform:rotate(240deg) translateY(-116px);background:var(--deep);opacity:.85;"></div>
+      <div class="leaf" style="transform:rotate(264deg) translateY(-122px);background:var(--blush);opacity:.8;height:18px;"></div>
+      <div class="leaf" style="transform:rotate(288deg) translateY(-118px);background:var(--deep);opacity:.85;"></div>
+      <div class="leaf" style="transform:rotate(312deg) translateY(-120px);background:var(--blush);opacity:.8;height:17px;"></div>
+      <div class="leaf" style="transform:rotate(336deg) translateY(-116px);background:var(--deep);opacity:.85;"></div>
+      <div class="wreath-text">
+        <div class="script">Save the Date</div>
+        <div class="sub-script">for the wedding of</div>
+        <div class="names">SOVATHA &amp; YOUSA</div>
+        <div class="when">23 &middot; 11 &middot; 2026</div>
+        <div class="where">Pursat, Cambodia</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INVITATION DETAILS ============ -->
+  <section class="invitepanel reveal">
+    <svg class="frame-line frame-line--top" viewBox="0 0 300 46" preserveAspectRatio="none">
+      <path d="M0,10 L120,10 L155,40" fill="none" stroke="var(--primary)" stroke-width="1"/>
+      <path d="M300,10 L180,10 L155,40" fill="none" stroke="var(--primary)" stroke-width="1"/>
+    </svg>
+
+    <div class="together caps">Together with their families</div>
+    <div class="name caps">Sovatha</div>
+    <div class="and">and</div>
+    <div class="name caps">Yousa</div>
+    <div class="invite-line caps">Invite you to their</div>
+    <div class="celebration">Wedding Celebration</div>
+
+    <div class="daterow">
+      <div class="caps">Saturday</div>
+      <div class="div"></div>
+      <div class="big">23</div>
+      <div class="div"></div>
+      <div class="caps">2&#58;00 PM</div>
+    </div>
+    <div style="font-size:12px;letter-spacing:.14em;color:var(--sub);margin-bottom:22px;">NOVEMBER 2026</div>
+
+    <div class="venue">
+      <strong>Azure Garden Estate</strong><br>
+      14 Willow Lane<br>
+      Pursat, Cambodia
+    </div>
+    <div class="reception">Reception to follow</div>
+
+    <svg class="frame-line frame-line--bottom" viewBox="0 0 300 46" preserveAspectRatio="none">
+      <path d="M0,36 L120,36 L155,6" fill="none" stroke="var(--primary)" stroke-width="1"/>
+      <path d="M300,36 L180,36 L155,6" fill="none" stroke="var(--primary)" stroke-width="1"/>
+    </svg>
+  </section>
+
+  <!-- ============ COUNTDOWN ============ -->
+  <section class="countdown">
+    <div class="reveal">
+      <div class="eyebrow">The wait begins</div>
+      <h2>Counting down<br>to forever</h2>
+      <div class="clock">
+        <div class="unit"><div class="num" id="cd-d">--</div><div class="lab">Days</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-h">--</div><div class="lab">Hours</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-m">--</div><div class="lab">Mins</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-s">--</div><div class="lab">Secs</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STORY ============ -->
+  <section class="story">
+    <div class="reveal">
+      <div class="eyebrow">Our story</div>
+      <h2>Two vines that<br>grew as one</h2>
+      <div class="frame"><div class="ph" style="width:100%;height:100%"><span>your photo</span></div></div>
+      <p>It began quietly &mdash; a shared glance, a slow-blooming friendship, and a conversation that never quite ended. Six years, countless seasons, and one very certain question later, we&rsquo;re ready to say forever.</p>
+      <div class="quote">&ldquo;Rooted in you.&rdquo;</div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="gallery">
+    <div class="reveal" style="text-align:center;margin-bottom:26px">
+      <div class="eyebrow">Moments</div>
+      <h2 style="margin:0">A few of our<br>favorite frames</h2>
+    </div>
+    <div class="reveal grid">
+      <div class="ph tall"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph tall"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SCHEDULE ============ -->
+  <section class="schedule">
+    <div class="reveal" style="text-align:center;margin-bottom:34px">
+      <div class="eyebrow">The day</div>
+      <h2 style="margin:0">Order of the day</h2>
+    </div>
+    <div class="reveal">
+      <div class="row"><div class="time">2:00</div><div class="body"><div class="dot"></div><div class="t">The Ceremony</div><div class="d">Garden lawn &middot; arrive 15 minutes early</div></div></div>
+      <div class="row"><div class="time">3:30</div><div class="body"><div class="dot"></div><div class="t">Cocktail Hour</div><div class="d">Terrace &middot; drinks among the greenery</div></div></div>
+      <div class="row"><div class="time">5:30</div><div class="body"><div class="dot"></div><div class="t">Dinner &amp; Reception</div><div class="d">Grand hall &middot; toasts &amp; feasting</div></div></div>
+      <div class="row"><div class="time">8:30</div><div class="body"><div class="dot"></div><div class="t">First Dance &amp; Party</div><div class="d">Dancing until late</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ VENUE ============ -->
+  <section class="venue-sec">
+    <div class="reveal">
+      <div class="eyebrow">Where</div>
+      <h2 style="margin:0 0 6px">Azure Garden Estate</h2>
+      <div class="addr">14 Willow Lane<br>Pursat, Cambodia</div>
+      <div class="map"><div class="ph" style="width:100%;height:100%"><span>map / venue photo</span></div></div>
+      <a class="btn" href="#">Get directions</a>
+    </div>
+  </section>
+
+  <!-- ============ ATTIRE ============ -->
+  <section class="dress">
+    <div class="reveal">
+      <div class="eyebrow">Attire</div>
+      <h2 style="margin:0 0 16px">Garden formal</h2>
+      <p>We&rsquo;d love to see you in soft greens and gold &mdash; think sage, ivory, moss and champagne. Flat or block heels for the lawn.</p>
+      <div class="swatches">
+        <i style="background:var(--primary)"></i>
+        <i style="background:var(--blush)"></i>
+        <i style="background:var(--accent)"></i>
+        <i style="background:var(--deep)"></i>
+        <i style="background:#fff;border:1px solid var(--line);box-shadow:0 6px 16px rgba(0,0,0,.06)"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <section class="footer">
+    <div class="reveal inner">
+      <div class="kick">With all our love</div>
+      <div class="big">We can&rsquo;t wait to<br>celebrate with you</div>
+      <div class="names">Sovatha &amp; Yousa</div>
+      <div class="rule"></div>
+      <div class="date">23 &middot; 11 &middot; 2026</div>
+      <a class="rsvp" href="#">RSVP by 1 October</a>
+      <div class="tag">#SovathaMeetsYousa</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  (function(){
+    var invite = document.getElementById('invite');
+    invite.classList.add('started');
+
+    // Countdown
+    var target = new Date('2026-11-23T15:00:00').getTime();
+    var pad = function(n){ return String(n).padStart(2,'0'); };
+    function render(){
+      var diff = Math.max(0, target - Date.now());
+      var d = Math.floor(diff/86400000); diff -= d*86400000;
+      var h = Math.floor(diff/3600000); diff -= h*3600000;
+      var m = Math.floor(diff/60000); diff -= m*60000;
+      var s = Math.floor(diff/1000);
+      document.getElementById('cd-d').textContent = d;
+      document.getElementById('cd-h').textContent = pad(h);
+      document.getElementById('cd-m').textContent = pad(m);
+      document.getElementById('cd-s').textContent = pad(s);
+    }
+    render();
+    setInterval(render, 1000);
+
+    // Reveal on scroll
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold:0.14 });
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  })();
+</script>
+
+<p style="text-align:center; font-size:0.75rem; color:#999; padding:1rem 0; margin:0;">
+  Template © <a href="/" style="color:inherit;">Wedding Templates</a> — licensed for personal use only.
+</p>
+</body>
+</html>

@@ -1,0 +1,79 @@
+[
+  {
+    "id": "classic-elegance",
+    "name": "Classic Elegance",
+    "description": "Bilingual invitation with animated hero, gallery, and RSVP form.",
+    "descriptionKm": "ប័ណ្ណអញ្ជើញពីរភាសា មានផ្នែកដើមមានចលនា វិចិត្រសាល និងទម្រង់បញ្ជាក់ការចូលរួម។",
+    "price": "$49",
+    "previewUrl": "/templates/classic-elegance/",
+    "stripePriceId": "price_REPLACE_ME_CLASSIC",
+    "accent": "#d98b9c",
+    "tags": ["classic", "bilingual"]
+  },
+  {
+    "id": "ocean-breeze",
+    "name": "Ocean Breeze",
+    "description": "Soft, garden-inspired layout with a full-bleed hero photo.",
+    "descriptionKm": "រចនាបថទន់ភ្លន់ តាមស្មារតីសួនច្បារ ជាមួយរូបភាពគម្របពេញអេក្រង់។",
+    "price": "$49",
+    "previewUrl": "/templates/ocean-breeze/",
+    "stripePriceId": "price_REPLACE_ME_OCEAN",
+    "accent": "#a9c7dd",
+    "tags": ["garden", "ocean"]
+  },
+  {
+    "id": "golden-botanical",
+    "name": "Golden Botanical",
+    "description": "Warm gold and sage tones with a garden-wedding feel.",
+    "descriptionKm": "ពណ៌មាស និងបៃតងស្រទន់ ផ្តល់អារម្មណ៍អាពាហ៍ពិពាហ៍សួនច្បារ។",
+    "price": "$49",
+    "previewUrl": "/templates/golden-botanical/",
+    "stripePriceId": "price_REPLACE_ME_GOLDEN",
+    "accent": "#c9a45c",
+    "tags": ["garden", "gold"]
+  },
+  {
+    "id": "midnight-romance",
+    "name": "Midnight Romance",
+    "description": "Deep navy and gold, built for an elegant evening affair.",
+    "descriptionKm": "ពណ៌ខៀវចាស់ និងមាស សម្រាប់ពិធីល្ងាចដ៏ថ្លៃថ្នូរ។",
+    "price": "$49",
+    "previewUrl": "/templates/midnight-romance/",
+    "stripePriceId": "price_REPLACE_ME_MIDNIGHT",
+    "accent": "#d4af6a",
+    "tags": ["evening", "formal"]
+  },
+  {
+    "id": "minimalist-mono",
+    "name": "Minimalist Mono",
+    "description": "Black, white, and grey — clean typography, no clutter.",
+    "descriptionKm": "ខ្មៅ ស និងប្រផេះ — អក្សរស្អាតស្អំ គ្មានភាពច្របូកច្របល់។",
+    "price": "$49",
+    "previewUrl": "/templates/minimalist-mono/",
+    "stripePriceId": "price_REPLACE_ME_MONO",
+    "accent": "#111111",
+    "tags": ["minimal"]
+  },
+  {
+    "id": "timeless-journey",
+    "name": "Timeless Journey",
+    "description": "Wide, editorial layout with a full-bleed landscape hero and script headline.",
+    "descriptionKm": "ប្លង់ធំទូលាយ ជាមួយរូបភាពទេសភាពពេញអេក្រង់ និងចំណងជើងជាអក្សរវិចិត្រ។",
+    "price": "$49",
+    "previewUrl": "/templates/timeless-journey/",
+    "stripePriceId": "price_REPLACE_ME_JOURNEY",
+    "accent": "#c9a66b",
+    "tags": ["journey"]
+  },
+  {
+    "id": "emerald-wreath",
+    "name": "Emerald Wreath",
+    "description": "Formal stationery style with a botanical wreath and gold geometric line accents.",
+    "descriptionKm": "រចនាបថផ្លូវការ ជាមួយកម្រងផ្កាឈើ និងបន្ទាត់មាសធរណីមាត្រតុបតែង។",
+    "price": "$49",
+    "previewUrl": "/templates/emerald-wreath/",
+    "stripePriceId": "price_REPLACE_ME_EMERALD",
+    "accent": "#3f5c48",
+    "tags": ["formal", "botanical"]
+  }
+]
