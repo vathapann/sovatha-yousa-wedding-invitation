@@ -4,11 +4,18 @@
    see the "BACKEND" notes to collect data for everyone.
    ═══════════════════════════════════════════════════════════════ */
 
-// EDIT: your wedding date/time (local). Format: YYYY, MM-1, DD, HH, MM
-const WEDDING_DATE = new Date(2026, 10, 22, 16, 0, 0); // 22 Nov 2026, 4:00pm
+// When served at /i/<slug>/ the Worker injects window.INVITE (the couple's
+// config) and the APIs below store RSVPs/wishes in D1. Previews (no INVITE)
+// keep the localStorage fallback so nothing breaks.
+const INVITE = window.INVITE || null;
 
-// EDIT: your shared photo album link (Google Photos / Immich / etc.)
-const ALBUM_URL = 'https://photos.example.com/share/XXXXXXXX';
+// EDIT (preview only): wedding date/time. Live invites use INVITE.dateISO.
+const WEDDING_DATE = INVITE && INVITE.dateISO
+  ? new Date(INVITE.dateISO)
+  : new Date(2026, 10, 22, 16, 0, 0); // 22 Nov 2026, 4:00pm
+
+// EDIT (preview only): shared photo album link. Live invites use INVITE.albumUrl.
+const ALBUM_URL = (INVITE && INVITE.albumUrl) || 'https://photos.example.com/share/XXXXXXXX';
 
 /* ─────────────────────────────────────────────
    Language toggle (EN / KM)
@@ -43,7 +50,11 @@ const GUESTS = {
 function applyGreeting(){
   const el = document.getElementById('greeting');
   if(!el) return;
-  const g = GUESTS[new URLSearchParams(location.search).get('g')];
+  // Live invites: the Worker resolves ?g=<code> against the guest list in D1.
+  const g = INVITE && INVITE.guest
+    ? { en: 'Dear ' + INVITE.guest.nameEn,
+        km: INVITE.guest.nameKm ? 'ជូនចំពោះ ' + INVITE.guest.nameKm : null }
+    : GUESTS[new URLSearchParams(location.search).get('g')];
   if(!g) return;
   el.setAttribute('data-en', g.en);
   el.setAttribute('data-km', g.km || g.en);
@@ -164,11 +175,24 @@ if(rsvpForm) rsvpForm.addEventListener('submit', async (e) => {
   if(!rsvpForm.reportValidity()) return;
   const data = Object.fromEntries(new FormData(rsvpForm).entries());
   try {
-    // await fetch('/api/rsvp', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
-    const saved = JSON.parse(localStorage.getItem('rsvps') || '[]');
-    saved.push({ ...data, at: Date.now() });
-    localStorage.setItem('rsvps', JSON.stringify(saved));
-    console.log('RSVP (stored locally):', data);
+    if(INVITE){
+      await fetch('/api/rsvp', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          slug: INVITE.slug,
+          guestCode: INVITE.guest ? INVITE.guest.code : null,
+          name: data.name || data.who || '',
+          attending: (data.attending || data.attend || 'yes') !== 'no',
+          partySize: data.guests || data.partySize || 1,
+          message: data.message || '',
+        }),
+      });
+    } else {
+      const saved = JSON.parse(localStorage.getItem('rsvps') || '[]');
+      saved.push({ ...data, at: Date.now() });
+      localStorage.setItem('rsvps', JSON.stringify(saved));
+      console.log('RSVP (stored locally):', data);
+    }
   } catch(err){ console.error('RSVP failed', err); }
   rsvpForm.style.display = 'none';
   document.getElementById('rsvpThanks').classList.add('show');
@@ -187,26 +211,48 @@ function loadWishes(){ return JSON.parse(localStorage.getItem('wishes') || '[]')
 function saveWishes(list){ localStorage.setItem('wishes', JSON.stringify(list)); }
 function escapeHTML(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
-function renderWishes(){
-  const list = loadWishes();
+// Live invites read the shared wall from D1 so every guest sees it.
+async function fetchWishes(){
+  try {
+    const res = await fetch('/api/wishes?slug=' + encodeURIComponent(INVITE.slug));
+    const data = await res.json();
+    renderWishList((data.wishes || []).map(w => ({ who: w.who, message: w.message })));
+  } catch(err){ console.error('wishes failed', err); }
+}
+
+function renderWishList(list){
   if(!list.length){
     const empty = currentLang === 'km' ? 'នៅមិនទាន់មានពរ — សូមក្លាយជាអ្នកដំបូង!' : 'No wishes yet — be the first to write one!';
     wishesEl.innerHTML = '<p class="wishes-empty">' + empty + '</p>';
     return;
   }
-  wishesEl.innerHTML = list.slice().reverse().map(w =>
+  wishesEl.innerHTML = list.map(w =>
     '<div class="wish"><p>' + escapeHTML(w.message) + '</p><div class="who">' + escapeHTML(w.who) + '</div></div>'
   ).join('');
 }
 
+function renderWishes(){
+  if(INVITE) return fetchWishes();
+  renderWishList(loadWishes().slice().reverse()); // newest first
+}
+
 if(wishForm){
-  wishForm.addEventListener('submit', (e) => {
+  wishForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if(!wishForm.reportValidity()) return;
     const data = Object.fromEntries(new FormData(wishForm).entries());
-    const list = loadWishes();
-    list.push({ who: data.who.trim(), message: data.message.trim(), at: Date.now() });
-    saveWishes(list);
+    if(INVITE){
+      try {
+        await fetch('/api/wish', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ slug: INVITE.slug, who: data.who.trim(), message: data.message.trim() }),
+        });
+      } catch(err){ console.error('wish failed', err); }
+    } else {
+      const list = loadWishes();
+      list.push({ who: data.who.trim(), message: data.message.trim(), at: Date.now() });
+      saveWishes(list);
+    }
     wishForm.reset();
     renderWishes();
     wishesEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });

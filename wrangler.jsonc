@@ -1,12 +1,25 @@
 {
-  // Cloudflare Worker serving the template marketplace: static storefront +
-  // template previews via assets, plus /api/* checkout routes via the Worker.
-  // Docs: https://developers.cloudflare.com/workers/static-assets/
-  "name": "sovatha-yousa-wedding",
-  "compatibility_date": "2025-01-01",
-  "main": "src/worker.js",
-  "assets": {
-    "directory": "./marketplace",
-    "binding": "ASSETS"
-  }
+	// Cloudflare Worker serving the template marketplace: static storefront +
+	// template previews via assets, plus /api/* checkout routes via the Worker.
+	// Docs: https://developers.cloudflare.com/workers/static-assets/
+	"name": "sovatha-yousa-wedding",
+	"compatibility_date": "2025-01-01",
+	"main": "src/worker.js",
+	"assets": {
+		"directory": "./marketplace",
+		"binding": "ASSETS",
+		// The Worker must see every request so mapped custom domains can serve
+		// an invitation at their root instead of the storefront asset.
+		"run_worker_first": true
+	},
+	// Production schema setup: `npx wrangler d1 migrations apply DB --remote`.
+	// Local dev needs only `npx wrangler d1 migrations apply DB --local`.
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "wedding-invites",
+			"database_id": "95e4e2ae-4698-4571-bc7f-bc217f1fd46a",
+			"migrations_dir": "migrations"
+		}
+	]
 }

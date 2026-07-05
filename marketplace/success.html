@@ -10,10 +10,17 @@
   <header class="store-header">
     <h1>🎉 Payment received!</h1>
     <p>
-      Thank you for your purchase. Reply to your receipt email with your names, wedding date,
-      and venue, and we'll send your customized invitation within 24 hours.
+      Thank you for your purchase. Tell us about your big day and we'll have your
+      invitation live within 24 hours.
     </p>
+    <p><a id="intakeLink" class="intake-cta" href="/intake.html">Fill in your wedding details →</a></p>
     <p><a href="/">Back to templates</a></p>
   </header>
+  <script>
+    // Carry the Stripe session id through to the intake form so the
+    // submission can be matched to this order.
+    var sid = new URLSearchParams(location.search).get('session_id');
+    if (sid) document.getElementById('intakeLink').href = '/intake.html?session_id=' + encodeURIComponent(sid);
+  </script>
 </body>
 </html>

@@ -319,7 +319,7 @@
     invite.classList.add('started');
 
     // Countdown
-    var target = new Date('2026-11-23T15:00:00').getTime();
+    var target = new Date((window.INVITE && window.INVITE.dateISO) || '2026-11-23T15:00:00').getTime();
     var pad = function(n){ return String(n).padStart(2,'0'); };
     function render(){
       var diff = Math.max(0, target - Date.now());

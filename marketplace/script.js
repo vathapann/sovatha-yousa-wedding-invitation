@@ -75,32 +75,11 @@ async function loadCatalog() {
   allTemplates = await fetch("/templates.json").then((res) => res.json());
   renderCatalog();
 
-  document.getElementById("catalog").addEventListener("click", async (event) => {
+  document.getElementById("catalog").addEventListener("click", (event) => {
     const button = event.target.closest(".buy-btn");
     if (!button) return;
-
-    button.disabled = true;
-    button.textContent = t("redirecting");
-
-    try {
-      const response = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ templateId: button.dataset.templateId }),
-      });
-
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
-
-      const { url } = await response.json();
-      window.location.href = url;
-    } catch (err) {
-      console.error(err);
-      alert(t("checkoutError"));
-      button.disabled = false;
-      button.textContent = t("buy");
-    }
+    // Checkout flow: contact + terms → ABA/KHQR payment + slip → intake.
+    window.location.href = `/checkout.html?template=${encodeURIComponent(button.dataset.templateId)}`;
   });
 }
 
@@ -122,7 +101,7 @@ function setupSearchAndChips() {
 
 function setupNavHighlight() {
   const navLinks = document.querySelectorAll(".nav-link");
-  const sections = ["home", "templates", "features", "offer"]
+  const sections = ["home", "templates", "features", "reviews", "offer"]
     .map((id) => document.getElementById(id))
     .filter(Boolean);
 
@@ -169,8 +148,27 @@ function setupLangToggle() {
   });
 }
 
+function setupMobileMenu() {
+  const topbar = document.querySelector(".topbar");
+  const menuBtn = document.getElementById("menuBtn");
+
+  menuBtn.addEventListener("click", () => {
+    const open = topbar.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", String(open));
+  });
+
+  // Navigating closes the menu.
+  topbar.querySelectorAll(".nav-link").forEach((link) => {
+    link.addEventListener("click", () => {
+      topbar.classList.remove("open");
+      menuBtn.setAttribute("aria-expanded", "false");
+    });
+  });
+}
+
 applyStaticTranslations();
 loadCatalog();
 setupSearchAndChips();
 setupNavHighlight();
 setupLangToggle();
+setupMobileMenu();

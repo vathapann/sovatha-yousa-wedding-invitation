@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your wedding details — Wedding Invitation Templates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Jost:wght@300;400;500&family=Noto+Sans+Khmer:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#37505e;--sub:#728a97;--deep:#7fa8c2;--page:#f3f8fb;--line:#d6e3ec;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Jost',sans-serif;background:var(--page);color:var(--ink);}
+    .km{font-family:'Noto Sans Khmer',sans-serif;}
+    .wrap{max-width:560px;margin:0 auto;padding:40px 20px 80px;}
+    h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;margin:0 0 8px;}
+    .sub{color:var(--sub);margin-bottom:30px;line-height:1.6;}
+    form{display:flex;flex-direction:column;gap:16px;}
+    label{display:flex;flex-direction:column;gap:6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);}
+    input,textarea{font-family:'Jost','Noto Sans Khmer',sans-serif;font-size:15px;color:var(--ink);background:#fff;
+      border:1px solid var(--line);border-radius:10px;padding:12px 14px;outline:none;}
+    input:focus,textarea:focus{border-color:var(--deep);}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media (max-width:480px){.row{grid-template-columns:1fr;}}
+    button{margin-top:10px;cursor:pointer;font-family:inherit;letter-spacing:.16em;font-size:12px;text-transform:uppercase;
+      color:#fff;background:var(--deep);border:0;border-radius:100px;padding:15px 28px;}
+    button:disabled{opacity:.6;cursor:default;}
+    .msg{padding:14px 18px;border-radius:12px;line-height:1.6;display:none;}
+    .msg.err{display:block;background:#fdecec;color:#a33;}
+    .msg.ok{display:block;background:#e8f6ec;color:#2c6b3f;}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Tell us about your big day</h1>
+  <p class="sub">We'll use these details to build your invitation and send you the live link
+    within 24 hours. <span class="km">សូមបំពេញព័ត៌មានអំពីពិធីមង្គលការរបស់អ្នក។</span></p>
+
+  <div id="notice" class="msg"></div>
+
+  <form id="intakeForm">
+    <div class="row">
+      <label>Groom's name (English) · ឈ្មោះកូនកំលោះ<input name="coupleA" required maxlength="80" placeholder="Sovatha"></label>
+      <label>Bride's name (English) · ឈ្មោះកូនក្រមុំ<input name="coupleB" required maxlength="80" placeholder="Yousa"></label>
+    </div>
+    <div class="row">
+      <label>Groom's name (Khmer, optional)<input name="coupleAKm" maxlength="80" class="km" placeholder="សុវត្ថា"></label>
+      <label>Bride's name (Khmer, optional)<input name="coupleBKm" maxlength="80" class="km" placeholder="យូសា"></label>
+    </div>
+    <label>Wedding date &amp; time · កាលបរិច្ឆេទ<input name="dateISO" type="datetime-local" required></label>
+    <label>Venue name · ទីកន្លែង<input name="venueName" required maxlength="120" placeholder="Rose Garden Hall"></label>
+    <label>Venue address · អាសយដ្ឋាន<textarea name="venueAddress" rows="2" maxlength="300" placeholder="Street 123&#10;Pursat, Cambodia"></textarea></label>
+    <label>Google Maps link (optional)<input name="mapsUrl" type="url" maxlength="500" placeholder="https://maps.app.goo.gl/…"></label>
+    <label>Wedding hashtag (optional)<input name="hashtag" maxlength="80" placeholder="SovathaMeetsYousa"></label>
+    <label>Your Telegram or phone · តេឡេក្រាម ឬ ទូរស័ព្ទ<input name="contact" required maxlength="120" placeholder="@yourtelegram"></label>
+    <label>Anything else? (photos, music, colors…) · ផ្សេងៗ<textarea name="notes" rows="3" maxlength="2000"></textarea></label>
+    <button type="submit" id="submitBtn">Submit details · ផ្ញើព័ត៌មាន</button>
+  </form>
+</div>
+
+<script>
+(function () {
+  var sid = new URLSearchParams(location.search).get('session_id');
+  var notice = document.getElementById('notice');
+  var form = document.getElementById('intakeForm');
+
+  function show(kind, html) { notice.className = 'msg ' + kind; notice.innerHTML = html; }
+
+  if (!sid) {
+    show('err', 'Missing order reference. Please open this page from the link on your payment confirmation, or contact us on Telegram.');
+    form.style.display = 'none';
+    return;
+  }
+
+  // Confirm the order exists (the Stripe webhook may lag a few seconds).
+  fetch('/api/order?session_id=' + encodeURIComponent(sid))
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      if (!d.found) {
+        show('err', 'We can\'t find your order yet — payment confirmations can take a minute. Please refresh this page shortly.');
+      } else if (d.status === 'pending_payment' || d.status === 'slip_uploaded') {
+        form.style.display = 'none';
+        show('err', 'Your payment hasn\'t been verified yet. <a href="/pay.html?order=' + encodeURIComponent(sid) + '">Go to the payment page</a> — this form unlocks as soon as we confirm your slip.');
+      } else if (d.status !== 'paid') {
+        show('ok', 'We already have your details for this order. Submitting again will update your live invitation.');
+      }
+    })
+    .catch(function () {});
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    var data = Object.fromEntries(new FormData(form).entries());
+    data.orderId = sid;
+    fetch('/api/intake', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) throw new Error(res.d.error || 'Something went wrong');
+        form.style.display = 'none';
+        var d = res.d;
+        show('ok',
+          '🎉 <b>Your invitation is live!</b><br><br>' +
+          '💍 Invitation: <a href="' + d.inviteUrl + '">' + d.inviteUrl + '</a><br>' +
+          '📊 Dashboard: <a href="' + d.dashboardUrl + '">RSVPs &amp; guest links</a><br><br>' +
+          '🔑 Your access code: <b style="font-size:22px;letter-spacing:.2em">' + d.accessCode + '</b><br>' +
+          'Save it! Use it any time at <a href="/my.html">/my.html</a> to find your links again.<br>' +
+          '<span class="km">សូមរក្សាទុកលេខកូដនេះ ដើម្បីចូលមើលប័ណ្ណអញ្ជើញរបស់អ្នកពេលក្រោយ។</span>');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function (err) {
+        btn.disabled = false;
+        show('err', err.message);
+      });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment — Wedding Invitation Templates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Jost:wght@300;400;500&family=Noto+Sans+Khmer:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#37505e;--sub:#728a97;--deep:#7fa8c2;--page:#f3f8fb;--line:#d6e3ec;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Jost','Noto Sans Khmer',sans-serif;background:var(--page);color:var(--ink);}
+    .km{font-family:'Noto Sans Khmer',sans-serif;}
+    .wrap{max-width:520px;margin:0 auto;padding:40px 20px 80px;}
+    h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:32px;margin:0 0 8px;}
+    h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:22px;margin:28px 0 10px;}
+    .sub{color:var(--sub);margin-bottom:26px;line-height:1.6;}
+    .box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px;}
+    .amount{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--deep);}
+    .qr{display:block;max-width:240px;width:100%;margin:14px auto;border-radius:12px;}
+    .acct{text-align:center;letter-spacing:.08em;font-size:14px;}
+    ol{margin:0;padding-left:20px;line-height:1.9;color:var(--sub);font-size:14px;}
+    input[type=file]{width:100%;font-family:inherit;}
+    button{cursor:pointer;font-family:inherit;letter-spacing:.16em;font-size:12px;text-transform:uppercase;
+      color:#fff;background:var(--deep);border:0;border-radius:100px;padding:14px 26px;margin-top:12px;}
+    button:disabled{opacity:.6;cursor:default;}
+    .msg{padding:14px 18px;border-radius:12px;line-height:1.7;display:none;margin-bottom:16px;}
+    .msg.err{display:block;background:#fdecec;color:#a33;}
+    .msg.ok{display:block;background:#e8f6ec;color:#2c6b3f;}
+    .msg.wait{display:block;background:#fff7e6;color:#8a6d1a;}
+    .preview{max-width:180px;border-radius:10px;display:block;margin-top:10px;}
+    a{color:var(--deep);}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Payment</h1>
+  <p class="sub">Step 2 of 3 — pay with ABA / any KHQR banking app, then upload your payment slip.
+    <span class="km">បង់ប្រាក់តាម ABA ឬកម្មវិធីធនាគារ KHQR បន្ទាប់មកបញ្ជូនរូបថតបង្កាន់ដៃ។</span></p>
+
+  <div id="notice" class="msg"></div>
+
+  <div class="box" id="payBox">
+    <div style="text-align:center">Amount · ចំនួន <div class="amount" id="amount">…</div></div>
+    <!-- Replace assets/payment-khqr.png with your own KHQR image, and the
+         account name below with yours. -->
+    <img class="qr" src="/assets/payment-khqr.png" alt="KHQR — scan to pay"
+         onerror="this.style.display='none';document.getElementById('noQr').style.display='block'">
+    <p id="noQr" style="display:none;text-align:center;color:var(--sub)">(KHQR image coming soon — transfer directly to the account below)</p>
+    <div class="acct"><b>SOVATHA PANN</b><br>ABA · scan the KHQR with any bank app</div>
+    <h2>Then upload your payment slip</h2>
+    <ol>
+      <li>Screenshot the payment confirmation in your banking app</li>
+      <li>Upload it here — we verify within a few hours</li>
+    </ol>
+    <input type="file" id="slipFile" accept="image/*" style="margin-top:12px">
+    <img id="slipPreview" class="preview" hidden>
+    <button id="slipBtn">Upload slip · បញ្ជូនបង្កាន់ដៃ</button>
+  </div>
+
+  <div class="box" id="statusBox" hidden>
+    <div id="statusText"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var orderId = new URLSearchParams(location.search).get('order');
+  var notice = document.getElementById('notice');
+  function show(kind, html) { notice.className = 'msg ' + kind; notice.innerHTML = html; }
+
+  if (!orderId) { show('err', 'Missing order reference — please start again from the template page.'); return; }
+
+  // Show the price for the ordered template.
+  Promise.all([
+    fetch('/api/order?session_id=' + encodeURIComponent(orderId)).then(function (r) { return r.json(); }),
+    fetch('/templates.json').then(function (r) { return r.json(); }),
+  ]).then(function (results) {
+    var order = results[0], templates = results[1];
+    if (!order.found) { show('err', 'Order not found — please start again.'); return; }
+    var tpl = templates.find(function (t) { return t.id === order.templateId; });
+    document.getElementById('amount').textContent = tpl ? tpl.price : '';
+    reflectStatus(order.status);
+  });
+
+  function reflectStatus(status) {
+    if (status === 'slip_uploaded') {
+      show('wait', '🧾 Slip received — we\'re verifying your payment. This page will update automatically, and you can safely close it and come back later.');
+      pollUntilPaid();
+    } else if (status === 'paid' || status === 'intake_received' || status === 'published') {
+      document.getElementById('payBox').hidden = true;
+      show('ok', '✅ Payment confirmed! <a href="/intake.html?session_id=' + encodeURIComponent(orderId) + '">Continue to customize your invitation →</a>');
+    }
+  }
+
+  var timer = null;
+  function pollUntilPaid() {
+    if (timer) return;
+    timer = setInterval(function () {
+      fetch('/api/order?session_id=' + encodeURIComponent(orderId))
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d.found && d.status !== 'pending_payment' && d.status !== 'slip_uploaded') {
+            clearInterval(timer);
+            reflectStatus(d.status);
+          }
+        })
+        .catch(function () {});
+    }, 10000);
+  }
+
+  // Downscale the slip client-side so it fits comfortably in the database.
+  document.getElementById('slipFile').addEventListener('change', function () {
+    var f = this.files[0];
+    if (!f) return;
+    var img = document.getElementById('slipPreview');
+    img.src = URL.createObjectURL(f);
+    img.hidden = false;
+  });
+
+  document.getElementById('slipBtn').addEventListener('click', function () {
+    var file = document.getElementById('slipFile').files[0];
+    if (!file) { show('err', 'Please choose your payment screenshot first.'); return; }
+    var btn = this;
+    btn.disabled = true;
+
+    var img = new Image();
+    img.onload = function () {
+      var max = 1200;
+      var scale = Math.min(1, max / Math.max(img.width, img.height));
+      var canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      URL.revokeObjectURL(img.src);
+
+      fetch('/api/orders/slip', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId: orderId,
+          mime: 'image/jpeg',
+          dataB64: dataUrl.split(',')[1],
+        }),
+      })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok) throw new Error(res.d.error || 'Upload failed');
+          reflectStatus('slip_uploaded');
+        })
+        .catch(function (err) { btn.disabled = false; show('err', err.message); });
+    };
+    img.onerror = function () { btn.disabled = false; show('err', 'That file doesn\'t look like an image.'); };
+    img.src = URL.createObjectURL(file);
+  });
+})();
+</script>
+</body>
+</html>

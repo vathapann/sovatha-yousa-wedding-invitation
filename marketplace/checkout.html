@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — Wedding Invitation Templates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Jost:wght@300;400;500&family=Noto+Sans+Khmer:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#37505e;--sub:#728a97;--deep:#7fa8c2;--page:#f3f8fb;--line:#d6e3ec;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Jost','Noto Sans Khmer',sans-serif;background:var(--page);color:var(--ink);}
+    .km{font-family:'Noto Sans Khmer',sans-serif;}
+    .wrap{max-width:520px;margin:0 auto;padding:40px 20px 80px;}
+    h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:32px;margin:0 0 8px;}
+    .sub{color:var(--sub);margin-bottom:26px;line-height:1.6;}
+    .summary{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);
+      border-radius:14px;padding:18px 20px;margin-bottom:24px;}
+    .summary .tpl{font-family:'Cormorant Garamond',serif;font-size:22px;}
+    .summary .tpl a{display:block;font-family:'Jost',sans-serif;font-size:12px;color:var(--deep);margin-top:4px;}
+    .summary .price{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--deep);}
+    form{display:flex;flex-direction:column;gap:16px;}
+    label{display:flex;flex-direction:column;gap:6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);}
+    input{font-family:inherit;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;outline:none;}
+    input:focus{border-color:var(--deep);}
+    .agree{flex-direction:row;align-items:flex-start;gap:10px;text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink);line-height:1.6;}
+    .agree input{width:18px;height:18px;margin-top:2px;accent-color:var(--deep);}
+    .agree a{color:var(--deep);}
+    button{margin-top:10px;cursor:pointer;font-family:inherit;letter-spacing:.16em;font-size:12px;text-transform:uppercase;
+      color:#fff;background:var(--deep);border:0;border-radius:100px;padding:15px 28px;}
+    button:disabled{opacity:.6;cursor:default;}
+    .msg{padding:14px 18px;border-radius:12px;line-height:1.6;display:none;margin-bottom:16px;}
+    .msg.err{display:block;background:#fdecec;color:#a33;}
+    .hint{font-size:12px;letter-spacing:0;text-transform:none;color:var(--sub);}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Checkout</h1>
+  <p class="sub">Step 1 of 3 — your contact &amp; order summary.
+    <span class="km">ជំហានទី១ — ព័ត៌មានទំនាក់ទំនង និងការបញ្ជាទិញ។</span></p>
+
+  <div id="notice" class="msg"></div>
+
+  <div class="summary" id="summary" hidden>
+    <div class="tpl"><span id="tplName"></span><a id="tplPreview" href="#" target="_blank" rel="noopener">Preview this design →</a></div>
+    <div class="price" id="tplPrice"></div>
+  </div>
+
+  <form id="checkoutForm" hidden>
+    <label>Phone number · លេខទូរស័ព្ទ<input name="phone" type="tel" maxlength="40" placeholder="012 345 678">
+      <span class="hint">Phone or email — at least one, so we can send your invitation link.</span></label>
+    <label>Email (optional if phone given)<input name="email" type="email" maxlength="120" placeholder="you@example.com"></label>
+    <label>Wedding date · កាលបរិច្ឆេទរៀបការ<input name="weddingDate" type="date" required></label>
+    <label class="agree"><input type="checkbox" name="agree" required>
+      <span>I agree to the <a href="/terms.html" target="_blank">Terms of Service</a> and
+      <a href="/privacy.html" target="_blank">Privacy Policy</a>.
+      <span class="km">ខ្ញុំយល់ព្រមតាមលក្ខខណ្ឌប្រើប្រាស់ និងគោលការណ៍ឯកជនភាព។</span></span></label>
+    <button type="submit" id="payBtn">Continue to payment · បន្តទៅការទូទាត់</button>
+  </form>
+</div>
+
+<script>
+(function () {
+  var templateId = new URLSearchParams(location.search).get('template');
+  var notice = document.getElementById('notice');
+  var form = document.getElementById('checkoutForm');
+  var template = null;
+
+  function show(kind, text) { notice.className = 'msg ' + kind; notice.textContent = text; }
+
+  fetch('/templates.json')
+    .then(function (r) { return r.json(); })
+    .then(function (templates) {
+      template = templates.find(function (t) { return t.id === templateId; });
+      if (!template) { show('err', 'Template not found — please go back and choose a design.'); return; }
+      document.getElementById('tplName').textContent = template.name;
+      document.getElementById('tplPrice').textContent = template.price;
+      document.getElementById('tplPreview').href = template.previewUrl;
+      document.getElementById('summary').hidden = false;
+      form.hidden = false;
+    })
+    .catch(function () { show('err', 'Could not load the catalog. Please try again.'); });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    var data = Object.fromEntries(new FormData(form).entries());
+    if (!data.phone && !data.email) { show('err', 'Please enter your phone number or email.'); return; }
+
+    var btn = document.getElementById('payBtn');
+    btn.disabled = true;
+    fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        templateId: templateId,
+        phone: data.phone,
+        email: data.email,
+        weddingDate: data.weddingDate,
+        agree: !!data.agree,
+      }),
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) throw new Error(res.d.error || 'Something went wrong');
+        location.href = '/pay.html?order=' + encodeURIComponent(res.d.orderId);
+      })
+      .catch(function (err) { btn.disabled = false; show('err', err.message); });
+  });
+})();
+</script>
+</body>
+</html>

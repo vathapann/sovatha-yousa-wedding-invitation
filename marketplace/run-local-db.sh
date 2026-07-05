@@ -1,0 +1,1 @@
+npx wrangler d1 execute DB --local --command "SELECT * FROM orders;"

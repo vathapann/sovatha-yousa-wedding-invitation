@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My invitation — Wedding Invitation Templates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Jost:wght@300;400;500&family=Noto+Sans+Khmer:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#37505e;--sub:#728a97;--deep:#7fa8c2;--page:#f3f8fb;--line:#d6e3ec;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Jost','Noto Sans Khmer',sans-serif;background:var(--page);color:var(--ink);}
+    .km{font-family:'Noto Sans Khmer',sans-serif;}
+    .wrap{max-width:460px;margin:0 auto;padding:60px 20px 80px;text-align:center;}
+    h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:32px;margin:0 0 8px;}
+    .sub{color:var(--sub);margin-bottom:30px;line-height:1.6;}
+    input{width:100%;text-align:center;font-family:inherit;font-size:22px;letter-spacing:.3em;text-transform:uppercase;
+      color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;outline:none;}
+    input:focus{border-color:var(--deep);}
+    button{cursor:pointer;font-family:inherit;letter-spacing:.16em;font-size:12px;text-transform:uppercase;
+      color:#fff;background:var(--deep);border:0;border-radius:100px;padding:15px 32px;margin-top:16px;}
+    .links{margin-top:26px;display:none;flex-direction:column;gap:12px;}
+    .links a{display:block;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;
+      text-decoration:none;color:var(--deep);font-size:15px;}
+    .err{margin-top:16px;color:#a33;display:none;}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>My invitation</h1>
+  <p class="sub">Enter the access code from your purchase.
+    <span class="km">បញ្ចូលលេខកូដចូលប្រើពីការទិញរបស់អ្នក។</span></p>
+  <input id="code" maxlength="8" placeholder="········" autocomplete="off">
+  <button id="go">Open · បើក</button>
+  <div class="err" id="err"></div>
+  <div class="links" id="links">
+    <a id="inviteLink" href="#">💍 View my invitation</a>
+    <a id="dashLink" href="#">📊 RSVP dashboard &amp; guest links</a>
+  </div>
+</div>
+<script>
+(function () {
+  var err = document.getElementById('err');
+  function lookup() {
+    var code = document.getElementById('code').value.trim().toUpperCase();
+    if (!code) return;
+    err.style.display = 'none';
+    fetch('/api/access?code=' + encodeURIComponent(code))
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d.found || !d.inviteUrl) {
+          err.textContent = 'Code not found — please check it and try again.';
+          err.style.display = 'block';
+          return;
+        }
+        document.getElementById('inviteLink').href = d.inviteUrl;
+        document.getElementById('dashLink').href = d.dashboardUrl;
+        document.getElementById('links').style.display = 'flex';
+      })
+      .catch(function () { err.textContent = 'Something went wrong — try again.'; err.style.display = 'block'; });
+  }
+  document.getElementById('go').addEventListener('click', lookup);
+  document.getElementById('code').addEventListener('keydown', function (e) { if (e.key === 'Enter') lookup(); });
+})();
+</script>
+</body>
+</html>

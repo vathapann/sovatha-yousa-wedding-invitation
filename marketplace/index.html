@@ -6,7 +6,7 @@
   <title>Wedding Invitation Templates — Choose Yours</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&family=Noto+Sans+Khmer:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,700;1,800&family=Noto+Sans+Khmer:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
@@ -15,17 +15,18 @@
     <nav class="topbar">
       <a class="brand" href="#home">Wedding Templates</a>
       <div class="topbar-links">
-        <a href="#home" class="nav-link" data-nav="home" data-en="Home" data-km="ទំព័រដើម">Home</a>
         <a href="#templates" class="nav-link" data-nav="templates" data-en="Templates" data-km="គំរូ">Templates</a>
         <a href="#features" class="nav-link" data-nav="features" data-en="Features" data-km="លក្ខណៈពិសេស">Features</a>
+        <a href="#reviews" class="nav-link" data-nav="reviews" data-en="Reviews" data-km="មតិយោបល់">Reviews</a>
         <a href="#offer" class="nav-link" data-nav="offer" data-en="What We Offer" data-km="អ្វីដែលយើងផ្តល់ជូន">What We Offer</a>
       </div>
       <div class="topbar-actions">
         <button id="langToggle" class="lang-btn" data-en="ខ្មែរ" data-km="English">ខ្មែរ</button>
-        <a class="icon-btn" href="mailto:sovathapann@gmail.com" aria-label="Contact us">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        </a>
+        <a class="icon-btn" href="mailto:sovathapann@gmail.com" aria-label="Contact us">SP</a>
       </div>
+      <button id="menuBtn" class="menu-btn" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </nav>
 
     <header class="hero-block" id="home">
@@ -84,6 +85,57 @@
           <h3 data-en="Mobile-friendly" data-km="ងាយស្រួលប្រើលើទូរស័ព្ទ">Mobile-friendly</h3>
           <p data-en="Every design is responsive, so guests can RSVP from their phones." data-km="រចនាបថទាំងអស់ឆ្លើយតបបានល្អ ដូច្នេះភ្ញៀវអាចបញ្ជាក់ការចូលរួមតាមទូរស័ព្ទ។">Every design is responsive, so guests can RSVP from their phones.</p>
         </div>
+      </div>
+    </section>
+
+    <!-- PLACEHOLDER testimonials — replace the quotes/names below with real
+         couples' reviews as they come in. Layout: dark band, 3-column grid. -->
+    <section id="reviews" class="reviews-section">
+      <p class="reviews-eyebrow" data-en="Happy Couples" data-km="គូស្វាមីភរិយាដែលរីករាយ">Happy Couples</p>
+      <h2 class="reviews-title" data-en="Weddings That Started Here" data-km="អាពាហ៍ពិពាហ៍ដែលចាប់ផ្តើមពីទីនេះ">Weddings That Started Here</h2>
+      <div class="reviews-grid">
+        <article class="review-card">
+          <p class="review-quote" data-en="“Our guests kept asking who designed the invitation. The countdown and music made it feel so alive.”" data-km="“ភ្ញៀវរបស់យើងសួរថាអ្នកណារចនាប័ណ្ណអញ្ជើញនេះ។ ការរាប់ថយក្រោយ និងតន្ត្រីធ្វើឱ្យវាមានជីវិត។”">“Our guests kept asking who designed the invitation. The countdown and music made it feel so alive.”</p>
+          <div class="review-who">
+            <span class="review-avatar">DS</span>
+            <div><b>Dara &amp; Sreymom</b><span class="review-role" data-en="Married Dec 2026" data-km="រៀបការ ធ្នូ 2026">Married Dec 2026</span></div>
+          </div>
+        </article>
+        <article class="review-card">
+          <p class="review-quote" data-en="“We sent one link on Telegram and had 180 RSVPs in three days. No more calling every single guest.”" data-km="“យើងផ្ញើតំណតែមួយតាម Telegram ហើយទទួលបានការឆ្លើយតប 180 ក្នុងបីថ្ងៃ។ លែងត្រូវទូរស័ព្ទទៅភ្ញៀវម្នាក់ៗទៀតហើយ។”">“We sent one link on Telegram and had 180 RSVPs in three days. No more calling every single guest.”</p>
+          <div class="review-who">
+            <span class="review-avatar">VP</span>
+            <div><b>Visal &amp; Pisey</b><span class="review-role" data-en="Married Nov 2026" data-km="រៀបការ វិច្ឆិកា 2026">Married Nov 2026</span></div>
+          </div>
+        </article>
+        <article class="review-card">
+          <p class="review-quote" data-en="“Every guest opened a page with their own name on it. Our elders loved seeing theirs in Khmer.”" data-km="“ភ្ញៀវម្នាក់ៗបើកទំព័រដែលមានឈ្មោះផ្ទាល់ខ្លួន។ ចាស់ទុំរបស់យើងចូលចិត្តឃើញឈ្មោះជាភាសាខ្មែរ។”">“Every guest opened a page with their own name on it. Our elders loved seeing theirs in Khmer.”</p>
+          <div class="review-who">
+            <span class="review-avatar">RC</span>
+            <div><b>Rithy &amp; Chanlina</b><span class="review-role" data-en="Married Jan 2027" data-km="រៀបការ មករា 2027">Married Jan 2027</span></div>
+          </div>
+        </article>
+        <article class="review-card">
+          <p class="review-quote" data-en="“Paid in the morning, filled in our details after lunch, and the invitation was live the same day.”" data-km="“បង់ប្រាក់ពេលព្រឹក បំពេញព័ត៌មានក្រោយអាហារថ្ងៃត្រង់ ហើយប័ណ្ណអញ្ជើញដំណើរការនៅថ្ងៃដដែល។”">“Paid in the morning, filled in our details after lunch, and the invitation was live the same day.”</p>
+          <div class="review-who">
+            <span class="review-avatar">SK</span>
+            <div><b>Sok &amp; Kanha</b><span class="review-role" data-en="Married Feb 2027" data-km="រៀបការ កុម្ភៈ 2027">Married Feb 2027</span></div>
+          </div>
+        </article>
+        <article class="review-card">
+          <p class="review-quote" data-en="“The KHQR gift section was so convenient — relatives abroad could send their blessing in seconds.”" data-km="“ផ្នែកចងដៃ KHQR ងាយស្រួលណាស់ — សាច់ញាតិនៅបរទេសអាចផ្ញើពរជ័យក្នុងប៉ុន្មានវិនាទី។”">“The KHQR gift section was so convenient — relatives abroad could send their blessing in seconds.”</p>
+          <div class="review-who">
+            <span class="review-avatar">MS</span>
+            <div><b>Makara &amp; Sophea</b><span class="review-role" data-en="Married Dec 2026" data-km="រៀបការ ធ្នូ 2026">Married Dec 2026</span></div>
+          </div>
+        </article>
+        <article class="review-card">
+          <p class="review-quote" data-en="“Reading the wishes from friends on our page the morning after the wedding made us cry all over again.”" data-km="“ការអានពរជ័យពីមិត្តភ័ក្តិនៅលើទំព័ររបស់យើងនៅព្រឹកបន្ទាប់ពីអាពាហ៍ពិពាហ៍ ធ្វើឱ្យយើងស្រក់ទឹកភ្នែកម្តងទៀត។”">“Reading the wishes from friends on our page the morning after the wedding made us cry all over again.”</p>
+          <div class="review-who">
+            <span class="review-avatar">TN</span>
+            <div><b>Thida &amp; Nara</b><span class="review-role" data-en="Married Mar 2027" data-km="រៀបការ មីនា 2027">Married Mar 2027</span></div>
+          </div>
+        </article>
       </div>
     </section>
 
