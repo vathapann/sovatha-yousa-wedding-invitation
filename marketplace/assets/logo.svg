@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Mongkol">
+  <!--
+    Mongkol logo — hand-built SVG placeholder (no binary needed, scales cleanly).
+    Palette: gold gradient (#gold), navy #17293b, ivory gown #fffdf6.
+    Tweak freely, or replace this file with a PNG/SVG export of the final art.
+  -->
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e6c87d"/>
+      <stop offset=".5" stop-color="#c9a24a"/>
+      <stop offset="1" stop-color="#a2782c"/>
+    </linearGradient>
+    <style>
+      .wm{ font-family: Georgia, 'Cormorant Garamond', 'Times New Roman', serif;
+           font-weight: 700; fill:#17293b; stroke:url(#gold); stroke-width:2;
+           paint-order:stroke; }
+    </style>
+  </defs>
+
+  <!-- ===== Couple (back view) ===== -->
+  <!-- Groom -->
+  <circle cx="203" cy="72" r="21" fill="url(#gold)"/>
+  <path fill="url(#gold)" d="M176 116 C180 102 226 102 230 116
+    L236 250 C236 261 230 268 221 268 L185 268 C176 268 170 261 170 250 Z"/>
+  <!-- subtle jacket vent -->
+  <path fill="#fffdf6" opacity=".18" d="M201 150 L205 150 L205 266 L201 266 Z"/>
+
+  <!-- Bride -->
+  <circle cx="292" cy="80" r="18" fill="url(#gold)"/>
+  <path fill="url(#gold)" d="M300 66 c15 -5 20 10 7 18 c-7 4 -15 1 -15 1 z"/>
+  <!-- bare shoulders / bodice -->
+  <path fill="url(#gold)" d="M276 108 C280 100 304 100 308 108 L304 158 C295 164 289 164 280 158 Z"/>
+  <!-- gown + train -->
+  <path fill="#fffdf6" stroke="url(#gold)" stroke-width="3" stroke-linejoin="round"
+    d="M283 152 L305 152 C314 190 322 244 338 305
+       C345 328 316 340 292 340 C252 340 231 328 224 308
+       C244 244 262 198 283 152 Z"/>
+
+  <!-- ===== Filigree flourish ===== -->
+  <g fill="none" stroke="url(#gold)" stroke-width="5" stroke-linecap="round">
+    <path id="flL" d="M256 322 C214 308 176 312 150 326
+      C126 338 126 364 148 362 C166 360 168 340 150 342
+      C140 343 138 354 147 358"/>
+    <use href="#flL" transform="matrix(-1 0 0 1 512 0)"/>
+    <line x1="230" y1="330" x2="282" y2="330"/>
+  </g>
+
+  <!-- ===== Wordmark ===== -->
+  <text class="wm" x="256" y="424" text-anchor="middle" font-size="82">Mong</text>
+  <text class="wm" x="256" y="500" text-anchor="middle" font-size="82">Kol</text>
+</svg>

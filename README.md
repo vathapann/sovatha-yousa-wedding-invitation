@@ -34,6 +34,10 @@ Worker serves every couple — no per-couple deploys. Plain previews at
    dashboard link, and an **access code** they can reuse at `my.html`.
 5. **Guests** — the couple uploads their guest list (Excel/CSV) on their own dashboard;
    every guest gets a personal URL like `/i/vibol-srey/sok-dara`.
+6. **Return visits** — "My Invitation" in the nav → `my.html`: the couple enters their
+   access code (remembered in the browser) and gets status-aware links — finish payment,
+   fill intake, or view invitation / dashboard / **edit details** (`edit.html`, backed by
+   `GET|POST /api/my-invite`). Edits go live instantly; the slug and guest links never change.
 
 ### Admin commands
 
@@ -117,7 +121,7 @@ invite URL, dashboard URL, and access code.
   and an `/api/upload` route (planned: shared wedding-day photo sharing).
 - **Pricing tiers** — storefront still lists a flat $49; adjust `templates.json` and the
   pricing section when tiers/custom-domain add-ons are decided.
-- **Customer editor page** — later: a self-serve edit page on top of the config system
-  (same fields as intake, authenticated by access code).
+- **Editor photo/music changes** — the editor (`edit.html`) covers text fields; photo and
+  music swaps still go through Telegram until R2 uploads exist.
 - **Stripe** — kept as an optional card path (`/api/create-checkout-session`); price ids
   are still placeholders and the storefront no longer uses it.

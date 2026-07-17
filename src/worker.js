@@ -30,6 +30,30 @@ export default {
     if (request.method === "GET" && pathname === "/api/access") {
       return accessLookup(env, url);
     }
+    if (request.method === "POST" && pathname === "/api/auth/start") {
+      return authStart(request, env, ctx, url);
+    }
+    if (request.method === "GET" && pathname === "/api/auth/link-status") {
+      return authLinkStatus(request, env, ctx, url);
+    }
+    if (request.method === "POST" && pathname === "/api/auth/verify") {
+      return authVerify(request, env, url);
+    }
+    if (request.method === "GET" && pathname === "/api/auth/me") {
+      return authMe(request, env, url);
+    }
+    if (request.method === "POST" && pathname === "/api/auth/logout") {
+      return authLogout(url);
+    }
+    if (request.method === "POST" && pathname === "/api/tg-webhook") {
+      return tgWebhook(request, env, ctx);
+    }
+    if (request.method === "GET" && pathname === "/api/my-invite") {
+      return myInviteGet(request, env, url);
+    }
+    if (request.method === "POST" && pathname === "/api/my-invite") {
+      return myInvitePost(request, env, ctx, url);
+    }
     if (request.method === "POST" && pathname === "/api/guests") {
       return coupleAddGuests(request, env, url);
     }
@@ -326,10 +350,114 @@ async function uploadSlip(request, env, ctx) {
   ).bind(orderId, mime, dataB64).run();
   await env.DB.prepare("UPDATE orders SET status = 'slip_uploaded' WHERE id = ?").bind(orderId).run();
 
-  notifyTelegram(env, ctx,
-    `🧾 Payment slip uploaded for ${orderId} (${order.template_id}) by ${order.phone || order.email}.\n` +
-    `Verify: curl -X POST <host>/api/admin/verify-payment -H "X-Admin-Key: …" -d '{"orderId":"${orderId}"}'`);
+  // Send the slip to the owner's Telegram with one-tap Approve / Reject buttons.
+  const bytes = Uint8Array.from(atob(dataB64), (c) => c.charCodeAt(0));
+  sendSlipForReview(env, ctx, order, bytes, mime);
   return json({ ok: true });
+}
+
+// Short, human-friendly payment reference derived from the order id — shown to
+// the customer and echoed to the owner, so a slip is easy to match to an order.
+function paymentRef(orderId) {
+  return "MK-" + String(orderId).replace(/[^a-z0-9]/gi, "").slice(-6).toUpperCase();
+}
+
+// Send the uploaded slip photo to the owner with inline Approve / Reject buttons.
+function sendSlipForReview(env, ctx, order, bytes, mime) {
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return;
+  const caption =
+    "🧾 Payment slip — please review\n" +
+    `Order: ${order.id}  (${paymentRef(order.id)})\n` +
+    `Template: ${order.template_id}\n` +
+    `From: ${order.phone || order.email || "—"}`;
+  const form = new FormData();
+  form.append("chat_id", String(env.TELEGRAM_CHAT_ID));
+  form.append("caption", caption);
+  form.append("reply_markup", JSON.stringify({
+    inline_keyboard: [[
+      { text: "✅ Approve", callback_data: `pay:ok:${order.id}` },
+      { text: "❌ Reject", callback_data: `pay:no:${order.id}` },
+    ]],
+  }));
+  form.append("photo", new Blob([bytes], { type: mime || "image/jpeg" }), "slip.jpg");
+  const send = fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+    method: "POST", body: form,
+  }).catch((e) => console.log("Telegram slip send failed:", e));
+  if (ctx) ctx.waitUntil(send);
+}
+
+// Move an order to 'paid' — shared by the admin endpoint and the Telegram button.
+async function markOrderPaid(env, orderId) {
+  const order = await env.DB.prepare("SELECT id, status FROM orders WHERE id = ?").bind(orderId).first();
+  if (!order) return { ok: false, error: "Order not found" };
+  if (!["pending_payment", "slip_uploaded"].includes(order.status)) {
+    return { ok: false, error: `Order is already '${order.status}'` };
+  }
+  await env.DB.prepare("UPDATE orders SET status = 'paid' WHERE id = ?").bind(orderId).run();
+  return { ok: true, orderId, status: "paid" };
+}
+
+// Reject a slip → back to 'pending_payment' so the customer can re-pay / re-upload.
+async function rejectOrderPayment(env, orderId) {
+  const order = await env.DB.prepare("SELECT id, status FROM orders WHERE id = ?").bind(orderId).first();
+  if (!order) return { ok: false, error: "Order not found" };
+  if (!["slip_uploaded", "pending_payment"].includes(order.status)) {
+    return { ok: false, error: `Order is '${order.status}'` };
+  }
+  await env.DB.prepare("UPDATE orders SET status = 'pending_payment' WHERE id = ?").bind(orderId).run();
+  return { ok: true, orderId, status: "pending_payment" };
+}
+
+// One sanitizer for every path that accepts couple-submitted wedding details
+// (intake form and the customer editor), so the field rules can't drift.
+function sanitizeIntake(body) {
+  return {
+    coupleA: String(body.coupleA || "").trim().slice(0, 80),
+    coupleB: String(body.coupleB || "").trim().slice(0, 80),
+    coupleAKm: String(body.coupleAKm || "").trim().slice(0, 80),
+    coupleBKm: String(body.coupleBKm || "").trim().slice(0, 80),
+    dateISO: String(body.dateISO || "").trim().slice(0, 40),
+    venueName: String(body.venueName || "").trim().slice(0, 120),
+    venueAddress: String(body.venueAddress || "").trim().slice(0, 300),
+    mapsUrl: String(body.mapsUrl || "").trim().slice(0, 500),
+    hashtag: String(body.hashtag || "").trim().slice(0, 80),
+    contact: String(body.contact || "").trim().slice(0, 120),
+    notes: String(body.notes || "").trim().slice(0, 2000),
+  };
+}
+
+// Couple's design choices from the editor. Whitelisted so arbitrary CSS/JS
+// can never reach the invitation page.
+function sanitizeStyle(raw) {
+  if (!raw || typeof raw !== "object") return null;
+  const style = {};
+  if (/^#[0-9a-fA-F]{6}$/.test(raw.bg || "")) style.bg = raw.bg.toLowerCase();
+  if (["classic", "romantic", "modern", "royal", "minimal"].includes(raw.fontPair)) {
+    style.fontPair = raw.fontPair;
+  }
+  const fs = parseFloat(raw.fontScale);
+  if (!isNaN(fs)) style.fontScale = Math.min(1.25, Math.max(0.85, fs));
+  return Object.keys(style).length ? style : null;
+}
+
+function deriveDateDisplay(dateISO) {
+  const d = new Date(dateISO);
+  if (isNaN(d)) return null;
+  return `${String(d.getDate()).padStart(2, "0")} · ${String(d.getMonth() + 1).padStart(2, "0")} · ${d.getFullYear()}`;
+}
+
+// Merges new couple-submitted fields into a live invitation's config.
+// The slug never changes — distributed guest links and QRs must keep working.
+async function updateInviteConfig(env, invite, fields) {
+  const config = { ...JSON.parse(invite.config_json), ...fields };
+  delete config.contact;
+  delete config.notes;
+  if (config.dateISO) {
+    config.dateDisplay = deriveDateDisplay(config.dateISO) || config.dateDisplay;
+  }
+  await env.DB.prepare("UPDATE invites SET config_json = ? WHERE slug = ?")
+    .bind(JSON.stringify(config), invite.slug).run();
+  return config;
 }
 
 // Publishes an order's invitation from its intake data (+ overrides) and
@@ -340,10 +468,7 @@ async function publishOrder(env, order, overrides, origin) {
   delete config.contact;
   delete config.notes;
   if (!config.dateDisplay && config.dateISO) {
-    const d = new Date(config.dateISO);
-    if (!isNaN(d)) {
-      config.dateDisplay = `${String(d.getDate()).padStart(2, "0")} · ${String(d.getMonth() + 1).padStart(2, "0")} · ${d.getFullYear()}`;
-    }
+    config.dateDisplay = deriveDateDisplay(config.dateISO);
   }
 
   let slug = slugify(overrides?.slug || `${config.coupleA}-${config.coupleB}`);
@@ -369,27 +494,390 @@ async function publishOrder(env, order, overrides, origin) {
   };
 }
 
-// Customer portal lookup: access code → invitation + dashboard links.
+// Customer portal existence check: access code → order status only.
+// Sensitive links are NOT returned here — they require Telegram OTP (/api/auth/*).
 async function accessLookup(env, url) {
   const code = String(url.searchParams.get("code") || "").trim().toUpperCase();
   if (!code) return json({ error: "Code required" }, 400);
 
   const order = await env.DB.prepare(
-    "SELECT id, status, template_id, access_code FROM orders WHERE access_code = ?"
+    "SELECT id, status FROM orders WHERE access_code = ?"
   ).bind(code).first();
   if (!order) return json({ found: false });
 
+  return json({ found: true, status: order.status, orderId: order.id });
+}
+
+/* ────────────────────────────────────────────────────────────
+   Telegram-OTP login for the customer portal
+   Flow:  access code  →  (link Telegram once)  →  OTP  →  30-day session
+   ──────────────────────────────────────────────────────────── */
+
+// A per-isolate cache of the bot's @username (used to build the t.me deep link).
+let BOT_USERNAME = null;
+async function botUsername(env) {
+  if (BOT_USERNAME) return BOT_USERNAME;
+  if (!env.TELEGRAM_BOT_TOKEN) return null;
+  try {
+    const r = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/getMe`);
+    const d = await r.json();
+    if (d.ok) BOT_USERNAME = d.result.username;
+  } catch { /* leave null — caller handles */ }
+  return BOT_USERNAME;
+}
+
+function clientIp(request) { return request.headers.get("CF-Connecting-IP") || "0.0.0.0"; }
+
+// Fixed-window rate limiter backed by D1. Returns true when the caller is over the limit.
+async function overLimit(env, key, max, windowSec) {
+  const now = Math.floor(Date.now() / 1000);
+  const row = await env.DB.prepare("SELECT count, reset_at FROM auth_throttle WHERE key = ?").bind(key).first();
+  if (!row || row.reset_at < now) {
+    await env.DB.prepare("INSERT OR REPLACE INTO auth_throttle (key, count, reset_at) VALUES (?, 1, ?)")
+      .bind(key, now + windowSec).run();
+    return false;
+  }
+  if (row.count >= max) return true;
+  await env.DB.prepare("UPDATE auth_throttle SET count = count + 1 WHERE key = ?").bind(key).run();
+  return false;
+}
+
+// Session cookie: HMAC-signed "orderId.exp.sig" — no DB row needed.
+function sessionKey(env) { return env.SESSION_SECRET || env.TELEGRAM_BOT_TOKEN || "insecure-dev-key"; }
+
+async function hmacB64(keyStr, msg) {
+  const key = await crypto.subtle.importKey(
+    "raw", new TextEncoder().encode(keyStr), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(msg));
+  return btoa(String.fromCharCode(...new Uint8Array(sig)))
+    .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+const SESSION_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
+
+async function makeSession(env, orderId) {
+  const exp = Math.floor(Date.now() / 1000) + SESSION_MAX_AGE;
+  const payload = `${orderId}.${exp}`;
+  return `${payload}.${await hmacB64(sessionKey(env), payload)}`;
+}
+
+async function readSession(env, request) {
+  const m = (request.headers.get("Cookie") || "").match(/(?:^|;\s*)mi_sess=([^;]+)/);
+  if (!m) return null;
+  const parts = decodeURIComponent(m[1]).split(".");
+  if (parts.length !== 3) return null;
+  const [orderId, exp, sig] = parts;
+  if (Number(exp) < Math.floor(Date.now() / 1000)) return null;
+  const good = await hmacB64(sessionKey(env), `${orderId}.${exp}`);
+  return good === sig ? orderId : null;
+}
+
+// `Secure` only over https — otherwise browsers won't set/clear the cookie on
+// a local http dev server, which breaks sign-in and sign-out during testing.
+function cookieSecure(url) { return url && url.protocol === "https:" ? "; Secure" : ""; }
+function sessionCookie(token, url) {
+  return `mi_sess=${encodeURIComponent(token)}; HttpOnly${cookieSecure(url)}; SameSite=Lax; Path=/; Max-Age=${SESSION_MAX_AGE}`;
+}
+function clearSessionCookie(url) {
+  return `mi_sess=; HttpOnly${cookieSecure(url)}; SameSite=Lax; Path=/; Max-Age=0`;
+}
+function jsonCookie(data, cookie, status = 200) {
+  const headers = { "Content-Type": "application/json", "Cache-Control": "no-store" };
+  if (cookie) headers["Set-Cookie"] = cookie;
+  return new Response(JSON.stringify(data), { status, headers });
+}
+
+async function sha256Hex(s) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+function otpHash(env, orderId, otp) { return sha256Hex(`${orderId}:${otp}:${sessionKey(env)}`); }
+
+async function sendTelegram(env, chatId, text) {
+  if (!env.TELEGRAM_BOT_TOKEN) return false;
+  try {
+    const r = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text }),
+    });
+    return r.ok;
+  } catch { return false; }
+}
+
+// Create + store + deliver a 6-digit OTP to a linked order. Reuses a code < 30s old.
+async function issueOtp(env, order) {
+  const now = Math.floor(Date.now() / 1000);
+  const existing = await env.DB.prepare("SELECT sent_at FROM auth_otps WHERE order_id = ?").bind(order.id).first();
+  if (existing && now - existing.sent_at < 30) return true; // just sent one — don't spam
+  const otp = String(crypto.getRandomValues(new Uint32Array(1))[0] % 1000000).padStart(6, "0");
+  await env.DB.prepare(
+    "INSERT OR REPLACE INTO auth_otps (order_id, code_hash, expires_at, attempts, sent_at) VALUES (?, ?, ?, 0, ?)"
+  ).bind(order.id, await otpHash(env, order.id, otp), now + 300, now).run();
+  return sendTelegram(env, order.tg_chat_id,
+    `🔐 Your My-Invitation login code is: ${otp}\n\nIt expires in 5 minutes. If you didn't request it, you can ignore this message.`);
+}
+
+// Build the status-appropriate portal links for a signed-in order.
+async function portalLinks(env, url, orderId) {
+  const order = await env.DB.prepare("SELECT id, status FROM orders WHERE id = ?").bind(orderId).first();
+  if (!order) return { status: null };
   const invite = await env.DB.prepare(
     "SELECT slug, dash_key FROM invites WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
-  ).bind(order.id).first();
-
-  return json({
-    found: true,
+  ).bind(orderId).first();
+  return {
     status: order.status,
-    templateId: order.template_id,
+    orderId: order.id,
     inviteUrl: invite ? `${url.origin}/i/${invite.slug}/` : null,
     dashboardUrl: invite ? `${url.origin}/dash/${invite.slug}?key=${invite.dash_key}` : null,
+  };
+}
+
+// POST /api/auth/start { code } → { step:"otp" } (linked) or { step:"link", linkUrl } (needs linking)
+async function authStart(request, env, ctx, url) {
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "Bad JSON" }, 400); }
+  const code = String(body.code || "").trim().toUpperCase();
+  if (!code) return json({ error: "Code required" }, 400);
+
+  if (await overLimit(env, `start:ip:${clientIp(request)}`, 12, 600)) {
+    return json({ error: "Too many attempts — please wait a few minutes and try again." }, 429);
+  }
+
+  const order = await env.DB.prepare(
+    "SELECT id, status, tg_chat_id FROM orders WHERE access_code = ?"
+  ).bind(code).first();
+  if (!order) return json({ found: false, error: "Code not found — please check it and try again." }, 404);
+
+  if (!env.TELEGRAM_BOT_TOKEN) {
+    return json({ error: "Sign-in is temporarily unavailable. Please contact us on Telegram." }, 503);
+  }
+
+  if (order.tg_chat_id) {
+    if (await overLimit(env, `otp:${order.id}`, 5, 600)) {
+      return json({ error: "Too many code requests — please wait a few minutes." }, 429);
+    }
+    if (!(await issueOtp(env, order))) {
+      return json({ error: "Couldn't send your code via Telegram. Please contact us." }, 502);
+    }
+    return json({ step: "otp", orderId: order.id });
+  }
+
+  // Not linked yet — mint a one-time token for the t.me deep link.
+  const token = randHex(16);
+  await env.DB.prepare("UPDATE orders SET link_token = ? WHERE id = ?").bind(token, order.id).run();
+  const uname = await botUsername(env);
+  return json({
+    step: "link",
+    orderId: order.id,
+    botUsername: uname,
+    linkToken: token,
+    linkUrl: uname ? `https://t.me/${uname}?start=${token}` : null,
   });
+}
+
+// GET /api/auth/link-status?token=... → polled after the user opens Telegram.
+// Once the webhook has captured their chat_id, this sends the OTP.
+async function authLinkStatus(request, env, ctx, url) {
+  const token = String(url.searchParams.get("token") || "");
+  if (!token) return json({ error: "token required" }, 400);
+  const order = await env.DB.prepare(
+    "SELECT id, status, tg_chat_id FROM orders WHERE link_token = ?"
+  ).bind(token).first();
+  if (!order) return json({ linked: false, found: false });
+  if (!order.tg_chat_id) return json({ linked: false });
+  if (!(await overLimit(env, `otp:${order.id}`, 5, 600))) await issueOtp(env, order);
+  return json({ linked: true, orderId: order.id });
+}
+
+// POST /api/auth/verify { orderId, otp } → sets the session cookie + returns links.
+async function authVerify(request, env, url) {
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "Bad JSON" }, 400); }
+  const orderId = String(body.orderId || "");
+  const otp = String(body.otp || "").trim();
+  if (!orderId || !otp) return json({ error: "Enter the 6-digit code." }, 400);
+
+  const row = await env.DB.prepare(
+    "SELECT code_hash, expires_at, attempts FROM auth_otps WHERE order_id = ?"
+  ).bind(orderId).first();
+  if (!row) return json({ error: "No active code — request a new one." }, 400);
+  const now = Math.floor(Date.now() / 1000);
+  if (row.expires_at < now) {
+    await env.DB.prepare("DELETE FROM auth_otps WHERE order_id = ?").bind(orderId).run();
+    return json({ error: "That code expired — request a new one." }, 400);
+  }
+  if (row.attempts >= 5) {
+    await env.DB.prepare("DELETE FROM auth_otps WHERE order_id = ?").bind(orderId).run();
+    return json({ error: "Too many wrong tries — request a new code." }, 429);
+  }
+  if ((await otpHash(env, orderId, otp)) !== row.code_hash) {
+    await env.DB.prepare("UPDATE auth_otps SET attempts = attempts + 1 WHERE order_id = ?").bind(orderId).run();
+    return json({ error: "Incorrect code — please try again." }, 401);
+  }
+
+  await env.DB.prepare("DELETE FROM auth_otps WHERE order_id = ?").bind(orderId).run();
+  await env.DB.prepare("UPDATE orders SET link_token = NULL WHERE id = ?").bind(orderId).run();
+  const links = await portalLinks(env, url, orderId);
+  return jsonCookie(Object.assign({ ok: true }, links), sessionCookie(await makeSession(env, orderId), url));
+}
+
+// GET /api/auth/me → links for the current session (returning visitors skip the code).
+async function authMe(request, env, url) {
+  const orderId = await readSession(env, request);
+  const body = orderId ? Object.assign({ ok: true }, await portalLinks(env, url, orderId)) : { ok: false };
+  return new Response(JSON.stringify(body), {
+    status: orderId ? 200 : 401,
+    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
+  });
+}
+
+// POST /api/auth/logout
+function authLogout(url) { return jsonCookie({ ok: true }, clearSessionCookie(url)); }
+
+// POST /api/tg-webhook — Telegram delivers updates here. Handles /start <token> linking.
+async function tgWebhook(request, env, ctx) {
+  if (env.TELEGRAM_WEBHOOK_SECRET &&
+      request.headers.get("X-Telegram-Bot-Api-Secret-Token") !== env.TELEGRAM_WEBHOOK_SECRET) {
+    return new Response("forbidden", { status: 403 });
+  }
+  let update;
+  try { update = await request.json(); } catch { return json({ ok: true }); }
+
+  // Owner tapped an inline Approve / Reject button on a payment slip.
+  if (update.callback_query) {
+    return handlePaymentDecision(env, ctx, update.callback_query);
+  }
+
+  const msg = update.message || update.edited_message;
+  const chatId = msg && msg.chat ? msg.chat.id : null;
+  const text = msg && msg.text ? msg.text.trim() : "";
+
+  if (chatId && text.startsWith("/start")) {
+    const payload = text.split(/\s+/)[1];
+    if (payload) {
+      const order = await env.DB.prepare(
+        "SELECT id, tg_chat_id FROM orders WHERE link_token = ?"
+      ).bind(payload).first();
+      if (order && !order.tg_chat_id) {
+        await env.DB.prepare("UPDATE orders SET tg_chat_id = ? WHERE id = ?").bind(String(chatId), order.id).run();
+        ctx.waitUntil(sendTelegram(env, chatId,
+          "✅ Linked! Your login codes will be sent here. Head back to the website and continue."));
+        return json({ ok: true });
+      }
+      if (order && order.tg_chat_id) {
+        ctx.waitUntil(sendTelegram(env, chatId, "This invitation is already linked to a Telegram account."));
+        return json({ ok: true });
+      }
+    }
+    ctx.waitUntil(sendTelegram(env, chatId,
+      "👋 Welcome! To connect your invitation, tap the “Connect Telegram” button on the My-Invitation page."));
+  }
+  return json({ ok: true });
+}
+
+// Handle the owner's Approve / Reject tap on a slip review message.
+async function handlePaymentDecision(env, ctx, cq) {
+  const answer = (t) => tgAnswerCallback(env, cq.id, t);
+
+  // Only the configured owner chat may approve/reject payments.
+  if (!env.TELEGRAM_CHAT_ID || String(cq.from && cq.from.id) !== String(env.TELEGRAM_CHAT_ID)) {
+    ctx.waitUntil(answer("Not authorized."));
+    return json({ ok: true });
+  }
+
+  const m = String(cq.data || "").match(/^pay:(ok|no):(.+)$/);
+  if (!m) { ctx.waitUntil(answer("")); return json({ ok: true }); }
+  const [, action, orderId] = m;
+
+  const result = action === "ok"
+    ? await markOrderPaid(env, orderId)
+    : await rejectOrderPayment(env, orderId);
+  const label = action === "ok" ? "✅ Approved" : "❌ Rejected";
+  const toast = result.ok ? label : (result.error || "Failed");
+  ctx.waitUntil(answer(toast));
+
+  // Reflect the outcome on the message and remove the buttons.
+  if (cq.message) {
+    const base = cq.message.caption || cq.message.text || "";
+    const stamp = new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";
+    const line = result.ok ? `${label} · ${stamp}` : `⚠️ ${toast}`;
+    ctx.waitUntil(tgEditCaption(env, cq.message.chat.id, cq.message.message_id, `${base}\n\n${line}`));
+  }
+  return json({ ok: true });
+}
+
+function tgAnswerCallback(env, callbackId, text) {
+  return fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ callback_query_id: callbackId, text: text || "" }),
+  }).catch(() => {});
+}
+
+// Edit a photo message's caption and clear its inline keyboard.
+function tgEditCaption(env, chatId, messageId, caption) {
+  return fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/editMessageCaption`, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chatId, message_id: messageId, caption,
+      reply_markup: { inline_keyboard: [] },
+    }),
+  }).catch(() => {});
+}
+
+// Customer editor: resolve an order id to its order + latest invite.
+async function orderById(env, orderId) {
+  if (!orderId) return {};
+  const order = await env.DB.prepare(
+    "SELECT id, status, template_id, access_code, intake_json FROM orders WHERE id = ?"
+  ).bind(orderId).first();
+  if (!order) return {};
+  const invite = await env.DB.prepare(
+    "SELECT slug, dash_key, config_json FROM invites WHERE order_id = ? ORDER BY created_at DESC LIMIT 1"
+  ).bind(order.id).first();
+  return { order, invite };
+}
+
+// GET /api/my-invite — current details for the editor page (session-authenticated).
+async function myInviteGet(request, env, url) {
+  const orderId = await readSession(env, request);
+  if (!orderId) return json({ error: "Please sign in again." }, 401);
+  const { order, invite } = await orderById(env, orderId);
+  if (!order || !invite) return json({ error: "Invitation not found" }, 404);
+  return json({
+    ok: true,
+    status: order.status,
+    templateId: order.template_id,
+    config: JSON.parse(invite.config_json),
+    inviteUrl: `${url.origin}/i/${invite.slug}/`,
+    dashboardUrl: `${url.origin}/dash/${invite.slug}?key=${invite.dash_key}`,
+  });
+}
+
+// POST /api/my-invite — couple edits their live invitation (session-authenticated).
+async function myInvitePost(request, env, ctx, url) {
+  const orderId = await readSession(env, request);
+  if (!orderId) return json({ error: "Please sign in again." }, 401);
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "Bad JSON" }, 400); }
+
+  const { order, invite } = await orderById(env, orderId);
+  if (!order || !invite) return json({ error: "Invitation not found" }, 404);
+
+  const fields = sanitizeIntake(body);
+  if (!fields.coupleA || !fields.coupleB || !fields.dateISO) {
+    return json({ error: "Both names and the wedding date are required" }, 400);
+  }
+  // Always overwrite: an empty style means "back to template defaults".
+  fields.style = sanitizeStyle(body.style) || {};
+
+  await updateInviteConfig(env, invite, fields);
+  await env.DB.prepare("UPDATE orders SET intake_json = ? WHERE id = ?")
+    .bind(JSON.stringify(fields), order.id).run();
+
+  notifyTelegram(env, ctx,
+    `✏️ Couple edited ${invite.slug}: ${fields.coupleA} & ${fields.coupleB} — ${fields.dateISO}\n${fields.venueName}`);
+
+  return json({ ok: true, inviteUrl: `${url.origin}/i/${invite.slug}/` });
 }
 
 // Shared guest-list insert (admin API + couple dashboard upload).
@@ -530,19 +1018,7 @@ async function handleIntake(request, env, ctx) {
     return json({ error: "Your payment hasn't been confirmed yet — we verify slips within a few hours. Please try again soon." }, 403);
   }
 
-  const intake = {
-    coupleA: String(body.coupleA || "").trim().slice(0, 80),
-    coupleB: String(body.coupleB || "").trim().slice(0, 80),
-    coupleAKm: String(body.coupleAKm || "").trim().slice(0, 80),
-    coupleBKm: String(body.coupleBKm || "").trim().slice(0, 80),
-    dateISO: String(body.dateISO || "").trim().slice(0, 40),
-    venueName: String(body.venueName || "").trim().slice(0, 120),
-    venueAddress: String(body.venueAddress || "").trim().slice(0, 300),
-    mapsUrl: String(body.mapsUrl || "").trim().slice(0, 500),
-    hashtag: String(body.hashtag || "").trim().slice(0, 80),
-    contact: String(body.contact || "").trim().slice(0, 120),
-    notes: String(body.notes || "").trim().slice(0, 2000),
-  };
+  const intake = sanitizeIntake(body);
   if (!intake.coupleA || !intake.coupleB || !intake.dateISO) {
     return json({ error: "Both names and the wedding date are required" }, 400);
   }
@@ -558,12 +1034,7 @@ async function handleIntake(request, env, ctx) {
   const origin = new URL(request.url).origin;
   let result;
   if (existing) {
-    const prev = JSON.parse(existing.config_json);
-    const config = { ...prev, ...intake };
-    delete config.contact;
-    delete config.notes;
-    await env.DB.prepare("UPDATE invites SET config_json = ? WHERE slug = ?")
-      .bind(JSON.stringify(config), existing.slug).run();
+    await updateInviteConfig(env, existing, intake);
     await env.DB.prepare("UPDATE orders SET status = 'published' WHERE id = ?").bind(orderId).run();
     result = {
       slug: existing.slug,
@@ -612,14 +1083,8 @@ async function handleAdmin(request, env, url) {
   if (request.method === "POST" && url.pathname === "/api/admin/verify-payment") {
     let body;
     try { body = await request.json(); } catch { return json({ error: "Bad JSON" }, 400); }
-    const order = await env.DB.prepare("SELECT id, status FROM orders WHERE id = ?")
-      .bind(String(body.orderId || "")).first();
-    if (!order) return json({ error: "Order not found" }, 404);
-    if (!["pending_payment", "slip_uploaded"].includes(order.status)) {
-      return json({ error: `Order is already '${order.status}'` }, 400);
-    }
-    await env.DB.prepare("UPDATE orders SET status = 'paid' WHERE id = ?").bind(order.id).run();
-    return json({ ok: true, orderId: order.id, status: "paid" });
+    const res = await markOrderPaid(env, String(body.orderId || ""));
+    return res.ok ? json(res) : json({ error: res.error }, 400);
   }
 
   // View an uploaded payment slip: /api/admin/slip?orderId=…

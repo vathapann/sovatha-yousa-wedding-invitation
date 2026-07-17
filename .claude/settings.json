@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.ababank.com)",
+      "WebFetch(domain:www.payway.com.kh)"
+    ]
+  }
+}

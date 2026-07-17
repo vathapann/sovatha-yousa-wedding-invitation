@@ -39,6 +39,94 @@
     else fn();
   }
 
+  /* ── Couple's design choices (background, fonts, text size) ──
+       Overrides the template's neutral vars only — accent colors
+       (--primary, --deep, --accent, --gold…) are left untouched.
+       NOTE: must be assigned before ready() runs — ready() executes
+       synchronously in deferred scripts and reads FONT_PAIRS. ── */
+  var FONT_PAIRS = {
+    classic: null, // template default
+    romantic: {
+      css: 'Great+Vibes&family=Cormorant+Garamond:wght@400;500',
+      heading: '"Great Vibes", cursive',
+      body: '"Cormorant Garamond", serif',
+    },
+    modern: {
+      css: 'Playfair+Display:wght@500;600&family=Montserrat:wght@300;400;500',
+      heading: '"Playfair Display", serif',
+      body: '"Montserrat", sans-serif',
+    },
+    royal: {
+      css: 'Cinzel:wght@400;500&family=EB+Garamond:wght@400;500',
+      heading: '"Cinzel", serif',
+      body: '"EB Garamond", serif',
+    },
+    minimal: {
+      css: 'Montserrat:wght@300;400;500;600',
+      heading: '"Montserrat", sans-serif',
+      body: '"Montserrat", sans-serif',
+    },
+  };
+
+  function hexShade(hex, amount) {
+    var m = /^#([0-9a-f]{6})$/i.exec(hex || '');
+    if (!m) return hex;
+    var n = parseInt(m[1], 16);
+    var r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    function adj(v) { return Math.max(0, Math.min(255, Math.round(v + amount * 255))); }
+    return '#' + ((adj(r) << 16) | (adj(g) << 8) | adj(b)).toString(16).padStart(6, '0');
+  }
+
+  function applyCustomStyle(style) {
+    if (!style) return;
+    var css = '';
+
+    if (/^#[0-9a-f]{6}$/i.test(style.bg || '')) {
+      var section = hexShade(style.bg, -0.045);
+      css += ':root{--page:' + style.bg + ';--section:' + section + ';}' +
+        '.invite{background:' + style.bg + ';}';
+    }
+
+    var pair = FONT_PAIRS[style.fontPair];
+    if (pair) {
+      var id = 'ivFontPair';
+      var link = document.getElementById(id);
+      var href = 'https://fonts.googleapis.com/css2?family=' + pair.css + '&display=swap';
+      if (!link) {
+        link = document.createElement('link');
+        link.id = id;
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+      }
+      if (link.href !== href) link.href = href;
+      css += 'body,.invite,p,input,textarea,button{font-family:' + pair.body + ',sans-serif;}' +
+        'h1,h2,h3,.n,.names,.amp,.script,.quote,.big,.num,.time,.t,.iv-h2,.hero-date,.when' +
+        '{font-family:' + pair.heading + ' !important;}';
+    }
+
+    var fs = parseFloat(style.fontScale);
+    if (fs && fs >= 0.85 && fs <= 1.25 && fs !== 1) {
+      css += ':root{--ivfs:' + fs + ';}' +
+        'h2,.iv-h2{font-size:calc(34px*var(--ivfs)) !important;}' +
+        '.hero .n{font-size:calc(64px*var(--ivfs)) !important;}' +
+        '.footer .names{font-size:calc(40px*var(--ivfs)) !important;}' +
+        '.footer .big{font-size:calc(30px*var(--ivfs)) !important;}' +
+        '.story p,.dress p,.venue .addr,.row .d,.iv-note' +
+        '{font-size:calc(15px*var(--ivfs)) !important;}' +
+        '.row .t{font-size:calc(23px*var(--ivfs)) !important;}' +
+        '.story .quote{font-size:calc(20px*var(--ivfs)) !important;}' +
+        '.clock .num{font-size:calc(42px*var(--ivfs)) !important;}';
+    }
+
+    var el = document.getElementById('ivStyleOverride');
+    if (!el) {
+      el = document.createElement('style');
+      el.id = 'ivStyleOverride';
+      document.head.appendChild(el);
+    }
+    el.textContent = css;
+  }
+
   ready(function () {
     if (!isClassic) hydrateText();
     injectStyles();
@@ -47,6 +135,14 @@
     injectGiftSection();
     injectActionBar();
     pointRsvpLinks();
+    applyCustomStyle(INV.style);
+  });
+
+  // Live preview from the couple's editor (edit.html embeds the invitation
+  // in an iframe and posts style changes as they tweak the controls).
+  window.addEventListener('message', function (e) {
+    if (e.origin !== location.origin) return;
+    if (e.data && e.data.type === 'invitePreviewStyle') applyCustomStyle(e.data.style);
   });
 
   /* ── Text hydration (names, dates, venue) ─────────────────── */

@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My invitation — Wedding Invitation Templates</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Jost:wght@300;400;500&family=Noto+Sans+Khmer:wght@400&display=swap" rel="stylesheet">
+  <script defer src="/site-header.js"></script>
   <style>
-    :root{--ink:#37505e;--sub:#728a97;--deep:#7fa8c2;--page:#f3f8fb;--line:#d6e3ec;}
+    :root{--ink:#3a2e2a;--sub:#8a7a72;--gold:#c9a45c;--page:#fbf6f1;--line:#ecdfd4;}
     *{box-sizing:border-box}
     body{margin:0;font-family:'Jost','Noto Sans Khmer',sans-serif;background:var(--page);color:var(--ink);}
     .km{font-family:'Noto Sans Khmer',sans-serif;}
@@ -15,51 +16,170 @@
     .sub{color:var(--sub);margin-bottom:30px;line-height:1.6;}
     input{width:100%;text-align:center;font-family:inherit;font-size:22px;letter-spacing:.3em;text-transform:uppercase;
       color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;outline:none;}
-    input:focus{border-color:var(--deep);}
+    input:focus{border-color:var(--gold);}
     button{cursor:pointer;font-family:inherit;letter-spacing:.16em;font-size:12px;text-transform:uppercase;
-      color:#fff;background:var(--deep);border:0;border-radius:100px;padding:15px 32px;margin-top:16px;}
+      color:#fff;background:var(--gold);border:0;border-radius:100px;padding:15px 32px;margin-top:16px;}
     .links{margin-top:26px;display:none;flex-direction:column;gap:12px;}
     .links a{display:block;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;
-      text-decoration:none;color:var(--deep);font-size:15px;}
+      text-decoration:none;color:var(--ink);font-size:15px;box-shadow:0 8px 24px rgba(58,46,42,.06);}
+    .links a b{color:var(--gold);}
     .err{margin-top:16px;color:#a33;display:none;}
+    .signout{margin-top:26px;display:none;background:none;border:none;color:var(--sub);font-size:12px;
+      letter-spacing:.08em;text-transform:uppercase;text-decoration:underline;cursor:pointer;padding:0;}
+    .home{display:inline-block;margin-top:34px;color:var(--sub);font-size:13px;}
+    .muted{color:var(--sub);font-size:13px;line-height:1.7;margin:14px 0;}
+    .tg-btn{display:inline-block;background:#2aabee;color:#fff;text-decoration:none;border-radius:100px;
+      padding:14px 30px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin-top:6px;}
+    #otp{letter-spacing:.5em;}
+    .linklike{background:none;border:none;color:var(--sub);text-decoration:underline;font-size:12px;
+      letter-spacing:.06em;text-transform:uppercase;cursor:pointer;margin-top:12px;padding:0;display:block;
+      width:100%;}
   </style>
 </head>
 <body>
 <div class="wrap">
   <h1>My invitation</h1>
-  <p class="sub">Enter the access code from your purchase.
+  <p class="sub" id="intro">Enter the access code from your purchase.
     <span class="km">បញ្ចូលលេខកូដចូលប្រើពីការទិញរបស់អ្នក។</span></p>
-  <input id="code" maxlength="8" placeholder="········" autocomplete="off">
-  <button id="go">Open · បើក</button>
-  <div class="err" id="err"></div>
-  <div class="links" id="links">
-    <a id="inviteLink" href="#">💍 View my invitation</a>
-    <a id="dashLink" href="#">📊 RSVP dashboard &amp; guest links</a>
+  <div id="loginBox">
+    <input id="code" maxlength="8" placeholder="········" autocomplete="off">
+    <button id="go">Open · បើក</button>
   </div>
+
+  <div id="linkBox" style="display:none">
+    <p class="muted">One-time step: connect Telegram so we can send you a secure login code.
+      <span class="km">ភ្ជាប់ Telegram ដើម្បីទទួលលេខកូដចូលដោយសុវត្ថិភាព។</span></p>
+    <a id="linkBtn" class="tg-btn" target="_blank" rel="noopener">Connect Telegram</a>
+    <p id="linkWait" class="muted">Waiting for you to press <b>Start</b> in Telegram…</p>
+  </div>
+
+  <div id="otpBox" style="display:none">
+    <p class="muted">We sent a 6-digit code to your Telegram. Enter it below.
+      <span class="km">យើងបានផ្ញើលេខកូដ ៦ ខ្ទង់ទៅ Telegram របស់អ្នក។</span></p>
+    <input id="otp" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="······">
+    <button id="verify">Verify · បញ្ជាក់</button>
+    <button class="linklike" id="resend">Resend code · ផ្ញើម្តងទៀត</button>
+  </div>
+
+  <div class="err" id="err"></div>
+  <div class="links" id="links"></div>
+  <button class="signout" id="signout">Sign out · ចាកចេញ</button>
+  <a class="home" href="/">← Back to templates · ត្រឡប់ទៅគំរូ</a>
 </div>
 <script>
 (function () {
-  var err = document.getElementById('err');
-  function lookup() {
-    var code = document.getElementById('code').value.trim().toUpperCase();
-    if (!code) return;
-    err.style.display = 'none';
-    fetch('/api/access?code=' + encodeURIComponent(code))
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        if (!d.found || !d.inviteUrl) {
-          err.textContent = 'Code not found — please check it and try again.';
-          err.style.display = 'block';
-          return;
-        }
-        document.getElementById('inviteLink').href = d.inviteUrl;
-        document.getElementById('dashLink').href = d.dashboardUrl;
-        document.getElementById('links').style.display = 'flex';
-      })
-      .catch(function () { err.textContent = 'Something went wrong — try again.'; err.style.display = 'block'; });
+  var $ = function (id) { return document.getElementById(id); };
+  var err = $('err'), links = $('links'), signout = $('signout');
+  var loginBox = $('loginBox'), linkBox = $('linkBox'), otpBox = $('otpBox');
+  var currentOrderId = null, lastCode = null, linkToken = null, linkTimer = null;
+
+  function stopPolling() { if (linkTimer) { clearInterval(linkTimer); linkTimer = null; } }
+  function hideAll() {
+    loginBox.style.display = linkBox.style.display = otpBox.style.display = 'none';
+    links.style.display = signout.style.display = err.style.display = 'none';
+    stopPolling();
   }
-  document.getElementById('go').addEventListener('click', lookup);
-  document.getElementById('code').addEventListener('keydown', function (e) { if (e.key === 'Enter') lookup(); });
+  function showErr(msg) { err.textContent = msg; err.style.display = msg ? 'block' : 'none'; }
+
+  function showLogin() { hideAll(); loginBox.style.display = 'block'; $('code').value = ''; }
+  function showOtp() { hideAll(); otpBox.style.display = 'block'; $('otp').value = ''; $('otp').focus(); }
+
+  function card(href, html) { return '<a href="' + href + '">' + html + '</a>'; }
+
+  function renderLinks(d) {
+    hideAll();
+    signout.style.display = 'inline-block';
+    var items = [];
+    if (d.status === 'pending_payment' || d.status === 'slip_uploaded') {
+      items.push(card('/pay.html?order=' + encodeURIComponent(d.orderId || ''),
+        '💳 <b>Finish your payment</b><br>បញ្ចប់ការទូទាត់របស់អ្នក'));
+    } else if (d.status === 'paid') {
+      items.push(card('/intake.html?session_id=' + encodeURIComponent(d.orderId || ''),
+        '📝 <b>Fill in your wedding details</b><br>បំពេញព័ត៌មានពិធីមង្គលការ'));
+    } else {
+      items.push(card(d.inviteUrl, '💍 <b>View my invitation</b><br>មើលប័ណ្ណអញ្ជើញរបស់ខ្ញុំ'));
+      items.push(card(d.dashboardUrl, '📊 <b>RSVP dashboard &amp; guest links</b><br>ផ្ទាំង RSVP និងតំណភ្ញៀវ'));
+      items.push(card('/edit.html', '✏️ <b>Edit details</b><br>កែសម្រួលព័ត៌មាន'));
+    }
+    links.innerHTML = items.join('');
+    links.style.display = 'flex';
+  }
+
+  function api(path, opts) {
+    return fetch(path, opts).then(function (r) {
+      return r.json().then(function (d) { return { ok: r.ok, d: d }; });
+    });
+  }
+
+  function start(code) {
+    if (!code) return;
+    lastCode = code;
+    var btn = $('go'); btn.disabled = true;
+    api('/api/auth/start', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code }),
+    }).then(function (res) {
+      btn.disabled = false;
+      if (!res.ok) { showLogin(); showErr(res.d.error || 'Something went wrong.'); return; }
+      currentOrderId = res.d.orderId;
+      if (res.d.step === 'otp') showOtp();
+      else if (res.d.step === 'link') showLink(res.d);
+    }).catch(function () { btn.disabled = false; showLogin(); showErr('Something went wrong — try again.'); });
+  }
+
+  function showLink(d) {
+    hideAll();
+    linkBox.style.display = 'block';
+    linkToken = d.linkToken;
+    if (d.linkUrl) $('linkBtn').href = d.linkUrl;
+    else showErr('Telegram isn’t configured yet — please contact us.');
+    linkTimer = setInterval(function () {
+      api('/api/auth/link-status?token=' + encodeURIComponent(linkToken)).then(function (res) {
+        if (res.d && res.d.linked) { stopPolling(); showOtp(); }
+      }).catch(function () {});
+    }, 2500);
+  }
+
+  function verify() {
+    var otp = $('otp').value.trim();
+    if (!otp) return;
+    var btn = $('verify'); btn.disabled = true;
+    api('/api/auth/verify', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId: currentOrderId, otp: otp }),
+    }).then(function (res) {
+      btn.disabled = false;
+      if (!res.ok) { showErr(res.d.error || 'Incorrect code.'); return; }
+      renderLinks(res.d);
+    }).catch(function () { btn.disabled = false; showErr('Something went wrong — try again.'); });
+  }
+
+  function resend() {
+    if (!lastCode) return;
+    showErr('');
+    api('/api/auth/start', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: lastCode }),
+    }).then(function (res) {
+      if (!res.ok) showErr(res.d.error || 'Please wait before requesting another code.');
+      else if (res.d.step === 'otp') showErr('A new code was sent to your Telegram.');
+    });
+  }
+
+  $('go').addEventListener('click', function () { start($('code').value.trim().toUpperCase()); });
+  $('code').addEventListener('keydown', function (e) { if (e.key === 'Enter') start(e.target.value.trim().toUpperCase()); });
+  $('verify').addEventListener('click', verify);
+  $('otp').addEventListener('keydown', function (e) { if (e.key === 'Enter') verify(); });
+  $('resend').addEventListener('click', resend);
+  signout.addEventListener('click', function () {
+    api('/api/auth/logout', { method: 'POST' }).then(showLogin).catch(showLogin);
+  });
+
+  // Returning visitors with a valid session skip straight to their links.
+  api('/api/auth/me').then(function (res) {
+    if (res.ok && res.d.ok) renderLinks(res.d);
+    else showLogin();
+  }).catch(showLogin);
 })();
 </script>
 </body>

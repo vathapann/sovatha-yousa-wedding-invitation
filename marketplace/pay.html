@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Payment — Wedding Invitation Templates</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Jost:wght@300;400;500&family=Noto+Sans+Khmer:wght@400&display=swap" rel="stylesheet">
+  <script defer src="/steps.js" data-step="2"></script>
   <style>
-    :root{--ink:#37505e;--sub:#728a97;--deep:#7fa8c2;--page:#f3f8fb;--line:#d6e3ec;}
+    :root{--ink:#37505e;--sub:#728a97;--deep:#7fa8c2;--page:#f3f8fb;--line:#d6e3ec;--tint:#e6eff5;}
     *{box-sizing:border-box}
     body{margin:0;font-family:'Jost','Noto Sans Khmer',sans-serif;background:var(--page);color:var(--ink);}
     .km{font-family:'Noto Sans Khmer',sans-serif;}
@@ -34,7 +35,7 @@
 <body>
 <div class="wrap">
   <h1>Payment</h1>
-  <p class="sub">Step 2 of 3 — pay with ABA / any KHQR banking app, then upload your payment slip.
+  <p class="sub">Pay with ABA / any KHQR banking app, then upload your payment slip.
     <span class="km">បង់ប្រាក់តាម ABA ឬកម្មវិធីធនាគារ KHQR បន្ទាប់មកបញ្ជូនរូបថតបង្កាន់ដៃ។</span></p>
 
   <div id="notice" class="msg"></div>
@@ -47,6 +48,8 @@
          onerror="this.style.display='none';document.getElementById('noQr').style.display='block'">
     <p id="noQr" style="display:none;text-align:center;color:var(--sub)">(KHQR image coming soon — transfer directly to the account below)</p>
     <div class="acct"><b>SOVATHA PANN</b><br>ABA · scan the KHQR with any bank app</div>
+    <p class="acct" style="margin-top:12px">Payment reference · លេខយោង៖ <b id="payRef">—</b>
+      <br><span style="font-size:12px;color:var(--sub)">Add this in your transfer note if your app allows — it helps us match your payment.</span></p>
     <h2>Then upload your payment slip</h2>
     <ol>
       <li>Screenshot the payment confirmation in your banking app</li>
@@ -69,6 +72,10 @@
   function show(kind, html) { notice.className = 'msg ' + kind; notice.innerHTML = html; }
 
   if (!orderId) { show('err', 'Missing order reference — please start again from the template page.'); return; }
+
+  // Show the same short reference the owner sees, so a payment is easy to match.
+  document.getElementById('payRef').textContent =
+    'MK-' + orderId.replace(/[^a-z0-9]/gi, '').slice(-6).toUpperCase();
 
   // Show the price for the ordered template.
   Promise.all([

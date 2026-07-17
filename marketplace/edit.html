@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit my invitation — Wedding Invitation Templates</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Jost:wght@300;400;500&family=Noto+Sans+Khmer:wght@400&display=swap" rel="stylesheet">
+  <script defer src="/site-header.js"></script>
+  <style>
+    :root{--ink:#3a2e2a;--sub:#8a7a72;--gold:#c9a45c;--page:#fbf6f1;--line:#ecdfd4;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Jost','Noto Sans Khmer',sans-serif;background:var(--page);color:var(--ink);}
+    .km{font-family:'Noto Sans Khmer',sans-serif;}
+    .wrap{max-width:560px;margin:0 auto;padding:40px 20px 80px;}
+    h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:32px;margin:0 0 8px;}
+    .sub{color:var(--sub);margin-bottom:26px;line-height:1.7;}
+    form{display:flex;flex-direction:column;gap:16px;}
+    label{display:flex;flex-direction:column;gap:6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);}
+    input,textarea{font-family:'Jost','Noto Sans Khmer',sans-serif;font-size:15px;color:var(--ink);background:#fff;
+      border:1px solid var(--line);border-radius:10px;padding:12px 14px;outline:none;}
+    input:focus,textarea:focus{border-color:var(--gold);}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @media (max-width:480px){.row{grid-template-columns:1fr;}}
+    button{margin-top:10px;cursor:pointer;font-family:inherit;letter-spacing:.16em;font-size:12px;text-transform:uppercase;
+      color:#fff;background:var(--gold);border:0;border-radius:100px;padding:15px 28px;}
+    button:disabled{opacity:.6;cursor:default;}
+    .msg{padding:14px 18px;border-radius:12px;line-height:1.7;display:none;margin-bottom:16px;}
+    .msg.err{display:block;background:#fdecec;color:#a33;}
+    .msg.ok{display:block;background:#e8f6ec;color:#2c6b3f;}
+    .note{background:#faf3e8;border:1px solid var(--line);border-radius:12px;padding:12px 16px;
+      font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:20px;}
+    a{color:var(--gold);}
+    .back{display:inline-block;margin-bottom:20px;color:var(--sub);font-size:13px;text-decoration:none;}
+    .design-h{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:24px;margin:26px 0 0;}
+    .design-sub{margin:0 0 4px;color:var(--sub);font-size:13px;line-height:1.7;}
+    .swatches{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .swatch{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);cursor:pointer;padding:0;
+      color:var(--sub);font-size:14px;background:#fff;}
+    .swatch.active{outline:3px solid var(--gold);outline-offset:2px;}
+    #bgCustom{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;padding:2px;background:#fff;cursor:pointer;}
+    select{font-family:inherit;font-size:15px;color:var(--ink);background:#fff;border:1px solid var(--line);
+      border-radius:10px;padding:12px 14px;outline:none;}
+    select:focus{border-color:var(--gold);}
+    input[type=range]{padding:0;border:none;accent-color:var(--gold);background:transparent;}
+    .preview-wrap{margin-top:34px;}
+    .preview-label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);margin-bottom:10px;}
+    #preview{width:100%;height:640px;border:1px solid var(--line);border-radius:16px;background:#fff;}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="/my.html">← My invitation · ប័ណ្ណរបស់ខ្ញុំ</a>
+  <h1>Edit your invitation</h1>
+  <p class="sub">Changes go live immediately — your link and guest links stay the same.
+    <span class="km">ការកែប្រែមានប្រសិទ្ធភាពភ្លាមៗ — តំណរបស់អ្នកមិនផ្លាស់ប្តូរទេ។</span></p>
+
+  <div id="notice" class="msg"></div>
+
+  <form id="editForm" hidden>
+    <div class="note">📷 To change photos or music, message us on Telegram —
+      we'll update them for you. <span class="km">ដើម្បីប្តូររូបភាព ឬតន្ត្រី សូមផ្ញើសារតាម Telegram។</span></div>
+    <div class="row">
+      <label>Groom's name (English)<input name="coupleA" required maxlength="80"></label>
+      <label>Bride's name (English)<input name="coupleB" required maxlength="80"></label>
+    </div>
+    <div class="row">
+      <label>Groom's name (Khmer)<input name="coupleAKm" maxlength="80" class="km"></label>
+      <label>Bride's name (Khmer)<input name="coupleBKm" maxlength="80" class="km"></label>
+    </div>
+    <label>Wedding date &amp; time · កាលបរិច្ឆេទ<input name="dateISO" type="datetime-local" required></label>
+    <label>Venue name · ទីកន្លែង<input name="venueName" required maxlength="120"></label>
+    <label>Venue address · អាសយដ្ឋាន<textarea name="venueAddress" rows="2" maxlength="300"></textarea></label>
+    <label>Google Maps link<input name="mapsUrl" type="url" maxlength="500"></label>
+    <label>Wedding hashtag<input name="hashtag" maxlength="80"></label>
+
+    <h2 class="design-h">Design · រចនា</h2>
+    <p class="design-sub">Personalize the look — the template's accent colors stay.
+      <span class="km">កែសម្រួលរូបរាង — ពណ៌សំខាន់របស់គំរូនៅដដែល។</span></p>
+
+    <label>Background · ផ្ទៃខាងក្រោយ</label>
+    <div class="swatches" id="bgSwatches">
+      <button type="button" class="swatch default active" data-bg="" title="Template default">✕</button>
+      <button type="button" class="swatch" data-bg="#fbf6f1" style="background:#fbf6f1"></button>
+      <button type="button" class="swatch" data-bg="#fdf1f2" style="background:#fdf1f2"></button>
+      <button type="button" class="swatch" data-bg="#f1f6ef" style="background:#f1f6ef"></button>
+      <button type="button" class="swatch" data-bg="#f0f6fa" style="background:#f0f6fa"></button>
+      <button type="button" class="swatch" data-bg="#f7f1e6" style="background:#f7f1e6"></button>
+      <button type="button" class="swatch" data-bg="#f7f7f9" style="background:#f7f7f9"></button>
+      <input type="color" id="bgCustom" value="#fbf6f1" title="Custom color">
+    </div>
+
+    <label>Font style · ពុម្ពអក្សរ
+      <select id="fontPair">
+        <option value="classic">Classic — template default</option>
+        <option value="romantic">Romantic — script headings</option>
+        <option value="modern">Modern — Playfair &amp; Montserrat</option>
+        <option value="royal">Royal — Cinzel &amp; Garamond</option>
+        <option value="minimal">Minimal — clean sans-serif</option>
+      </select>
+    </label>
+
+    <label>Text size · ទំហំអក្សរ — <span id="fsVal">100%</span>
+      <input type="range" id="fontScale" min="0.85" max="1.25" step="0.05" value="1">
+    </label>
+
+    <button type="submit" id="saveBtn">Save changes · រក្សាទុក</button>
+  </form>
+
+  <div class="preview-wrap" id="previewWrap" hidden>
+    <div class="preview-label">Live preview · មើលជាមុន — changes apply as you adjust</div>
+    <iframe id="preview" title="Invitation preview"></iframe>
+  </div>
+</div>
+
+<script>
+(function () {
+  var notice = document.getElementById('notice');
+  var form = document.getElementById('editForm');
+
+  function show(kind, html) { notice.className = 'msg ' + kind; notice.innerHTML = html; }
+
+  // Couple's design choices, kept in sync with the controls + live preview.
+  var style = {};
+  var previewFrame = document.getElementById('preview');
+
+  function pushPreview() {
+    if (previewFrame.contentWindow) {
+      previewFrame.contentWindow.postMessage({ type: 'invitePreviewStyle', style: style }, location.origin);
+    }
+  }
+
+  function markSwatch(bg) {
+    document.querySelectorAll('.swatch').forEach(function (s) {
+      s.classList.toggle('active', (s.dataset.bg || '') === (bg || ''));
+    });
+  }
+
+  fetch('/api/my-invite')
+    .then(function (r) { if (r.status === 401) { location.href = '/my.html'; return null; } return r.json(); })
+    .then(function (d) {
+      if (!d) return;
+      if (!d.ok) {
+        show('err', 'Please go back to <a href="/my.html">My invitation</a> and sign in again.');
+        return;
+      }
+      var c = d.config || {};
+      ['coupleA', 'coupleB', 'coupleAKm', 'coupleBKm', 'dateISO', 'venueName', 'venueAddress', 'mapsUrl', 'hashtag']
+        .forEach(function (k) { if (form.elements[k] && c[k]) form.elements[k].value = c[k]; });
+
+      style = c.style || {};
+      if (style.bg) markSwatch(style.bg);
+      if (style.fontPair) document.getElementById('fontPair').value = style.fontPair;
+      if (style.fontScale) {
+        document.getElementById('fontScale').value = style.fontScale;
+        document.getElementById('fsVal').textContent = Math.round(style.fontScale * 100) + '%';
+      }
+
+      previewFrame.src = d.inviteUrl;
+      document.getElementById('previewWrap').hidden = false;
+      form.hidden = false;
+    })
+    .catch(function () { show('err', 'Could not load your invitation — please try again.'); });
+
+  document.getElementById('bgSwatches').addEventListener('click', function (e) {
+    var sw = e.target.closest('.swatch');
+    if (!sw) return;
+    style.bg = sw.dataset.bg || undefined;
+    markSwatch(style.bg);
+    pushPreview();
+  });
+  document.getElementById('bgCustom').addEventListener('input', function () {
+    style.bg = this.value;
+    markSwatch(null);
+    pushPreview();
+  });
+  document.getElementById('fontPair').addEventListener('change', function () {
+    style.fontPair = this.value === 'classic' ? undefined : this.value;
+    pushPreview();
+  });
+  document.getElementById('fontScale').addEventListener('input', function () {
+    var v = parseFloat(this.value);
+    style.fontScale = v === 1 ? undefined : v;
+    document.getElementById('fsVal').textContent = Math.round(v * 100) + '%';
+    pushPreview();
+  });
+  // The invitation loads async — re-send the saved style once it's ready.
+  previewFrame.addEventListener('load', function () { setTimeout(pushPreview, 300); });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    var btn = document.getElementById('saveBtn');
+    btn.disabled = true;
+    var data = Object.fromEntries(new FormData(form).entries());
+    data.style = style;
+    fetch('/api/my-invite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
+      .then(function (res) {
+        btn.disabled = false;
+        if (res.status === 401) { location.href = '/my.html'; return; }
+        if (!res.ok) throw new Error(res.d.error || 'Something went wrong');
+        show('ok', '✅ Your changes are live! <a href="' + res.d.inviteUrl + '">View your invitation →</a>' +
+          '<br><span class="km">ការកែប្រែរបស់អ្នកដំណើរការហើយ!</span>');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function (err) { btn.disabled = false; show('err', err.message); });
+  });
+})();
+</script>
+</body>
+</html>
