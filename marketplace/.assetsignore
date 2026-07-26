@@ -1,0 +1,6 @@
+# Files under ./marketplace that must NOT be uploaded as public static assets.
+# (Cloudflare Workers assets honor this like a .gitignore.)
+.wrangler/
+.dev.vars
+.DS_Store
+run-*.sh

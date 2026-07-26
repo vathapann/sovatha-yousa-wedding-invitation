@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Mongkol">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Weditation">
   <!--
-    Mongkol logo — hand-built SVG placeholder (no binary needed, scales cleanly).
+    Weditation logo — hand-built SVG placeholder (no binary needed, scales cleanly).
     Palette: gold gradient (#gold), navy #17293b, ivory gown #fffdf6.
     Tweak freely, or replace this file with a PNG/SVG export of the final art.
   -->
@@ -46,6 +46,5 @@
   </g>
 
   <!-- ===== Wordmark ===== -->
-  <text class="wm" x="256" y="424" text-anchor="middle" font-size="82">Mong</text>
-  <text class="wm" x="256" y="500" text-anchor="middle" font-size="82">Kol</text>
+  <text class="wm" x="256" y="452" text-anchor="middle" font-size="66" letter-spacing="1">Weditation</text>
 </svg>

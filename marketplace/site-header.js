@@ -23,7 +23,7 @@
   ready(function () {
     var header =
       '<nav class="topbar">' +
-      '<a class="brand" href="/"><img class="brand-logo" src="/assets/logo.svg" alt="Mongkol"></a>' +
+      '<a class="brand" href="/"><img class="brand-logo" src="/assets/logo.svg" alt="Weditation"></a>' +
       '<div class="topbar-links">' +
       '<a href="/#templates" class="nav-link">Templates</a>' +
       '<a href="/#features" class="nav-link">Features</a>' +

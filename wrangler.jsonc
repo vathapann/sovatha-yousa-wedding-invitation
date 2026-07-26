@@ -2,7 +2,7 @@
 	// Cloudflare Worker serving the template marketplace: static storefront +
 	// template previews via assets, plus /api/* checkout routes via the Worker.
 	// Docs: https://developers.cloudflare.com/workers/static-assets/
-	"name": "sovatha-yousa-wedding",
+	"name": "wedding-marketplace",
 	"compatibility_date": "2025-01-01",
 	"main": "src/worker.js",
 	"assets": {
