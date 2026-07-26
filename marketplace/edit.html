@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edit my invitation — Wedding Invitation Templates</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&family=Jost:wght@300;400;500&family=Noto+Sans+Khmer:wght@400&display=swap" rel="stylesheet">
+  <!-- Font-swatch previews below (task 2) — same families invite.js applies live. -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@600&family=Cinzel:wght@500&family=Montserrat:wght@500&display=swap" rel="stylesheet">
   <script defer src="/site-header.js"></script>
   <style>
     :root{--ink:#3a2e2a;--sub:#8a7a72;--gold:#c9a45c;--page:#fbf6f1;--line:#ecdfd4;}
@@ -45,6 +47,39 @@
     .preview-wrap{margin-top:34px;}
     .preview-label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--sub);margin-bottom:10px;}
     #preview{width:100%;height:640px;border:1px solid var(--line);border-radius:16px;background:#fff;}
+    .sched-row{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;background:#fff;}
+    .sched-line{display:grid;grid-template-columns:110px 1fr;gap:8px;margin-bottom:8px;}
+    .sched-row textarea{width:100%;min-height:52px;}
+    .sched-actions{display:flex;gap:8px;justify-content:flex-end;}
+    .sched-actions button{margin:0;padding:6px 12px;font-size:11px;background:#fff;color:var(--sub);
+      border:1px solid var(--line);border-radius:100px;text-transform:none;letter-spacing:0;}
+    .sched-actions button:hover{border-color:var(--gold);color:var(--gold);}
+    .sched-empty{color:var(--sub);font-size:13px;font-style:italic;margin:0 0 10px;}
+    .sched-add{display:flex;gap:8px;margin-top:4px;}
+    .sched-add select{flex:1;}
+    .sched-btn{margin:0;padding:11px 18px;font-size:11px;background:transparent;color:var(--gold);
+      border:1px solid var(--gold);border-radius:100px;white-space:nowrap;}
+    .sched-btn:hover{background:var(--gold);color:#fff;}
+    .photo-upload-btn{display:inline-block;text-align:center;}
+    .photo-hero{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;margin-bottom:16px;}
+    .photo-hero img{width:100%;max-height:220px;object-fit:cover;border-radius:8px;display:block;margin-bottom:10px;}
+    .photo-empty{color:var(--sub);font-size:13px;font-style:italic;padding:34px 0;text-align:center;
+      background:var(--page);border-radius:8px;margin-bottom:10px;}
+    .photo-actions{display:flex;gap:8px;flex-wrap:wrap;}
+    .photo-status{font-size:12px;color:var(--sub);margin-top:8px;min-height:16px;}
+    .photo-status.err{color:#a33;}
+    .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;margin-bottom:10px;}
+    .photo-tile{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:1;background:var(--page);}
+    .photo-tile img{width:100%;height:100%;object-fit:cover;display:block;}
+    .photo-tile button{position:absolute;top:4px;right:4px;margin:0;width:22px;height:22px;padding:0;
+      border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:0;font-size:12px;line-height:1;cursor:pointer;}
+    .photo-tile button:hover{background:rgba(0,0,0,.8);}
+    .font-swatches{display:flex;flex-wrap:wrap;gap:10px;}
+    .font-swatch{margin:0;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:12px;
+      cursor:pointer;text-align:center;min-width:110px;text-transform:none;letter-spacing:0;}
+    .font-swatch.active{border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,164,92,.25);}
+    .font-swatch .font-sample{display:block;font-size:20px;color:var(--ink);margin-bottom:6px;line-height:1.2;}
+    .font-swatch .font-label{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);}
   </style>
 </head>
 <body>
@@ -57,8 +92,8 @@
   <div id="notice" class="msg"></div>
 
   <form id="editForm" hidden>
-    <div class="note">📷 To change photos or music, message us on Telegram —
-      we'll update them for you. <span class="km">ដើម្បីប្តូររូបភាព ឬតន្ត្រី សូមផ្ញើសារតាម Telegram។</span></div>
+    <div class="note">🎵 To change background music, message us on Telegram —
+      we'll update it for you. <span class="km">ដើម្បីប្តូរតន្ត្រី សូមផ្ញើសារតាម Telegram។</span></div>
     <div class="row">
       <label>Groom's name (English)<input name="coupleA" required maxlength="80"></label>
       <label>Bride's name (English)<input name="coupleB" required maxlength="80"></label>
@@ -72,6 +107,34 @@
     <label>Venue address · អាសយដ្ឋាន<textarea name="venueAddress" rows="2" maxlength="300"></textarea></label>
     <label>Google Maps link<input name="mapsUrl" type="url" maxlength="500"></label>
     <label>Wedding hashtag<input name="hashtag" maxlength="80"></label>
+
+    <h2 class="design-h">Photos · រូបថត</h2>
+    <p class="design-sub">Upload your own photos — replaces the template's sample images.
+      <span class="km">បញ្ចូលរូបថតផ្ទាល់ខ្លួន — ជំនួសរូបគំរូរបស់គំរូ។</span></p>
+
+    <div id="heroPhotoSection">
+      <label>Hero photo · រូបថតគម្រប</label>
+      <div class="photo-hero">
+        <img id="heroPhotoImg" hidden>
+        <div class="photo-empty" id="heroPhotoEmpty">No hero photo yet — using the template's sample.</div>
+        <div class="photo-actions">
+          <label class="sched-btn photo-upload-btn">Upload or take photo
+            <input type="file" id="heroPhotoInput" accept="image/*" capture="environment" hidden>
+          </label>
+          <button type="button" class="sched-btn" id="heroPhotoRemove" hidden>Remove</button>
+        </div>
+        <div class="photo-status" id="heroPhotoStatus"></div>
+      </div>
+    </div>
+
+    <label>Gallery photos · វិចិត្រសាល</label>
+    <div class="photo-grid" id="galleryGrid"></div>
+    <div class="photo-actions">
+      <label class="sched-btn photo-upload-btn">+ Add gallery photo
+        <input type="file" id="galleryPhotoInput" accept="image/*" capture="environment" multiple hidden>
+      </label>
+    </div>
+    <div class="photo-status" id="galleryPhotoStatus"></div>
 
     <h2 class="design-h">Design · រចនា</h2>
     <p class="design-sub">Personalize the look — the template's accent colors stay.
@@ -89,19 +152,49 @@
       <input type="color" id="bgCustom" value="#fbf6f1" title="Custom color">
     </div>
 
-    <label>Font style · ពុម្ពអក្សរ
-      <select id="fontPair">
-        <option value="classic">Classic — template default</option>
-        <option value="romantic">Romantic — script headings</option>
-        <option value="modern">Modern — Playfair &amp; Montserrat</option>
-        <option value="royal">Royal — Cinzel &amp; Garamond</option>
-        <option value="minimal">Minimal — clean sans-serif</option>
-      </select>
-    </label>
+    <label>Font style · ពុម្ពអក្សរ</label>
+    <div class="font-swatches" id="fontSwatches">
+      <button type="button" class="font-swatch active" data-font="classic">
+        <span class="font-sample" style="font-family:'Cormorant Garamond',serif">Sovatha &amp; Yousa</span>
+        <span class="font-label">Classic — default</span>
+      </button>
+      <button type="button" class="font-swatch" data-font="romantic">
+        <span class="font-sample" style="font-family:'Great Vibes',cursive">Sovatha &amp; Yousa</span>
+        <span class="font-label">Romantic</span>
+      </button>
+      <button type="button" class="font-swatch" data-font="modern">
+        <span class="font-sample" style="font-family:'Playfair Display',serif">Sovatha &amp; Yousa</span>
+        <span class="font-label">Modern</span>
+      </button>
+      <button type="button" class="font-swatch" data-font="royal">
+        <span class="font-sample" style="font-family:'Cinzel',serif">Sovatha &amp; Yousa</span>
+        <span class="font-label">Royal</span>
+      </button>
+      <button type="button" class="font-swatch" data-font="minimal">
+        <span class="font-sample" style="font-family:'Montserrat',sans-serif">Sovatha &amp; Yousa</span>
+        <span class="font-label">Minimal</span>
+      </button>
+    </div>
 
     <label>Text size · ទំហំអក្សរ — <span id="fsVal">100%</span>
       <input type="range" id="fontScale" min="0.85" max="1.25" step="0.05" value="1">
     </label>
+
+    <h2 class="design-h">Our Story · រឿងរបស់យើង</h2>
+    <p class="design-sub">The short intro shown above your story section.
+      <span class="km">អត្ថបទខ្លីមួយបង្ហាញនៅផ្នែក "រឿងរបស់យើង"។</span></p>
+    <label>Story text<textarea name="story" rows="3" maxlength="600"
+      placeholder="It began with a chance meeting..."></textarea></label>
+
+    <h2 class="design-h">Order of the day · លំដាប់ព្រឹត្តិការណ៍</h2>
+    <p class="design-sub">Start from the sample schedule below — edit, delete, reorder, or add your own.
+      <span class="km">ចាប់ផ្តើមពីគំរូខាងក្រោម — កែសម្រួល លុប ឬបន្ថែមព្រឹត្តិការណ៍ថ្មី។</span></p>
+    <div id="scheduleList"></div>
+    <div class="sched-add">
+      <select id="scheduleSample"></select>
+      <button type="button" class="sched-btn" id="addSampleBtn">+ Add from sample</button>
+    </div>
+    <button type="button" class="sched-btn" id="addCustomBtn">+ Add custom event</button>
 
     <button type="submit" id="saveBtn">Save changes · រក្សាទុក</button>
   </form>
@@ -129,9 +222,215 @@
     }
   }
 
+  // Order-of-the-day: couple's own event list, seeded from a sample dropdown.
+  var SAMPLE_SCHEDULE = [
+    { time: '3:30 PM', title: 'Guests Arrival', desc: 'Doors open — find your seat and settle in.' },
+    { time: '4:00 PM', title: 'The Ceremony', desc: 'Please be seated 10 minutes before the start.' },
+    { time: '5:00 PM', title: 'Cocktail Hour', desc: 'Drinks, canapés and photos.' },
+    { time: '6:30 PM', title: 'Dinner & Reception', desc: 'Toasts, dinner and speeches.' },
+    { time: '8:00 PM', title: 'First Dance', desc: 'The newlyweds’ first dance.' },
+    { time: '8:30 PM', title: 'Cake Cutting', desc: 'Cutting of the wedding cake.' },
+    { time: '9:00 PM', title: 'Party & Dancing', desc: 'Dance the night away.' },
+    { time: '11:00 PM', title: 'Send-off', desc: 'A joyful farewell to close the night.' },
+  ];
+  var schedule = [];
+
+  var scheduleSampleSel = document.getElementById('scheduleSample');
+  SAMPLE_SCHEDULE.forEach(function (s, i) {
+    var opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = s.title + ' (' + s.time + ')';
+    scheduleSampleSel.appendChild(opt);
+  });
+
+  function escHtml(s) { var d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+  function escAttr(s) { return escHtml(s).replace(/"/g, '&quot;'); }
+
+  function renderScheduleList() {
+    var host = document.getElementById('scheduleList');
+    if (!schedule.length) {
+      host.innerHTML = '<p class="sched-empty">No events yet — add one from the sample list below.</p>';
+      return;
+    }
+    host.innerHTML = schedule.map(function (item, i) {
+      return '<div class="sched-row" data-i="' + i + '">' +
+        '<div class="sched-line">' +
+        '<input class="sched-time" placeholder="Time" maxlength="40" value="' + escAttr(item.time) + '">' +
+        '<input class="sched-title" placeholder="Event title" maxlength="80" value="' + escAttr(item.title) + '">' +
+        '</div>' +
+        '<textarea class="sched-desc" placeholder="Description (optional)" maxlength="200">' + escHtml(item.desc) + '</textarea>' +
+        '<div class="sched-actions">' +
+        '<button type="button" class="sched-up" title="Move up"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
+        '<button type="button" class="sched-down" title="Move down"' + (i === schedule.length - 1 ? ' disabled' : '') + '>↓</button>' +
+        '<button type="button" class="sched-del" title="Remove">✕ Remove</button>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  document.getElementById('scheduleList').addEventListener('input', function (e) {
+    var row = e.target.closest('.sched-row');
+    if (!row) return;
+    var i = parseInt(row.dataset.i, 10);
+    if (e.target.classList.contains('sched-time')) schedule[i].time = e.target.value;
+    if (e.target.classList.contains('sched-title')) schedule[i].title = e.target.value;
+    if (e.target.classList.contains('sched-desc')) schedule[i].desc = e.target.value;
+    pushPreviewData();
+  });
+  document.getElementById('scheduleList').addEventListener('click', function (e) {
+    var row = e.target.closest('.sched-row');
+    if (!row) return;
+    var i = parseInt(row.dataset.i, 10);
+    if (e.target.classList.contains('sched-del')) {
+      schedule.splice(i, 1);
+    } else if (e.target.classList.contains('sched-up') && i > 0) {
+      var t = schedule[i]; schedule[i] = schedule[i - 1]; schedule[i - 1] = t;
+    } else if (e.target.classList.contains('sched-down') && i < schedule.length - 1) {
+      var t2 = schedule[i]; schedule[i] = schedule[i + 1]; schedule[i + 1] = t2;
+    } else {
+      return;
+    }
+    renderScheduleList();
+    pushPreviewData();
+  });
+  document.getElementById('addSampleBtn').addEventListener('click', function () {
+    var sample = SAMPLE_SCHEDULE[parseInt(scheduleSampleSel.value, 10)];
+    if (sample) schedule.push({ time: sample.time, title: sample.title, desc: sample.desc });
+    renderScheduleList();
+    pushPreviewData();
+  });
+  document.getElementById('addCustomBtn').addEventListener('click', function () {
+    schedule.push({ time: '', title: '', desc: '' });
+    renderScheduleList();
+    pushPreviewData();
+  });
+
+  function pushPreviewData() {
+    if (previewFrame.contentWindow) {
+      previewFrame.contentWindow.postMessage({
+        type: 'invitePreviewData',
+        schedule: schedule,
+        story: form.elements.story ? form.elements.story.value : '',
+        heroImage: heroPhotoUrl,
+        gallery: galleryPhotos,
+      }, location.origin);
+    }
+  }
+
+  // Hero + gallery photos — uploaded straight to R2 as soon as the couple
+  // picks a file, so there's nothing extra to "save" for these.
+  var heroPhotoUrl = '';
+  var galleryPhotos = [];
+
+  function setPhotoStatus(el, msg, isErr) {
+    el.textContent = msg || '';
+    el.className = 'photo-status' + (isErr ? ' err' : '');
+  }
+
+  function uploadPhoto(slot, file, statusEl) {
+    var fd = new FormData();
+    fd.append('slot', slot);
+    fd.append('file', file);
+    setPhotoStatus(statusEl, 'Uploading…');
+    return fetch('/api/my-invite/photo', { method: 'POST', body: fd })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
+      .then(function (res) {
+        if (res.status === 401) { location.href = '/my.html'; return null; }
+        if (!res.ok) throw new Error(res.d.error || 'Upload failed');
+        setPhotoStatus(statusEl, '');
+        return res.d;
+      })
+      .catch(function (err) { setPhotoStatus(statusEl, err.message, true); return null; });
+  }
+
+  function deletePhoto(photoUrl) {
+    return fetch('/api/my-invite/photo/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: photoUrl }),
+    }).then(function (r) { return r.json(); }).catch(function () { return null; });
+  }
+
+  function renderHeroPhotoBox() {
+    var img = document.getElementById('heroPhotoImg');
+    var empty = document.getElementById('heroPhotoEmpty');
+    var removeBtn = document.getElementById('heroPhotoRemove');
+    img.src = heroPhotoUrl || '';
+    img.hidden = !heroPhotoUrl;
+    empty.hidden = !!heroPhotoUrl;
+    removeBtn.hidden = !heroPhotoUrl;
+  }
+
+  function renderGalleryGrid() {
+    var host = document.getElementById('galleryGrid');
+    host.innerHTML = galleryPhotos.map(function (photoUrl) {
+      return '<div class="photo-tile"><img src="' + escAttr(photoUrl) + '">' +
+        '<button type="button" class="gallery-remove" data-url="' + escAttr(photoUrl) + '" title="Remove">✕</button></div>';
+    }).join('');
+  }
+
+  document.getElementById('heroPhotoInput').addEventListener('change', function () {
+    var file = this.files[0];
+    this.value = '';
+    if (!file) return;
+    var statusEl = document.getElementById('heroPhotoStatus');
+    uploadPhoto('hero', file, statusEl).then(function (d) {
+      if (!d) return;
+      heroPhotoUrl = d.url;
+      renderHeroPhotoBox();
+      pushPreviewData();
+    });
+  });
+
+  document.getElementById('heroPhotoRemove').addEventListener('click', function () {
+    if (!heroPhotoUrl) return;
+    var url = heroPhotoUrl;
+    deletePhoto(url).then(function () {
+      heroPhotoUrl = '';
+      renderHeroPhotoBox();
+      pushPreviewData();
+    });
+  });
+
+  document.getElementById('galleryPhotoInput').addEventListener('change', function () {
+    var files = Array.prototype.slice.call(this.files);
+    this.value = '';
+    if (!files.length) return;
+    var statusEl = document.getElementById('galleryPhotoStatus');
+    var chain = Promise.resolve();
+    files.forEach(function (file) {
+      chain = chain.then(function () {
+        return uploadPhoto('gallery', file, statusEl).then(function (d) {
+          if (!d) return;
+          galleryPhotos.push(d.url);
+          renderGalleryGrid();
+          pushPreviewData();
+        });
+      });
+    });
+  });
+
+  document.getElementById('galleryGrid').addEventListener('click', function (e) {
+    var btn = e.target.closest('.gallery-remove');
+    if (!btn) return;
+    var photoUrl = btn.dataset.url;
+    deletePhoto(photoUrl).then(function () {
+      galleryPhotos = galleryPhotos.filter(function (u) { return u !== photoUrl; });
+      renderGalleryGrid();
+      pushPreviewData();
+    });
+  });
+  document.addEventListener('input', function (e) {
+    if (e.target.name === 'story') pushPreviewData();
+  });
+
   function markSwatch(bg) {
     document.querySelectorAll('.swatch').forEach(function (s) {
       s.classList.toggle('active', (s.dataset.bg || '') === (bg || ''));
+    });
+  }
+  function markFontSwatch(font) {
+    document.querySelectorAll('.font-swatch').forEach(function (s) {
+      s.classList.toggle('active', s.dataset.font === (font || 'classic'));
     });
   }
 
@@ -149,11 +448,23 @@
 
       style = c.style || {};
       if (style.bg) markSwatch(style.bg);
-      if (style.fontPair) document.getElementById('fontPair').value = style.fontPair;
+      markFontSwatch(style.fontPair);
       if (style.fontScale) {
         document.getElementById('fontScale').value = style.fontScale;
         document.getElementById('fsVal').textContent = Math.round(style.fontScale * 100) + '%';
       }
+
+      if (form.elements.story) form.elements.story.value = c.story || '';
+      schedule = (Array.isArray(c.schedule) && c.schedule.length ? c.schedule : SAMPLE_SCHEDULE.slice(0, 4))
+        .map(function (it) { return { time: it.time || '', title: it.title || '', desc: it.desc || '' }; });
+      renderScheduleList();
+
+      // This template's hero section is purely typographic — no photo slot to fill.
+      if (d.templateId === 'emerald-wreath') document.getElementById('heroPhotoSection').hidden = true;
+      heroPhotoUrl = c.heroImage || '';
+      galleryPhotos = Array.isArray(c.gallery) ? c.gallery.slice() : [];
+      renderHeroPhotoBox();
+      renderGalleryGrid();
 
       previewFrame.src = d.inviteUrl;
       document.getElementById('previewWrap').hidden = false;
@@ -173,8 +484,11 @@
     markSwatch(null);
     pushPreview();
   });
-  document.getElementById('fontPair').addEventListener('change', function () {
-    style.fontPair = this.value === 'classic' ? undefined : this.value;
+  document.getElementById('fontSwatches').addEventListener('click', function (e) {
+    var btn = e.target.closest('.font-swatch');
+    if (!btn) return;
+    style.fontPair = btn.dataset.font === 'classic' ? undefined : btn.dataset.font;
+    markFontSwatch(btn.dataset.font);
     pushPreview();
   });
   document.getElementById('fontScale').addEventListener('input', function () {
@@ -183,8 +497,10 @@
     document.getElementById('fsVal').textContent = Math.round(v * 100) + '%';
     pushPreview();
   });
-  // The invitation loads async — re-send the saved style once it's ready.
-  previewFrame.addEventListener('load', function () { setTimeout(pushPreview, 300); });
+  // The invitation loads async — re-send the saved style/schedule/story once it's ready.
+  previewFrame.addEventListener('load', function () {
+    setTimeout(function () { pushPreview(); pushPreviewData(); }, 300);
+  });
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -193,6 +509,7 @@
     btn.disabled = true;
     var data = Object.fromEntries(new FormData(form).entries());
     data.style = style;
+    data.schedule = schedule;
     fetch('/api/my-invite', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

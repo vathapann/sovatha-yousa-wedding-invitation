@@ -18,6 +18,88 @@ const WEDDING_DATE = INVITE && INVITE.dateISO
 const ALBUM_URL = (INVITE && INVITE.albumUrl) || 'https://photos.example.com/share/XXXXXXXX';
 
 /* ─────────────────────────────────────────────
+   "Our Story" intro text + order-of-day schedule
+   Couple-customized via /edit; falls back to the template's
+   sample copy when INVITE.story / INVITE.schedule aren't set.
+   ───────────────────────────────────────────── */
+function renderStory(text){
+  const el = document.getElementById('storyIntro');
+  if(!el || !text) return;
+  // data-en/data-km are re-applied via innerHTML on every language toggle
+  // (see setLang below) — escape so a couple's typed text can't inject markup.
+  const safe = escapeHTML(text);
+  el.setAttribute('data-en', safe);
+  el.setAttribute('data-km', safe);
+  el.innerHTML = safe;
+}
+function renderSchedule(items){
+  const host = document.querySelector('#schedule .timeline');
+  if(!host || !items || !items.length) return;
+  host.innerHTML = items.map(it =>
+    '<div class="t-item"><div class="t-when">' + escapeHTML(it.time || '') + '</div>' +
+    '<div class="t-what"><h3>' + escapeHTML(it.title || '') + '</h3>' +
+    '<p>' + escapeHTML(it.desc || '') + '</p></div></div>'
+  ).join('');
+}
+/* ── Hero + gallery photos (couple's own uploads) ─────────── */
+function renderHero(url){
+  let el = document.getElementById('ivHeroOverride');
+  if(!url){
+    if(el) el.textContent = '';
+    return;
+  }
+  if(!el){
+    el = document.createElement('style');
+    el.id = 'ivHeroOverride';
+    document.head.appendChild(el);
+  }
+  el.textContent = '.hero::before{background-image:url("' + url.replace(/["\\]/g, '\\$&') + '") !important;}';
+}
+// Remembers each slot's original picsum placeholder so removing all of the
+// couple's photos restores the template's sample gallery instead of breaking it.
+let galleryDefaults = null;
+function renderGallery(urls){
+  const host = document.getElementById('gallery');
+  if(!host) return;
+  const imgs = Array.from(host.querySelectorAll('img'));
+  if(galleryDefaults === null) galleryDefaults = imgs.map(img => img.src);
+  urls.forEach((url, i) => {
+    let img = imgs[i];
+    if(!img){
+      const figure = document.createElement('figure');
+      figure.className = 'gallery-item';
+      img = document.createElement('img');
+      img.loading = 'lazy';
+      img.alt = 'Couple photo';
+      figure.appendChild(img);
+      host.appendChild(figure);
+      imgs.push(img);
+    }
+    img.src = url;
+  });
+  for(let j = urls.length; j < imgs.length; j++){
+    if(j < galleryDefaults.length) imgs[j].src = galleryDefaults[j];
+    else { const fig = imgs[j].closest('.gallery-item'); if(fig) fig.remove(); }
+  }
+}
+
+if(INVITE && INVITE.story) renderStory(INVITE.story);
+if(INVITE && Array.isArray(INVITE.schedule) && INVITE.schedule.length) renderSchedule(INVITE.schedule);
+if(INVITE && INVITE.heroImage) renderHero(INVITE.heroImage);
+if(INVITE && Array.isArray(INVITE.gallery) && INVITE.gallery.length) renderGallery(INVITE.gallery);
+
+// Live preview from the couple's editor (edit.html embeds this page in an
+// iframe and posts schedule/story/photo changes as they edit).
+window.addEventListener('message', (e) => {
+  if(e.origin !== location.origin) return;
+  if(!e.data || e.data.type !== 'invitePreviewData') return;
+  if(e.data.story) renderStory(e.data.story);
+  if(Array.isArray(e.data.schedule) && e.data.schedule.length) renderSchedule(e.data.schedule);
+  renderHero(e.data.heroImage || '');
+  if(Array.isArray(e.data.gallery)) renderGallery(e.data.gallery);
+});
+
+/* ─────────────────────────────────────────────
    Language toggle (EN / KM)
    ───────────────────────────────────────────── */
 const COUNTDOWN_DONE = { en: 'Today is the day 💙', km: 'ថ្ងៃនេះគឺជាថ្ងៃពិសេស 💙' };

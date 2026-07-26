@@ -15,6 +15,11 @@ export default {
       return serveDashboard(request, env, url);
     }
 
+    // Couple-uploaded hero/gallery photos, stored in R2.
+    if (pathname.startsWith("/photos/")) {
+      return servePhoto(env, pathname);
+    }
+
     if (request.method === "POST" && pathname === "/api/create-checkout-session") {
       return createCheckoutSession(request, env, url);
     }
@@ -53,6 +58,12 @@ export default {
     }
     if (request.method === "POST" && pathname === "/api/my-invite") {
       return myInvitePost(request, env, ctx, url);
+    }
+    if (request.method === "POST" && pathname === "/api/my-invite/photo") {
+      return myInvitePhotoUpload(request, env, url);
+    }
+    if (request.method === "POST" && pathname === "/api/my-invite/photo/delete") {
+      return myInvitePhotoDelete(request, env, url);
     }
     if (request.method === "POST" && pathname === "/api/guests") {
       return coupleAddGuests(request, env, url);
@@ -224,6 +235,37 @@ async function serveInviteCore(env, url, invite, rest) {
   return new Response(html, {
     headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" },
   });
+}
+
+/* ────────────────────────────────────────────────────────────
+   Couple-uploaded hero/gallery photos (R2)
+   Keys are "<slug>/hero.<ext>" and "<slug>/gallery/<id>.<ext>",
+   served back at /photos/<key> so templates can reference them
+   as plain absolute URLs regardless of custom domain.
+   ──────────────────────────────────────────────────────────── */
+
+async function servePhoto(env, pathname) {
+  const key = decodeURIComponent(pathname.slice("/photos/".length));
+  if (!key) return new Response("Not found", { status: 404 });
+  const obj = await env.PHOTOS.get(key);
+  if (!obj) return new Response("Not found", { status: 404 });
+  const headers = new Headers();
+  obj.writeHttpMetadata(headers);
+  headers.set("Cache-Control", "public, max-age=31536000, immutable");
+  headers.set("ETag", obj.httpEtag);
+  return new Response(obj.body, { headers });
+}
+
+// Recovers the R2 key from a /photos/ URL previously handed to the couple —
+// used to delete the right object without trusting a raw key from the client.
+function photoUrlToKey(origin, photoUrl) {
+  try {
+    const u = new URL(String(photoUrl), origin);
+    if (!u.pathname.startsWith("/photos/")) return null;
+    return decodeURIComponent(u.pathname.slice("/photos/".length));
+  } catch {
+    return null;
+  }
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -438,6 +480,17 @@ function sanitizeStyle(raw) {
   const fs = parseFloat(raw.fontScale);
   if (!isNaN(fs)) style.fontScale = Math.min(1.25, Math.max(0.85, fs));
   return Object.keys(style).length ? style : null;
+}
+
+// Couple's custom order-of-day (from the /edit editor's sample dropdown +
+// their own add/edit/delete/reorder). Rows without a title are dropped.
+function sanitizeSchedule(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw.slice(0, 12).map((item) => ({
+    time: String((item && item.time) || "").trim().slice(0, 40),
+    title: String((item && item.title) || "").trim().slice(0, 80),
+    desc: String((item && item.desc) || "").trim().slice(0, 200),
+  })).filter((item) => item.title);
 }
 
 function deriveDateDisplay(dateISO) {
@@ -867,8 +920,10 @@ async function myInvitePost(request, env, ctx, url) {
   if (!fields.coupleA || !fields.coupleB || !fields.dateISO) {
     return json({ error: "Both names and the wedding date are required" }, 400);
   }
-  // Always overwrite: an empty style means "back to template defaults".
+  // Always overwrite: empty style/schedule/story means "back to template defaults".
   fields.style = sanitizeStyle(body.style) || {};
+  fields.schedule = sanitizeSchedule(body.schedule);
+  fields.story = String(body.story || "").trim().slice(0, 600);
 
   await updateInviteConfig(env, invite, fields);
   await env.DB.prepare("UPDATE orders SET intake_json = ? WHERE id = ?")
@@ -878,6 +933,87 @@ async function myInvitePost(request, env, ctx, url) {
     `✏️ Couple edited ${invite.slug}: ${fields.coupleA} & ${fields.coupleB} — ${fields.dateISO}\n${fields.venueName}`);
 
   return json({ ok: true, inviteUrl: `${url.origin}/i/${invite.slug}/` });
+}
+
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024; // 10 MB — generous for a phone camera shot
+const MAX_GALLERY_PHOTOS = 20;
+
+// POST /api/my-invite/photo — multipart upload: { slot: "hero"|"gallery", file }
+// (session-authenticated). Stores the photo in R2 and appends/overwrites the
+// couple's config so it shows up immediately on their live invitation.
+async function myInvitePhotoUpload(request, env, url) {
+  const orderId = await readSession(env, request);
+  if (!orderId) return json({ error: "Please sign in again." }, 401);
+  const { order, invite } = await orderById(env, orderId);
+  if (!order || !invite) return json({ error: "Invitation not found" }, 404);
+
+  let form;
+  try { form = await request.formData(); } catch { return json({ error: "Bad upload" }, 400); }
+  const slot = String(form.get("slot") || "");
+  const file = form.get("file");
+  if (!(file instanceof File)) return json({ error: "No file uploaded" }, 400);
+  if (!file.type.startsWith("image/")) return json({ error: "Please upload an image" }, 400);
+  if (file.size > MAX_PHOTO_BYTES) {
+    return json({ error: "Photo too large — please upload one under 10 MB" }, 400);
+  }
+  if (slot !== "hero" && slot !== "gallery") return json({ error: "Unknown photo slot" }, 400);
+
+  const config = JSON.parse(invite.config_json);
+  const ext = (file.type.split("/")[1] || "jpg").replace(/[^a-z0-9]/gi, "").slice(0, 8) || "jpg";
+  let key;
+
+  if (slot === "hero") {
+    key = `${invite.slug}/hero.${ext}`;
+    const oldKey = photoUrlToKey(url.origin, config.heroImage);
+    if (oldKey && oldKey !== key) await env.PHOTOS.delete(oldKey).catch(() => {});
+  } else {
+    const gallery = Array.isArray(config.gallery) ? config.gallery : [];
+    if (gallery.length >= MAX_GALLERY_PHOTOS) {
+      return json({ error: `Gallery is full (${MAX_GALLERY_PHOTOS} photos max) — remove one first.` }, 400);
+    }
+    key = `${invite.slug}/gallery/${randHex(6)}.${ext}`;
+  }
+
+  await env.PHOTOS.put(key, file.stream(), { httpMetadata: { contentType: file.type } });
+  const photoUrl = `${url.origin}/photos/${key}`;
+
+  if (slot === "hero") {
+    config.heroImage = photoUrl;
+  } else {
+    config.gallery = [...(Array.isArray(config.gallery) ? config.gallery : []), photoUrl];
+  }
+  await env.DB.prepare("UPDATE invites SET config_json = ? WHERE slug = ?")
+    .bind(JSON.stringify(config), invite.slug).run();
+
+  return json({ ok: true, url: photoUrl, config });
+}
+
+// POST /api/my-invite/photo/delete — { url } (session-authenticated).
+// Removes a hero/gallery photo from both R2 and the invite's config.
+async function myInvitePhotoDelete(request, env, url) {
+  const orderId = await readSession(env, request);
+  if (!orderId) return json({ error: "Please sign in again." }, 401);
+  const { order, invite } = await orderById(env, orderId);
+  if (!order || !invite) return json({ error: "Invitation not found" }, 404);
+
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "Bad JSON" }, 400); }
+  const photoUrl = String(body.url || "");
+  const key = photoUrlToKey(url.origin, photoUrl);
+  if (!key || !key.startsWith(`${invite.slug}/`)) return json({ error: "Invalid photo" }, 400);
+
+  const config = JSON.parse(invite.config_json);
+  if (config.heroImage === photoUrl) {
+    delete config.heroImage;
+  } else if (Array.isArray(config.gallery)) {
+    config.gallery = config.gallery.filter((u) => u !== photoUrl);
+  }
+
+  await env.PHOTOS.delete(key).catch(() => {});
+  await env.DB.prepare("UPDATE invites SET config_json = ? WHERE slug = ?")
+    .bind(JSON.stringify(config), invite.slug).run();
+
+  return json({ ok: true, config });
 }
 
 // Shared guest-list insert (admin API + couple dashboard upload).

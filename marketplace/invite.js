@@ -129,6 +129,9 @@
 
   ready(function () {
     if (!isClassic) hydrateText();
+    if (INV.heroImage) hydrateHero(INV.heroImage);
+    if (Array.isArray(INV.schedule) && INV.schedule.length) hydrateSchedule(INV.schedule);
+    if (Array.isArray(INV.gallery) && INV.gallery.length) hydrateGallery(INV.gallery);
     injectStyles();
     greetGuest();
     if (!document.getElementById('rsvpForm')) injectRsvpSection();
@@ -139,11 +142,64 @@
   });
 
   // Live preview from the couple's editor (edit.html embeds the invitation
-  // in an iframe and posts style changes as they tweak the controls).
+  // in an iframe and posts style/schedule/story/photo changes as they edit).
   window.addEventListener('message', function (e) {
     if (e.origin !== location.origin) return;
-    if (e.data && e.data.type === 'invitePreviewStyle') applyCustomStyle(e.data.style);
+    if (!e.data) return;
+    if (e.data.type === 'invitePreviewStyle') applyCustomStyle(e.data.style);
+    if (e.data.type === 'invitePreviewData') {
+      if (e.data.story) setText('.story p', e.data.story);
+      if (Array.isArray(e.data.schedule) && e.data.schedule.length) hydrateSchedule(e.data.schedule);
+      hydrateHero(e.data.heroImage || '');
+      if (Array.isArray(e.data.gallery)) hydrateGallery(e.data.gallery);
+    }
   });
+
+  /* ── Order-of-the-day schedule (couple's custom event list) ──
+       Templates ship 4 sample rows under .schedule .row; when the
+       couple has customized their schedule, replace them wholesale. */
+  function hydrateSchedule(items) {
+    var rows = $$('.schedule .row');
+    if (!rows.length) return;
+    var container = rows[0].parentNode;
+    container.innerHTML = items.map(function (it) {
+      return '<div class="row"><div class="time">' + esc(it.time) + '</div>' +
+        '<div class="body"><div class="dot"></div><div class="t">' + esc(it.title) + '</div>' +
+        '<div class="d">' + esc(it.desc) + '</div></div></div>';
+    }).join('');
+  }
+
+  /* ── Hero + gallery photos (couple's own uploads) ──────────
+       Both slots are placeholder .ph boxes with a CSS rule that
+       hides the "photo" label as soon as a background-image is
+       set inline — so we only ever need to touch .style. */
+  function hydrateHero(photoUrl) {
+    var bg = document.getElementById('heroBg') || $('.hero-bg');
+    if (bg) bg.style.backgroundImage = photoUrl ? 'url(' + JSON.stringify(photoUrl) + ')' : '';
+  }
+  // Tracks how many .ph tiles the template shipped with, so clearing the
+  // couple's photos reverts to those placeholders instead of deleting them.
+  var galleryBaseline = null;
+  function hydrateGallery(urls) {
+    var grid = $('.gallery .grid');
+    if (!grid) return;
+    var frames = Array.prototype.slice.call(grid.querySelectorAll('.ph'));
+    if (galleryBaseline === null) galleryBaseline = frames.length;
+    urls.forEach(function (photoUrl, i) {
+      var frame = frames[i];
+      if (!frame) {
+        frame = document.createElement('div');
+        frame.className = 'ph';
+        grid.appendChild(frame);
+        frames.push(frame);
+      }
+      frame.style.backgroundImage = 'url(' + JSON.stringify(photoUrl) + ')';
+    });
+    for (var j = urls.length; j < frames.length; j++) {
+      if (j < galleryBaseline) frames[j].style.backgroundImage = '';
+      else frames[j].remove();
+    }
+  }
 
   /* ── Text hydration (names, dates, venue) ─────────────────── */
   function hydrateText() {
@@ -176,6 +232,7 @@
     }
     if (INV.hashtag) setText('.footer .tag', '#' + String(INV.hashtag).replace(/^#/, ''));
     if (INV.rsvpBy) setText('.footer .rsvp', 'RSVP by ' + INV.rsvpBy);
+    if (INV.story) setText('.story p', INV.story);
   }
 
   /* ── Personalized guest greeting (?g=code) ────────────────── */

@@ -41,6 +41,7 @@
 </head>
 
 <body>
+  <div class="invite">
   <!-- ═══════════════ TOP CONTROLS (music + language) ═══════════════ -->
   <div class="controls">
     <button class="pill-btn icon-btn music-btn" id="musicBtn" type="button" aria-label="Play music" title="Play music">
@@ -131,7 +132,7 @@
         <h2 class="title" data-en="How we fell in love" data-km="របៀបដែលយើងស្រឡាញ់គ្នា">
           How we fell in love
         </h2>
-        <p class="muted" style="max-width: 540px; margin: 0 auto 34px"
+        <p class="muted" id="storyIntro" style="max-width: 540px; margin: 0 auto 34px"
           data-en="A few small moments that, looking back, were quietly leading us to this one."
           data-km="ពេលវេលាតូចៗ ដែលនៅពេលក្រឡេកមើលថយក្រោយ បាននាំយើងមកដល់ថ្ងៃនេះ។">
           A few small moments that, looking back, were quietly leading us to
@@ -234,7 +235,7 @@
   </section>
 
   <!-- ═══════════════ EVENT SCHEDULE ═══════════════ -->
-  <section class="section">
+  <section class="section" id="schedule">
     <div class="wrap reveal">
       <div class="center">
         <p class="script" data-en="The day" data-km="ថ្ងៃពិធី">The day</p>
@@ -539,6 +540,8 @@
     <button class="lb-prev" id="lbPrev" aria-label="Previous">&#8249;</button>
     <img id="lbImg" src="" alt="" />
     <button class="lb-next" id="lbNext" aria-label="Next">&#8250;</button>
+  </div>
+
   </div>
 
   <!-- Site logic: countdown, language toggle, music, greeting, guestbook, lightbox -->

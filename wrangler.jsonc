@@ -21,5 +21,12 @@
 			"database_id": "95e4e2ae-4698-4571-bc7f-bc217f1fd46a",
 			"migrations_dir": "migrations"
 		}
+	],
+	// Couple-uploaded hero/gallery photos, served back via /photos/<key>.
+	"r2_buckets": [
+		{
+			"binding": "PHOTOS",
+			"bucket_name": "wedding-invite-photos"
+		}
 	]
 }
