@@ -86,5 +86,16 @@
     "stripePriceId": "price_REPLACE_ME_ROYAL",
     "accent": "#6e1f2e",
     "tags": ["khmer", "traditional", "royal"]
+  },
+  {
+    "id": "champa-blossom",
+    "name": "Champa Blossom",
+    "description": "Deckle-edged ivory card with watercolor frangipani, a gold-foil arch, Khmer lettering, and a champagne silk ribbon.",
+    "descriptionKm": "ប័ណ្ណក្រដាសពណ៌ទឹកដោះគោគែមរហែក ជាមួយផ្កាចំប៉ាគំនូរទឹក ធ្នូមាស អក្សរខ្មែរ និងបូខ្សែបូព៌ណ៌ស្វាយចេក។",
+    "price": "$49",
+    "previewUrl": "/templates/champa-blossom/",
+    "stripePriceId": "price_REPLACE_ME_CHAMPA",
+    "accent": "#eeaebc",
+    "tags": ["khmer", "floral", "elegant"]
   }
 ]

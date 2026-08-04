@@ -459,8 +459,10 @@
         .map(function (it) { return { time: it.time || '', title: it.title || '', desc: it.desc || '' }; });
       renderScheduleList();
 
-      // This template's hero section is purely typographic — no photo slot to fill.
-      if (d.templateId === 'emerald-wreath') document.getElementById('heroPhotoSection').hidden = true;
+      // These templates' hero sections are purely typographic — no photo slot to fill.
+      if (d.templateId === 'emerald-wreath' || d.templateId === 'champa-blossom') {
+        document.getElementById('heroPhotoSection').hidden = true;
+      }
       heroPhotoUrl = c.heroImage || '';
       galleryPhotos = Array.isArray(c.gallery) ? c.gallery.slice() : [];
       renderHeroPhotoBox();

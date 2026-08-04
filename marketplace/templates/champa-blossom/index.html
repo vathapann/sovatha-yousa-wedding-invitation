@@ -1,5 +1,5 @@
 <!--
-  © Wedding Templates (sovathapann@gmail.com). "Royal Khmer" template.
+  © Wedding Templates (sovathapann@gmail.com). "Champa Blossom" template.
   Licensed for single-event personal use by the purchasing couple only.
   Redistribution, resale, or reuse of this source as a template for other
   couples/events is prohibited without written permission. See /LICENSE.md.
@@ -15,22 +15,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&family=Moul&family=Noto+Serif+Khmer:wght@400;600&display=swap" rel="stylesheet">
 <style>
   /* ============================================================
-     PALETTE — "Royal Khmer" — maroon brocade, gold, royal blue.
-     Inspired by traditional gilded Khmer wedding invitation books.
+     PALETTE — "Champa Blossom" — ivory paper, watercolor
+     frangipani & jasmine, gold foil, champagne silk ribbon.
      ============================================================ */
   :root{
-    --page:#faf3e3; --section:#f3e8cf; --ink:#4a2430; --sub:#9a7a5f;
-    --primary:#c9a45c; --blush:#8f2f3f; --deep:#6e1f2e;
-    --accent:#2f4d8f; --line:#e2cfa8; --ondark:#f8ecd8;
-    --gold:#c9a45c; --gold-deep:#a8853f;
-    /* Romduol brocade tile: dotted diagonal lattice with a three-petal
-       romduol flower in each diamond cell, gold on transparent. */
-    --romdoul:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2284%22 height=%2284%22%3E%3Cdefs%3E%3Cpath id=%22p%22 d=%22M0 0C-6.5 -5.5 -8.5 -11 -5 -14.5C-2.5 -16.8 -0.5 -15 0 -12.5C0.5 -15 2.5 -16.8 5 -14.5C8.5 -11 6.5 -5.5 0 0Z%22/%3E%3Cg id=%22f%22 fill=%22%23c9a45c%22 fill-opacity=%220.26%22%3E%3Cuse href=%22%23p%22 transform=%22translate(0 -3.2)%22/%3E%3Cuse href=%22%23p%22 transform=%22rotate(120) translate(0 -3.2)%22/%3E%3Cuse href=%22%23p%22 transform=%22rotate(240) translate(0 -3.2)%22/%3E%3Ccircle r=%221.7%22/%3E%3C/g%3E%3Cline id=%22l%22 x1=%22-10.5%22 y1=%22-10.5%22 x2=%2294.5%22 y2=%2294.5%22 stroke=%22%23c9a45c%22 stroke-opacity=%220.33%22 stroke-width=%221.4%22 stroke-linecap=%22round%22 stroke-dasharray=%220 4.95%22/%3E%3Cg id=%22d%22%3E%3Cuse href=%22%23l%22 transform=%22translate(1.9 -1.9)%22/%3E%3Cuse href=%22%23l%22 transform=%22translate(-1.9 1.9)%22/%3E%3C/g%3E%3C/defs%3E%3Cuse href=%22%23d%22/%3E%3Cuse href=%22%23d%22 transform=%22rotate(90 42 42)%22/%3E%3Cuse href=%22%23f%22 transform=%22translate(42 0) scale(0.8)%22/%3E%3Cuse href=%22%23f%22 transform=%22translate(42 84) scale(0.8)%22/%3E%3Cuse href=%22%23f%22 transform=%22translate(0 42) scale(0.8)%22/%3E%3Cuse href=%22%23f%22 transform=%22translate(84 42) scale(0.8)%22/%3E%3C/svg%3E");
+    --page:#fdfcf7; --section:#f6f1e4; --ink:#5a4a38; --sub:#a08d74;
+    --primary:#c3a15f; --blush:#eeaebc; --deep:#9d7b52;
+    --accent:#b7c7a8; --line:#eadfc8; --ondark:#fdf9ee;
+    --gold:#c3a15f; --gold-deep:#a8853f; --petal:#f2b9c6; --petal-core:#f6c86a;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:#3f1119;
+    background:#d8d1c3;
     font-family:'Jost',sans-serif;
     color:var(--ink);
     -webkit-font-smoothing:antialiased;
@@ -40,23 +37,17 @@
   .invite{
     max-width:480px;margin:0 auto;background:var(--page);
     position:relative;overflow:hidden;
-    box-shadow:0 30px 80px rgba(30,8,12,.5);
+    box-shadow:0 30px 80px rgba(90,74,56,.28);
   }
-  h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.12;color:var(--deep);margin:0 0 18px;}
+  h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.12;color:var(--ink);margin:0 0 18px;}
   .eyebrow{font-family:'Jost',sans-serif;letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:var(--gold-deep);margin-bottom:14px;}
   section{position:relative;}
-
-  /* Gold flourish divider under section headings */
-  .flourish{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto 26px;color:var(--gold);}
-  .flourish::before,.flourish::after{content:"";width:44px;height:1px;background:linear-gradient(90deg,transparent,var(--gold));}
-  .flourish::after{background:linear-gradient(90deg,var(--gold),transparent);}
-  .flourish svg{width:18px;height:18px;flex:none;}
 
   /* ---- Photo placeholder. To use a real photo: set a background-image,
          e.g. style="background-image:url('me.jpg')" on the .ph element. ---- */
   .ph{
     background-color:var(--section);
-    background-image:linear-gradient(135deg,rgba(110,31,46,.06) 25%,transparent 25%,transparent 50%,rgba(110,31,46,.06) 50%,rgba(110,31,46,.06) 75%,transparent 75%);
+    background-image:linear-gradient(135deg,rgba(157,123,82,.07) 25%,transparent 25%,transparent 50%,rgba(157,123,82,.07) 50%,rgba(157,123,82,.07) 75%,transparent 75%);
     background-size:18px 18px;background-position:center;background-repeat:no-repeat;
     display:flex;align-items:center;justify-content:center;
   }
@@ -64,65 +55,72 @@
   .ph span{font-family:'Jost',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);opacity:.8;}
   .ph[style*="url"] span{display:none;}
 
-  /* ---- HERO — brocade backdrop + gilded cream card ---- */
+  /* ---- HERO — deckle-edged card, floral arch, silk ribbon ---- */
   .hero{
-    min-height:100vh;padding:54px 22px 70px;
+    min-height:100vh;padding:56px 26px 76px;
     display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;
-    background:
-      var(--romdoul) 0 0/84px 84px repeat,
-      linear-gradient(150deg,#521623,#7a2436 46%,#521623);
+    background:linear-gradient(165deg,#efe8d8,#e6ddc9 55%,#efe8d8);
   }
   .hero-card{
-    position:relative;z-index:3;width:100%;max-width:360px;
-    background:var(--page);border:2px solid var(--gold);border-radius:10px;
-    padding:38px 26px 44px;box-shadow:0 26px 60px rgba(30,8,12,.45);
+    position:relative;z-index:3;width:100%;max-width:370px;
+    background:var(--page);
+    padding:30px 24px 60px;
+    border-radius:4px 7px 5px 8px;
+    box-shadow:0 4px 12px rgba(90,74,56,.10), 0 26px 60px rgba(90,74,56,.28);
   }
-  /* inner gold frame line, like the double borders on the printed card */
-  .hero-card::before{
-    content:"";position:absolute;inset:7px;border:1px solid var(--gold);
-    border-radius:6px;pointer-events:none;opacity:.75;
+  /* deckled paper edge — soft torn look along top and bottom */
+  .hero-card::before,.hero-card::after{
+    content:"";position:absolute;left:0;right:0;height:10px;background:var(--page);
   }
-  .hero-card .corner{position:absolute;width:26px;height:26px;color:var(--gold);pointer-events:none;}
-  .hero-card .corner svg{width:100%;height:100%;display:block;}
-  .corner.tl{top:12px;left:12px;}
-  .corner.tr{top:12px;right:12px;transform:scaleX(-1);}
-  .corner.bl{bottom:12px;left:12px;transform:scaleY(-1);}
-  .corner.br{bottom:12px;right:12px;transform:scale(-1);}
-  .khmer-title{
-    font-family:'Moul',serif;font-size:19px;line-height:1.9;color:var(--gold-deep);
-    margin-bottom:20px;
-    text-shadow:0 1px 0 rgba(255,255,255,.6);
+  .hero-card::before{top:-6px;clip-path:polygon(0 60%,4% 20%,9% 70%,15% 30%,22% 75%,28% 25%,35% 65%,42% 20%,49% 70%,56% 30%,63% 75%,70% 25%,77% 60%,84% 30%,91% 70%,96% 25%,100% 55%,100% 100%,0 100%);}
+  .hero-card::after{bottom:-6px;clip-path:polygon(0 45%,5% 80%,11% 30%,18% 75%,25% 25%,32% 70%,39% 30%,46% 80%,53% 25%,60% 70%,67% 35%,74% 75%,81% 30%,88% 70%,94% 25%,100% 50%,100% 0,0 0);}
+  /* thin gold-foil arch */
+  .arch-line{
+    position:absolute;top:88px;left:50%;transform:translateX(-50%);
+    width:280px;height:330px;pointer-events:none;
   }
-  /* Arched portrait frame, gilded */
-  .arch-wrap{width:172px;margin:0 auto 24px;position:relative;}
-  .arch{
-    width:172px;height:216px;overflow:hidden;
-    border:2px solid var(--gold);outline:1px solid var(--gold);outline-offset:4px;
-    border-radius:88px 88px 10px 10px;
-    box-shadow:0 14px 34px rgba(74,36,48,.25);
+  .arch-line svg{width:100%;height:100%;display:block;}
+  /* watercolor floral crown sits on the arch's shoulder */
+  .floral{width:270px;margin:-6px auto 4px;position:relative;z-index:2;}
+  .floral svg{width:100%;height:auto;display:block;}
+  .khmer-bless{
+    position:relative;z-index:2;
+    font-family:'Noto Serif Khmer',serif;font-size:13px;line-height:2.1;color:var(--gold-deep);
+    margin:2px 0 10px;
   }
-  .hero .kicker{letter-spacing:.36em;font-size:10px;text-transform:uppercase;color:var(--sub);margin-bottom:18px;}
-  .hero .n{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:44px;line-height:1.05;color:var(--deep);}
-  .hero .amp{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:26px;color:var(--gold-deep);margin:4px 0;}
-  .hero .rule{width:56px;height:1px;background:var(--gold);opacity:.8;margin:22px auto;}
-  .hero .date{letter-spacing:.34em;font-size:12px;text-transform:uppercase;color:var(--ink);}
-  /* Royal blue ribbon + gold seal, like the book's closure */
+  .khmer-names{
+    position:relative;z-index:2;
+    font-family:'Moul',serif;font-size:17px;line-height:2;color:var(--gold-deep);
+    margin-bottom:16px;
+  }
+  .hero .kicker{position:relative;z-index:2;letter-spacing:.36em;font-size:10px;text-transform:uppercase;color:var(--sub);margin-bottom:14px;}
+  .hero .n{position:relative;z-index:2;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:40px;line-height:1.08;color:var(--ink);}
+  .hero .amp{position:relative;z-index:2;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;color:var(--gold-deep);margin:2px 0;}
+  .hero .rule{position:relative;z-index:2;width:52px;height:1px;background:var(--gold);opacity:.8;margin:20px auto;}
+  .hero .date{position:relative;z-index:2;letter-spacing:.34em;font-size:12px;text-transform:uppercase;color:var(--ink);}
+  /* champagne silk ribbon tied across the card */
   .ribbon{
-    position:absolute;top:-8px;right:30px;width:30px;height:96px;z-index:4;
-    background:linear-gradient(90deg,#27417c,#3a5aa0 45%,#27417c);
-    clip-path:polygon(0 0,100% 0,100% 100%,50% 86%,0 100%);
-    box-shadow:0 8px 18px rgba(20,30,60,.35);
+    position:absolute;left:-14px;right:-14px;bottom:96px;height:40px;z-index:4;
+    background:linear-gradient(180deg,#eadbbe,#dcc9a4 45%,#cdb888);
+    transform:rotate(-2.2deg);
+    box-shadow:0 6px 16px rgba(120,100,60,.25), inset 0 2px 4px rgba(255,255,255,.5), inset 0 -3px 6px rgba(120,100,60,.18);
   }
-  .seal{
-    position:absolute;top:56px;right:16px;width:58px;height:58px;z-index:5;border-radius:50%;
-    background:radial-gradient(circle at 34% 30%, #e3c887, var(--gold) 55%, var(--gold-deep));
-    box-shadow:0 6px 16px rgba(74,36,48,.4), inset 0 0 0 4px rgba(120,90,30,.35);
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Moul',serif;font-size:15px;color:#6e4f14;
+  .ribbon .knot{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(2deg);
+    width:52px;height:30px;border-radius:40% 55% 50% 45%;
+    background:radial-gradient(ellipse at 35% 35%, #f0e2c6, #d9c49c 60%, #c4ad7c);
+    box-shadow:0 4px 10px rgba(120,100,60,.3);
   }
+  .ribbon .tail{
+    position:absolute;left:50%;top:16px;width:26px;height:56px;
+    background:linear-gradient(180deg,#dcc9a4,#cdb888);
+    box-shadow:0 6px 12px rgba(120,100,60,.2);
+  }
+  .ribbon .tail.a{transform:translateX(-120%) rotate(14deg);clip-path:polygon(0 0,100% 0,86% 100%,22% 88%);}
+  .ribbon .tail.b{transform:translateX(16%) rotate(-11deg);clip-path:polygon(0 0,100% 0,78% 88%,12% 100%);}
   .scrollhint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;}
-  .scrollhint .lbl{letter-spacing:.28em;font-size:9px;text-transform:uppercase;color:var(--ondark);opacity:.8;}
-  .scrollhint .bar{width:1px;height:22px;background:var(--ondark);opacity:.6;animation:nudge 1.8s ease-in-out infinite;}
+  .scrollhint .lbl{letter-spacing:.28em;font-size:9px;text-transform:uppercase;color:var(--ink);opacity:.65;}
+  .scrollhint .bar{width:1px;height:22px;background:var(--deep);opacity:.5;animation:nudge 1.8s ease-in-out infinite;}
 
   /* ---- COUNTDOWN ---- */
   .countdown{background:var(--section);padding:60px 28px 66px;text-align:center;}
@@ -135,9 +133,10 @@
   /* ---- STORY ---- */
   .story{background:var(--page);padding:64px 28px;text-align:center;}
   .story .frame{
-    width:210px;height:264px;margin:0 auto 26px;overflow:hidden;
-    border:2px solid var(--gold);outline:1px solid var(--gold);outline-offset:4px;
-    border-radius:105px 105px 10px 10px;box-shadow:0 20px 50px rgba(74,36,48,.16);
+    width:220px;height:280px;margin:0 auto 26px;overflow:hidden;
+    border-radius:110px 110px 110px 110px / 140px 140px 140px 140px;
+    border:1px solid var(--gold);outline:1px solid var(--line);outline-offset:5px;
+    box-shadow:0 20px 50px rgba(90,74,56,.14);
   }
   .story p{font-weight:300;font-size:15px;line-height:1.85;color:var(--sub);max-width:300px;margin:0 auto;}
   .story .quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--gold-deep);margin-top:26px;}
@@ -154,37 +153,35 @@
   .row .time{width:74px;text-align:right;font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--gold-deep);padding-top:2px;}
   .row .body{flex:1;border-left:1px solid var(--line);padding:0 0 30px 20px;position:relative;}
   .row:last-child .body{border-left:0;padding-bottom:0;}
-  .row .dot{position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px rgba(201,164,92,.25);}
-  .row .t{font-family:'Cormorant Garamond',serif;font-size:23px;color:var(--deep);margin-bottom:3px;}
+  .row .dot{position:absolute;left:-6px;top:5px;width:11px;height:11px;border-radius:50% 0 50% 50%;transform:rotate(45deg);background:var(--blush);}
+  .row .t{font-family:'Cormorant Garamond',serif;font-size:23px;color:var(--ink);margin-bottom:3px;}
   .row .d{font-weight:300;font-size:13px;color:var(--sub);}
 
   /* ---- VENUE ---- */
   .venue{background:var(--section);padding:60px 28px;text-align:center;}
   .venue .addr{font-weight:300;font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:22px;}
-  .venue .map{width:100%;height:210px;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 18px 44px rgba(74,36,48,.14);}
+  .venue .map{width:100%;height:210px;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 18px 44px rgba(90,74,56,.12);}
   .btn{display:inline-block;margin-top:24px;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--deep);border:1px solid var(--gold);border-radius:100px;padding:12px 26px;text-decoration:none;}
 
   /* ---- DRESS ---- */
   .dress{background:var(--page);padding:62px 28px;text-align:center;}
   .dress p{font-weight:300;font-size:15px;line-height:1.8;color:var(--sub);max-width:290px;margin:0 auto 28px;}
   .swatches{display:flex;justify-content:center;gap:14px;}
-  .swatches i{width:42px;height:42px;border-radius:50%;box-shadow:0 6px 16px rgba(0,0,0,.12);display:block;}
+  .swatches i{width:42px;height:42px;border-radius:50%;box-shadow:0 6px 16px rgba(0,0,0,.10);display:block;}
 
-  /* ---- FOOTER — deep maroon with gilt trim ---- */
+  /* ---- FOOTER — champagne gold, gilt trim ---- */
   .footer{
-    position:relative;background:
-      var(--romdoul) 0 0/84px 84px repeat,
-      linear-gradient(160deg,#521623,#6e1f2e 50%,#521623);
+    position:relative;background:linear-gradient(165deg,#a8875c,#96754a 55%,#a8875c);
     padding:74px 28px 60px;text-align:center;overflow:hidden;
     border-top:3px double var(--gold);
   }
   .footer .inner{position:relative;z-index:2;}
-  .footer .kick{letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:var(--gold);opacity:.95;margin-bottom:18px;}
+  .footer .kick{letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:var(--ondark);opacity:.9;margin-bottom:18px;}
   .footer .big{font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1.35;color:var(--ondark);margin-bottom:26px;}
   .footer .names{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:40px;color:var(--ondark);}
-  .footer .rule{width:56px;height:1px;background:var(--gold);opacity:.7;margin:26px auto;}
+  .footer .rule{width:56px;height:1px;background:var(--ondark);opacity:.5;margin:26px auto;}
   .footer .date{letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:var(--ondark);opacity:.85;margin-bottom:26px;}
-  .footer .rsvp{display:inline-block;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--deep);background:var(--gold);border-radius:100px;padding:13px 30px;text-decoration:none;}
+  .footer .rsvp{display:inline-block;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--deep);background:var(--ondark);border-radius:100px;padding:13px 30px;text-decoration:none;}
   .footer .tag{font-size:11px;color:var(--ondark);opacity:.7;margin-top:24px;letter-spacing:.1em;}
 
   /* ---- Reveal on scroll ---- */
@@ -193,7 +190,7 @@
 
   /* ---- Motion gate: everything frozen until the first touch ---- */
   .invite:not(.started) *{animation-play-state:paused !important;}
-  .taphint{position:absolute;left:50%;bottom:78px;transform:translateX(-50%);z-index:5;display:flex;align-items:center;gap:9px;font-family:'Jost',sans-serif;letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:var(--ondark);background:rgba(60,15,25,.45);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border:1px solid rgba(201,164,92,.6);border-radius:100px;padding:12px 24px;cursor:pointer;transition:opacity .7s ease,transform .7s ease;}
+  .taphint{position:absolute;left:50%;bottom:78px;transform:translateX(-50%);z-index:5;display:flex;align-items:center;gap:9px;font-family:'Jost',sans-serif;letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:var(--ink);background:rgba(253,252,247,.6);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border:1px solid rgba(195,161,95,.5);border-radius:100px;padding:12px 24px;cursor:pointer;transition:opacity .7s ease,transform .7s ease;}
   .taphint::before,.taphint::after{content:"";width:14px;height:1px;background:var(--gold);opacity:.8;}
   .taphint.gone{opacity:0;transform:translateX(-50%) translateY(12px);pointer-events:none;}
   .invite:not(.started) .scrollhint{opacity:0;}
@@ -205,20 +202,75 @@
 <body>
 <div class="invite">
 
-  <!-- ============ HERO — the gilded invitation book page ============ -->
+  <!-- ============ HERO — the deckled card with floral arch ============ -->
   <section class="hero">
     <div class="hero-card">
-      <span class="corner tl"><svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 25 V6 Q1 1 6 1 H25"/><path d="M5 25 V9 Q5 5 9 5 H25" opacity=".55"/></svg></span>
-      <span class="corner tr"><svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 25 V6 Q1 1 6 1 H25"/><path d="M5 25 V9 Q5 5 9 5 H25" opacity=".55"/></svg></span>
-      <span class="corner bl"><svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 25 V6 Q1 1 6 1 H25"/><path d="M5 25 V9 Q5 5 9 5 H25" opacity=".55"/></svg></span>
-      <span class="corner br"><svg viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 25 V6 Q1 1 6 1 H25"/><path d="M5 25 V9 Q5 5 9 5 H25" opacity=".55"/></svg></span>
-
-      <div class="khmer-title">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
-
-      <!-- To use your own photo, add: style="...url('your-photo.jpg')" to the arch -->
-      <div class="arch-wrap">
-        <div class="arch ph" id="heroBg"><span>couple photo</span></div>
+      <!-- thin gold-foil arch behind the text -->
+      <div class="arch-line">
+        <svg viewBox="0 0 280 330" fill="none">
+          <path d="M18 320 V150 A122 132 0 0 1 262 150 V320" stroke="#c3a15f" stroke-width="1.4" opacity=".8"/>
+        </svg>
       </div>
+
+      <!-- watercolor frangipani & jasmine crowning the arch -->
+      <div class="floral">
+        <svg viewBox="0 0 270 120">
+          <defs>
+            <g id="cb-frangipani">
+              <g opacity=".92">
+                <path d="M0 -16 C7 -13 8 -4 3 0 C-1 -1 -4 -6 -3 -12 Z" fill="#f2b9c6"/>
+                <path d="M15 -5 C14 3 6 7 1 3 C1 -2 5 -6 11 -7 Z" fill="#eeaebc"/>
+                <path d="M9 13 C2 15 -5 10 -4 4 C0 2 6 4 9 8 Z" fill="#f2b9c6"/>
+                <path d="M-9 13 C-15 8 -14 0 -8 -2 C-4 0 -3 6 -5 11 Z" fill="#e9a3b3"/>
+                <path d="M-15 -5 C-11 -12 -3 -13 0 -8 C-2 -4 -8 -3 -13 -4 Z" fill="#f2b9c6"/>
+                <circle cx="0" cy="0" r="4.6" fill="#f6c86a"/>
+              </g>
+            </g>
+            <g id="cb-jasmine">
+              <g opacity=".95">
+                <circle cx="0" cy="-6" r="4" fill="#fbf7ec"/>
+                <circle cx="6" cy="-2" r="4" fill="#f6efdd"/>
+                <circle cx="4" cy="5" r="4" fill="#fbf7ec"/>
+                <circle cx="-4" cy="5" r="4" fill="#f3ebd7"/>
+                <circle cx="-6" cy="-2" r="4" fill="#fbf7ec"/>
+                <circle cx="0" cy="0" r="2.4" fill="#e9d9a8"/>
+              </g>
+            </g>
+            <path id="cb-leaf" d="M0 0 C8 -7 20 -7 26 0 C20 7 8 7 0 0 Z"/>
+          </defs>
+          <!-- sage leaves fanning along the arch shoulder -->
+          <g fill="#b7c7a8">
+            <use href="#cb-leaf" transform="translate(30 78) rotate(-38)" opacity=".85"/>
+            <use href="#cb-leaf" transform="translate(46 58) rotate(-52) scale(.85)" opacity=".7"/>
+            <use href="#cb-leaf" transform="translate(70 40) rotate(-24) scale(.9)" opacity=".8"/>
+            <use href="#cb-leaf" transform="translate(196 30) rotate(16) scale(.95)" opacity=".8"/>
+            <use href="#cb-leaf" transform="translate(220 48) rotate(40) scale(.85)" opacity=".7"/>
+            <use href="#cb-leaf" transform="translate(236 70) rotate(58)" opacity=".85"/>
+            <use href="#cb-leaf" transform="translate(120 22) rotate(-8) scale(.8)" fill="#a3b892" opacity=".75"/>
+          </g>
+          <g fill="#95ad84" opacity=".6">
+            <use href="#cb-leaf" transform="translate(52 74) rotate(-70) scale(.7)"/>
+            <use href="#cb-leaf" transform="translate(214 66) rotate(70) scale(.7)"/>
+          </g>
+          <!-- white jasmine cluster, left of center like the printed card -->
+          <use href="#cb-jasmine" transform="translate(96 42) scale(1.35)"/>
+          <use href="#cb-jasmine" transform="translate(78 58) scale(1.1)"/>
+          <use href="#cb-jasmine" transform="translate(112 60) scale(.95)"/>
+          <use href="#cb-jasmine" transform="translate(90 74) scale(.8)"/>
+          <!-- pink frangipani cluster, right shoulder -->
+          <use href="#cb-frangipani" transform="translate(160 40) scale(1.5)"/>
+          <use href="#cb-frangipani" transform="translate(192 56) scale(1.25) rotate(30)"/>
+          <use href="#cb-frangipani" transform="translate(172 78) scale(1) rotate(-20)"/>
+          <use href="#cb-frangipani" transform="translate(212 84) scale(.85) rotate(60)"/>
+          <!-- tiny buds -->
+          <circle cx="132" cy="70" r="3.4" fill="#f2b9c6" opacity=".8"/>
+          <circle cx="142" cy="84" r="2.6" fill="#fbf7ec"/>
+          <circle cx="122" cy="86" r="2.4" fill="#f6c86a" opacity=".7"/>
+        </svg>
+      </div>
+
+      <div class="khmer-bless km">ក្រុមគ្រួសារយើងខ្ញុំ មានកិត្តិយសសូមគោរពអញ្ជើញ<br>សម្ដេចទ្រង់ ឯកឧត្តម លោកជំទាវ លោក លោកស្រី<br>អញ្ជើញចូលរួមជាភ្ញៀវកិត្តិយស</div>
+      <div class="khmer-names">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
 
       <div class="kicker">Together with their families</div>
       <div class="n">Sovatha</div>
@@ -226,9 +278,13 @@
       <div class="n">Yousa</div>
       <div class="rule"></div>
       <div class="date">23 &middot; 11 &middot; 2026</div>
+
+      <div class="ribbon">
+        <span class="tail a"></span>
+        <span class="tail b"></span>
+        <span class="knot"></span>
+      </div>
     </div>
-    <div class="ribbon"></div>
-    <div class="seal">៚</div>
     <div class="taphint" id="taphint">Tap to begin</div>
     <div class="scrollhint"><div class="lbl">Scroll</div><div class="bar"></div></div>
   </section>
@@ -238,7 +294,6 @@
     <div class="reveal">
       <div class="eyebrow">The wait begins</div>
       <h2>Counting down<br>to the blessed day</h2>
-      <div class="flourish"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2 4 2 8 0 11-2-3-2-7 0-11zM12 13c4-1 7 1 9 4-4 1-7-1-9-4zM12 13c-4-1-7 1-9 4 4 1 7-1 9-4z"/></svg></div>
       <div class="clock">
         <div class="unit"><div class="num" id="cd-d">--</div><div class="lab">Days</div></div>
         <div class="sep">:</div>
@@ -255,10 +310,10 @@
   <section class="story">
     <div class="reveal">
       <div class="eyebrow">Our story</div>
-      <h2>Two hearts,<br>one blessing</h2>
+      <h2>Two blossoms,<br>one garland</h2>
       <div class="frame"><div class="ph" style="width:100%;height:100%"><span>your photo</span></div></div>
-      <p>It began with a respectful greeting and a shy smile &mdash; and a conversation that never quite ended. With the blessing of our families and the guidance of tradition, we&rsquo;re ready to say forever.</p>
-      <div class="quote">&ldquo;Blessed by our elders, bound by love.&rdquo;</div>
+      <p>It began with a shy smile beneath the champa trees &mdash; and a conversation that never quite ended. With our families&rsquo; blessing and hearts entwined like a garland of jasmine, we&rsquo;re ready to say forever.</p>
+      <div class="quote">&ldquo;You are my sweetest bloom.&rdquo;</div>
     </div>
   </section>
 
@@ -296,7 +351,7 @@
   <section class="venue">
     <div class="reveal">
       <div class="eyebrow">Where</div>
-      <h2 style="margin:0 0 6px">Mondul Meas Hall</h2>
+      <h2 style="margin:0 0 6px">Champa Garden Hall</h2>
       <div class="addr">Street 123<br>Pursat, Cambodia</div>
       <div class="map"><div class="ph" style="width:100%;height:100%"><span>map / venue photo</span></div></div>
       <a class="btn" href="#">Get directions</a>
@@ -307,13 +362,13 @@
   <section class="dress">
     <div class="reveal">
       <div class="eyebrow">Attire</div>
-      <h2 style="margin:0 0 16px">Traditional formal</h2>
-      <p>We&rsquo;d be honored to see you in traditional dress or formal wear &mdash; think maroon, gold, ivory and royal blue.</p>
+      <h2 style="margin:0 0 16px">Garden elegant</h2>
+      <p>We&rsquo;d love to see you in soft blossom tones &mdash; think ivory, blush, champagne, sage and gold.</p>
       <div class="swatches">
-        <i style="background:var(--deep)"></i>
+        <i style="background:var(--blush)"></i>
         <i style="background:var(--gold)"></i>
         <i style="background:var(--accent)"></i>
-        <i style="background:var(--blush)"></i>
+        <i style="background:#e8d8bc"></i>
         <i style="background:#fdf8ec;border:1px solid var(--line);box-shadow:0 6px 16px rgba(0,0,0,.06)"></i>
       </div>
     </div>
