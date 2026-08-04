@@ -75,5 +75,16 @@
     "stripePriceId": "price_REPLACE_ME_EMERALD",
     "accent": "#3f5c48",
     "tags": ["formal", "botanical"]
+  },
+  {
+    "id": "royal-khmer",
+    "name": "Royal Khmer",
+    "description": "Traditional gilded Khmer invitation book — maroon brocade, gold frames, arched portrait, and a Khmer ceremony schedule.",
+    "descriptionKm": "ប័ណ្ណអញ្ជើញបែបប្រពៃណីខ្មែរ — ផ្ទៃក្រណាត់ពណ៌ក្រហមទុំ ស៊ុមមាស រូបថតស៊ុមកោង និងកម្មវិធីពិធីតាមប្រពៃណី។",
+    "price": "$49",
+    "previewUrl": "/templates/royal-khmer/",
+    "stripePriceId": "price_REPLACE_ME_ROYAL",
+    "accent": "#6e1f2e",
+    "tags": ["khmer", "traditional", "royal"]
   }
 ]
