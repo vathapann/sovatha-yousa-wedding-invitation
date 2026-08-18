@@ -25,9 +25,10 @@
     $$(sel).forEach(function (el) { el.textContent = value; });
   }
 
-  // classic-elegance runs its own bilingual data-en/data-km system and
-  // has native RSVP/wishes forms — its script.js reads window.INVITE
-  // directly, so here we only handle the injected extras.
+  // classic-elegance runs its own bilingual data-en/data-km system and has
+  // native RSVP/wishes forms. Its script.js reads the story/schedule/photo
+  // fields from window.INVITE itself; the remaining text is hydrated by
+  // hydrateClassic() below, which speaks that template's markup conventions.
   var isClassic = !!document.getElementById('langToggle');
 
   var A = INV.coupleA || '';
@@ -128,7 +129,8 @@
   }
 
   ready(function () {
-    if (!isClassic) hydrateText();
+    if (isClassic) hydrateClassic();
+    else hydrateText();
     if (INV.heroImage) hydrateHero(INV.heroImage);
     if (Array.isArray(INV.schedule) && INV.schedule.length) hydrateSchedule(INV.schedule);
     if (Array.isArray(INV.gallery) && INV.gallery.length) hydrateGallery(INV.gallery);
@@ -147,13 +149,53 @@
     if (e.origin !== location.origin) return;
     if (!e.data) return;
     if (e.data.type === 'invitePreviewStyle') applyCustomStyle(e.data.style);
-    if (e.data.type === 'invitePreviewData') {
-      if (e.data.story) setText('.story p', e.data.story);
-      if (Array.isArray(e.data.schedule) && e.data.schedule.length) hydrateSchedule(e.data.schedule);
-      hydrateHero(e.data.heroImage || '');
-      if (Array.isArray(e.data.gallery)) hydrateGallery(e.data.gallery);
-    }
+    if (e.data.type === 'invitePreviewData') applyPreviewData(e.data);
   });
+
+  var PREVIEW_FIELDS = ['coupleA', 'coupleB', 'coupleAKm', 'coupleBKm', 'dateISO',
+    'venueName', 'venueAddress', 'mapsUrl', 'hashtag'];
+
+  // Mirrors the server's deriveDateDisplay() so the preview shows the same
+  // formatting the invitation will have once the couple saves.
+  function previewDateDisplay(dateISO) {
+    var d = new Date(dateISO);
+    if (isNaN(d.getTime())) return null;
+    var pad = function (n) { return String(n).length < 2 ? '0' + n : String(n); };
+    return pad(d.getDate()) + ' · ' + pad(d.getMonth() + 1) + ' · ' + d.getFullYear();
+  }
+
+  function applyPreviewData(d) {
+    // Merge the in-progress edits into INV, then re-run the same hydration the
+    // published page uses — so the preview matches what saving will produce.
+    PREVIEW_FIELDS.forEach(function (k) {
+      if (typeof d[k] === 'string') INV[k] = d[k];
+    });
+    if (typeof d.dateISO === 'string') {
+      INV.dateDisplay = previewDateDisplay(d.dateISO) || INV.dateDisplay;
+    }
+    A = INV.coupleA || '';
+    B = INV.coupleB || '';
+    both = A && B ? A + ' & ' + B : '';
+
+    if (isClassic) {
+      hydrateClassic();
+      // classic-elegance ships its own renderers for these; its markup doesn't
+      // match the generic selectors below.
+      if (d.story && window.renderStory) window.renderStory(d.story);
+      if (Array.isArray(d.schedule) && d.schedule.length && window.renderSchedule) {
+        window.renderSchedule(d.schedule);
+      }
+      if (window.renderHero) window.renderHero(d.heroImage || '');
+      if (Array.isArray(d.gallery) && window.renderGallery) window.renderGallery(d.gallery);
+      return;
+    }
+
+    hydrateText();
+    if (d.story) setText('.story p', d.story);
+    if (Array.isArray(d.schedule) && d.schedule.length) hydrateSchedule(d.schedule);
+    hydrateHero(d.heroImage || '');
+    if (Array.isArray(d.gallery)) hydrateGallery(d.gallery);
+  }
 
   /* ── Order-of-the-day schedule (couple's custom event list) ──
        Templates ship 4 sample rows under .schedule .row; when the
@@ -233,6 +275,97 @@
     if (INV.hashtag) setText('.footer .tag', '#' + String(INV.hashtag).replace(/^#/, ''));
     if (INV.rsvpBy) setText('.footer .rsvp', 'RSVP by ' + INV.rsvpBy);
     if (INV.story) setText('.story p', INV.story);
+  }
+
+  /* ── Text hydration for classic-elegance ──────────────────────
+       This template uses its own markup conventions (.hero-names,
+       .fnames) and a bilingual data-en/data-km system, so the generic
+       hydrateText() above neither matches its selectors nor survives a
+       language switch. Its own script.js reads only the story/schedule/
+       photo fields from window.INVITE, so without this the couple's
+       names, date and venue never reach the page.
+
+       Every write sets BOTH data-en and data-km alongside the visible
+       markup: setLang() re-applies innerHTML from those attributes on
+       each toggle, so a plain textContent write would be wiped the
+       moment a guest switches language. ── */
+  // The digit table lives inside the function on purpose: ready() runs
+  // synchronously from higher up in this file, before any `var` down here has
+  // been assigned, so a module-level table would still be undefined at call time.
+  function toKmDigits(s) {
+    var digits = '០១២៣៤៥៦៧៨៩';
+    return String(s).replace(/[0-9]/g, function (d) { return digits[+d]; });
+  }
+
+  // enHtml/kmHtml are trusted markup built from escaped values above.
+  function setBilingual(sel, enHtml, kmHtml) {
+    var el = $(sel);
+    if (!el || !enHtml) return;
+    var km = kmHtml || enHtml;
+    el.setAttribute('data-en', enHtml);
+    el.setAttribute('data-km', km);
+    // script.js has already run setLang(), so honour the language on screen.
+    el.innerHTML = document.documentElement.lang === 'km' ? km : enHtml;
+  }
+
+  function hydrateClassic() {
+    var kmA = INV.coupleAKm || A;
+    var kmB = INV.coupleBKm || B;
+    var bothKm = kmA && kmB ? kmA + ' & ' + kmB : '';
+
+    if (both) document.title = both + (INV.dateDisplay ? ' · ' + INV.dateDisplay : '');
+
+    if (A && B) {
+      setBilingual('.hero-names',
+        esc(A) + '<span class="hero-amp">and</span>' + esc(B),
+        esc(kmA) + '<span class="hero-amp">និង</span>' + esc(kmB));
+    }
+    setBilingual('.fnames', esc(both), esc(bothKm));
+
+    // The template wraps each separator in <span class="dot"> for spacing.
+    if (INV.dateDisplay) {
+      var dots = function (s) { return esc(s).replace(/·/g, '<span class="dot">·</span>'); };
+      setBilingual('.hero-date', dots(INV.dateDisplay), dots(toKmDigits(INV.dateDisplay)));
+    }
+
+    var metaEn = [INV.dateDisplay, INV.venueName].filter(Boolean);
+    if (metaEn.length) {
+      var metaKm = [toKmDigits(INV.dateDisplay || ''), INV.venueName].filter(Boolean);
+      setBilingual('.fmeta', metaEn.map(esc).join('&nbsp;·&nbsp;'),
+        metaKm.map(esc).join('&nbsp;·&nbsp;'));
+    }
+
+    // The template ships a sample hashtag; hide the line outright when the
+    // couple hasn't set one, so the placeholder never reaches a live invite.
+    var tag = $('.ftag');
+    if (tag) {
+      var hashtag = String(INV.hashtag || '').replace(/^#/, '');
+      tag.hidden = !hashtag;
+      if (hashtag) setBilingual('.ftag', '#' + esc(hashtag));
+    }
+
+    // No Khmer variants are collected for the venue, so both languages
+    // share one value — the same approach script.js takes for the story.
+    setBilingual('.venue-info h3', esc(INV.venueName));
+    if (INV.venueAddress) {
+      setBilingual('.venue-info .addr', INV.venueAddress.split(/\n/).map(esc).join('<br>'));
+    }
+
+    if (INV.mapsUrl) {
+      var btn = $('.venue-card a.btn-primary');
+      if (btn) {
+        btn.href = INV.mapsUrl;
+        btn.target = '_blank';
+        btn.rel = 'noopener';
+      }
+    }
+
+    var place = INV.venueAddress || INV.venueName;
+    var map = $('.map-embed');
+    if (place && map) {
+      map.src = 'https://www.google.com/maps?q=' +
+        encodeURIComponent(place.replace(/\n/g, ', ')) + '&output=embed';
+    }
   }
 
   /* ── Personalized guest greeting (?g=code) ────────────────── */

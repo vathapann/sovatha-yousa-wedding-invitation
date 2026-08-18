@@ -1,5 +1,27 @@
 [
   {
+    "id": "butterfly-vale",
+    "name": "Butterfly Vale",
+    "description": "A hidden garden high in misty blue mountains — drifting clouds, sunlight through the peaks, wildflowers, and butterflies that never stop fluttering from the first screen to the last.",
+    "descriptionKm": "សួនច្បារលាក់កំបាំងនៅលើភ្នំពណ៌ខៀវអ័ព្ទ — ពពកអណ្តែត ពន្លឺថ្ងៃចាំងតាមកំពូលភ្នំ ផ្កាព្រៃ និងមេអំបៅដែលហើរមិនឈប់ ពីអេក្រង់ដំបូងរហូតដល់ចុងក្រោយ។",
+    "price": "$49",
+    "previewUrl": "/templates/butterfly-vale/",
+    "stripePriceId": "price_REPLACE_ME_BUTTERFLY",
+    "accent": "#a8c8ea",
+    "tags": ["mountain", "butterfly", "floral", "romantic", "animated"]
+  },
+  {
+    "id": "seaside-bloom",
+    "name": "Seaside Bloom",
+    "description": "A calm blue sea meeting a flower garden — drifting waves, falling petals, pearly seashells and a bird's nest, with sunlight shimmering on the water.",
+    "descriptionKm": "សមុទ្រពណ៌ខៀវស្ងប់ជួបនឹងសួនផ្កា — រលកបក់បោក ត្រយោងផ្កាជ្រុះ សំបកខ្យងភ្លឺរលោង និងសម្បុកបក្សី ជាមួយពន្លឺថ្ងៃចាំងលើទឹក។",
+    "price": "$49",
+    "previewUrl": "/templates/seaside-bloom/",
+    "stripePriceId": "price_REPLACE_ME_SEASIDE",
+    "accent": "#8ecae6",
+    "tags": ["ocean", "floral", "romantic", "animated"]
+  },
+  {
     "id": "classic-elegance",
     "name": "Classic Elegance",
     "description": "Bilingual invitation with animated hero, gallery, and RSVP form.",

@@ -58,6 +58,9 @@
     <input type="file" id="slipFile" accept="image/*" style="margin-top:12px">
     <img id="slipPreview" class="preview" hidden>
     <button id="slipBtn">Upload slip · បញ្ជូនបង្កាន់ដៃ</button>
+    <!-- Local dev only (wrangler dev): revealed on localhost, backed by a
+         localhost-gated endpoint, so it can never appear or work in production. -->
+    <button id="skipBtn" hidden style="background:#8a6d1a">Dev: skip payment →</button>
   </div>
 
   <div class="box" id="statusBox" hidden>
@@ -113,6 +116,26 @@
         })
         .catch(function () {});
     }, 10000);
+  }
+
+  // Local dev: offer a one-click skip past the KHQR/slip step.
+  if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+    var skipBtn = document.getElementById('skipBtn');
+    skipBtn.hidden = false;
+    skipBtn.addEventListener('click', function () {
+      skipBtn.disabled = true;
+      fetch('/api/dev/skip-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: orderId }),
+      })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) {
+          if (!res.ok) throw new Error(res.d.error || 'Skip failed');
+          reflectStatus('paid');
+        })
+        .catch(function (err) { skipBtn.disabled = false; show('err', err.message); });
+    });
   }
 
   // Downscale the slip client-side so it fits comfortably in the database.

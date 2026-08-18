@@ -304,16 +304,23 @@
     pushPreviewData();
   });
 
+  // Text fields mirrored into the preview as the couple types.
+  var PREVIEW_FIELDS = ['coupleA', 'coupleB', 'coupleAKm', 'coupleBKm', 'dateISO',
+    'venueName', 'venueAddress', 'mapsUrl', 'hashtag'];
+
   function pushPreviewData() {
-    if (previewFrame.contentWindow) {
-      previewFrame.contentWindow.postMessage({
-        type: 'invitePreviewData',
-        schedule: schedule,
-        story: form.elements.story ? form.elements.story.value : '',
-        heroImage: heroPhotoUrl,
-        gallery: galleryPhotos,
-      }, location.origin);
-    }
+    if (!previewFrame.contentWindow) return;
+    var msg = {
+      type: 'invitePreviewData',
+      schedule: schedule,
+      story: form.elements.story ? form.elements.story.value : '',
+      heroImage: heroPhotoUrl,
+      gallery: galleryPhotos,
+    };
+    PREVIEW_FIELDS.forEach(function (k) {
+      if (form.elements[k]) msg[k] = form.elements[k].value;
+    });
+    previewFrame.contentWindow.postMessage(msg, location.origin);
   }
 
   // Hero + gallery photos — uploaded straight to R2 as soon as the couple
@@ -420,7 +427,7 @@
     });
   });
   document.addEventListener('input', function (e) {
-    if (e.target.name === 'story') pushPreviewData();
+    if (e.target.name === 'story' || PREVIEW_FIELDS.indexOf(e.target.name) !== -1) pushPreviewData();
   });
 
   function markSwatch(bg) {

@@ -83,6 +83,9 @@ export default {
     if (request.method === "POST" && pathname === "/api/intake") {
       return handleIntake(request, env, ctx);
     }
+    if (request.method === "POST" && pathname === "/api/dev/skip-payment") {
+      return devSkipPayment(request, env, url);
+    }
     if (pathname.startsWith("/api/admin/")) {
       return handleAdmin(request, env, url);
     }
@@ -239,7 +242,7 @@ async function serveInviteCore(env, url, invite, rest) {
 
 /* ────────────────────────────────────────────────────────────
    Couple-uploaded hero/gallery photos (R2)
-   Keys are "<slug>/hero.<ext>" and "<slug>/gallery/<id>.<ext>",
+   Keys are "<slug>/hero-<id>.<ext>" and "<slug>/gallery/<id>.<ext>",
    served back at /photos/<key> so templates can reference them
    as plain absolute URLs regardless of custom domain.
    ──────────────────────────────────────────────────────────── */
@@ -426,6 +429,19 @@ function sendSlipForReview(env, ctx, order, bytes, mime) {
     method: "POST", body: form,
   }).catch((e) => console.log("Telegram slip send failed:", e));
   if (ctx) ctx.waitUntil(send);
+}
+
+// Dev-only escape hatch (wrangler dev): marks an order 'paid' without a slip,
+// so the checkout → intake → publish flow can be tested end-to-end locally.
+// Refuses on any non-localhost hostname so it can never fire in production.
+async function devSkipPayment(request, env, url) {
+  if (!["localhost", "127.0.0.1"].includes(url.hostname)) {
+    return json({ error: "Not found" }, 404);
+  }
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "Bad JSON" }, 400); }
+  const result = await markOrderPaid(env, String(body.orderId || ""));
+  return json(result, result.ok ? 200 : 400);
 }
 
 // Move an order to 'paid' — shared by the admin endpoint and the Telegram button.
@@ -705,6 +721,17 @@ async function authStart(request, env, ctx, url) {
     return json({ error: "Sign-in is temporarily unavailable. Please contact us on Telegram." }, 503);
   }
 
+  // Local dev: Telegram delivers /start to the bot's registered webhook, which
+  // points at production — it can never reach localhost, so the deep-link
+  // handshake would hang forever. Link straight to the owner's chat instead;
+  // outbound OTP sends still work from wrangler dev, so login proceeds normally.
+  if (!order.tg_chat_id && env.TELEGRAM_CHAT_ID &&
+      ["localhost", "127.0.0.1"].includes(url.hostname)) {
+    await env.DB.prepare("UPDATE orders SET tg_chat_id = ? WHERE id = ?")
+      .bind(String(env.TELEGRAM_CHAT_ID), order.id).run();
+    order.tg_chat_id = String(env.TELEGRAM_CHAT_ID);
+  }
+
   if (order.tg_chat_id) {
     if (await overLimit(env, `otp:${order.id}`, 5, 600)) {
       return json({ error: "Too many code requests — please wait a few minutes." }, 429);
@@ -963,7 +990,10 @@ async function myInvitePhotoUpload(request, env, url) {
   let key;
 
   if (slot === "hero") {
-    key = `${invite.slug}/hero.${ext}`;
+    // A fresh key per upload, exactly like the gallery below. /photos/ is
+    // served `immutable`, so a fixed "hero.<ext>" key meant re-uploading the
+    // same format reused the URL and browsers kept showing the old photo.
+    key = `${invite.slug}/hero-${randHex(6)}.${ext}`;
     const oldKey = photoUrlToKey(url.origin, config.heroImage);
     if (oldKey && oldKey !== key) await env.PHOTOS.delete(oldKey).catch(() => {});
   } else {

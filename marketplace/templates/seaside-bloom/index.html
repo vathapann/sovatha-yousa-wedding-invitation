@@ -1,0 +1,571 @@
+<!--
+  © Wedding Templates (sovathapann@gmail.com). "Seaside Bloom" template.
+  Licensed for single-event personal use by the purchasing couple only.
+  Redistribution, resale, or reuse of this source as a template for other
+  couples/events is prohibited without written permission. See /LICENSE.md.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovatha &amp; Yousa · 23 Nov 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&family=Noto+Serif+Khmer:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     PALETTE — "Seaside Bloom" — a calm blue sea meeting an
+     elegant flower garden. Ocean blue, baby blue, soft white,
+     pale aqua, with pearly shells and a warm nest.
+     Swap these values to re-theme the whole invitation.
+     ============================================================ */
+  :root{
+    --page:#f7fcfe; --section:#e6f3fa; --ink:#23506b; --sub:#6d95ad;
+    --primary:#8ecae6; --blush:#bfe3f5; --deep:#2a6f97;
+    --accent:#9ec9c0; --line:#d5eaf5; --ondark:#f2fbff;
+    --sea-deep:#4a9fc4; --sea-mid:#7cc0dc; --sea-light:#a8d8ec;
+    --sand:#f0e4d2; --pearl:#fffaf3; --nest:#c2a077;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:#cfe3ee;
+    font-family:'Jost',sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .km{font-family:'Noto Serif Khmer',serif;}
+  /* Phone-width column, centered; full-bleed on small screens */
+  .invite{
+    max-width:480px;margin:0 auto;background:var(--page);
+    position:relative;overflow:hidden;
+    box-shadow:0 30px 80px rgba(35,80,107,.30);
+  }
+  h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:34px;line-height:1.12;color:var(--ink);margin:0 0 18px;}
+  .eyebrow{letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:var(--deep);margin-bottom:14px;}
+  section{position:relative;}
+
+  /* ---- Photo placeholder. To use a real photo: set a background-image,
+         e.g. style="background-image:url('me.jpg')" on the .ph element. ---- */
+  .ph{
+    background-color:var(--section);
+    background-image:linear-gradient(135deg,rgba(42,111,151,.07) 25%,transparent 25%,transparent 50%,rgba(42,111,151,.07) 50%,rgba(42,111,151,.07) 75%,transparent 75%);
+    background-size:18px 18px;background-position:center;background-repeat:no-repeat;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ph[style*="url"]{background-size:cover;}
+  .ph span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);opacity:.8;}
+  .ph[style*="url"] span{display:none;}
+
+  /* ---- Wave dividers: each section's own colour washes up into the
+         section above it, so every transition reads as a soft swell. ---- */
+  .wavesep{position:absolute;top:-1px;left:0;width:100%;height:34px;line-height:0;pointer-events:none;z-index:2;}
+  .wavesep svg{width:100%;height:100%;display:block;}
+  .wavesep path{fill:var(--wavefill,var(--page));}
+
+  /* ============ HERO — the sea, the garden, the names ============ */
+  .hero{
+    min-height:100vh;padding:60px 26px 92px;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;overflow:hidden;
+    background:linear-gradient(180deg,#eaf6fc 0%,#d3ecf7 38%,#a8d8ec 68%,#7cc0dc 100%);
+  }
+  /* couple's uploaded photo — transparent by default so the sea shows through */
+  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:1;}
+  .hero-wash{position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:linear-gradient(180deg,rgba(247,252,254,.34),rgba(168,216,236,.20) 55%,rgba(124,192,220,.42));}
+
+  /* soft sunlight + shimmering reflections on the water */
+  .sunlight{position:absolute;top:-14%;left:50%;transform:translateX(-50%);
+    width:340px;height:340px;z-index:2;pointer-events:none;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,252,235,.85),rgba(255,250,230,.28) 42%,transparent 70%);
+    animation:glow 9s ease-in-out infinite;}
+  .shimmer{position:absolute;left:0;right:0;bottom:0;height:46%;z-index:3;pointer-events:none;overflow:hidden;}
+  .shimmer i{position:absolute;height:2px;border-radius:2px;background:rgba(255,255,255,.72);
+    animation:glint 6s ease-in-out infinite;}
+
+  /* gentle ocean waves, three layers drifting at different speeds */
+  .sea{position:absolute;left:0;right:0;bottom:0;height:190px;z-index:3;pointer-events:none;}
+  .sea .wave{position:absolute;bottom:0;left:0;width:200%;height:100%;}
+  .sea .wave svg{width:50%;height:100%;display:block;float:left;}
+  .w1{opacity:.42;animation:drift 19s linear infinite;}
+  .w2{opacity:.55;animation:drift 13s linear infinite reverse;bottom:8px;}
+  .w3{opacity:.82;animation:drift 25s linear infinite;bottom:-6px;}
+
+  /* tiny bubbles / light particles floating gently upward */
+  .bubbles{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden;}
+  .bubbles i{position:absolute;bottom:-24px;border-radius:50%;
+    background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.95),rgba(255,255,255,.28) 60%,rgba(255,255,255,.06));
+    animation:rise linear infinite;}
+
+  /* blue & white petals carried down on the sea breeze */
+  .petals{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden;}
+  .petals i{position:absolute;top:-28px;display:block;border-radius:56% 12% 56% 12%;
+    animation:fall linear infinite;}
+
+  /* the flower garden growing along both edges, where land meets sea */
+  .garden{position:absolute;bottom:0;z-index:5;pointer-events:none;width:172px;}
+  .garden svg{width:100%;height:auto;display:block;}
+  .garden.left{left:-16px;}
+  .garden.right{right:-16px;transform:scaleX(-1);}
+  .sway{transform-box:fill-box;transform-origin:bottom center;animation:sway 6.5s ease-in-out infinite;}
+  .sway.s2{animation-duration:8s;animation-delay:-1.4s;}
+  .sway.s3{animation-duration:5.4s;animation-delay:-2.6s;}
+  .leafsway{transform-box:fill-box;transform-origin:left center;animation:leafsway 7.5s ease-in-out infinite;}
+  /* shells surface gently among the flowers */
+  .shell-in{transform-box:fill-box;transform-origin:center;animation:shellin 11s ease-in-out infinite;}
+  .shell-in.d2{animation-delay:-5.5s;}
+
+  .hero-inner{position:relative;z-index:7;}
+  .hero .kicker{letter-spacing:.36em;font-size:10px;text-transform:uppercase;color:var(--deep);margin-bottom:14px;}
+  .hero .khmer-bless{font-family:'Noto Serif Khmer',serif;font-size:12.5px;line-height:2.05;color:var(--deep);margin:0 0 14px;}
+  .hero .n{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:42px;line-height:1.06;color:var(--ink);
+    text-shadow:0 1px 0 rgba(255,255,255,.65);}
+  .hero .amp{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;color:var(--deep);margin:2px 0;}
+  .hero .rule{width:56px;height:1px;background:var(--deep);opacity:.55;margin:20px auto;}
+  .hero .date{letter-spacing:.34em;font-size:12px;text-transform:uppercase;color:var(--ink);}
+  .scrollhint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:8;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .scrollhint .lbl{letter-spacing:.28em;font-size:9px;text-transform:uppercase;color:var(--ink);opacity:.7;}
+  .scrollhint .bar{width:1px;height:22px;background:var(--deep);opacity:.55;animation:nudge 1.8s ease-in-out infinite;}
+
+  /* ---- COUNTDOWN ---- */
+  .countdown{background:var(--section);padding:66px 28px 66px;text-align:center;--wavefill:var(--section);}
+  .clock{display:flex;justify-content:center;gap:14px;}
+  .clock .unit{display:flex;flex-direction:column;gap:6px;min-width:56px;}
+  .clock .num{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:500;color:var(--deep);line-height:1;}
+  .clock .lab{letter-spacing:.2em;font-size:10px;text-transform:uppercase;color:var(--sub);}
+  .clock .sep{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--primary);line-height:1.1;}
+
+  /* ---- STORY — the nest: home, warmth, a life built together ---- */
+  .story{background:var(--page);padding:70px 28px 64px;text-align:center;--wavefill:var(--page);}
+  .story .frame{
+    width:220px;height:280px;margin:0 auto 26px;overflow:hidden;
+    border-radius:110px 110px 110px 110px / 140px 140px 140px 140px;
+    border:1px solid var(--primary);outline:1px solid var(--line);outline-offset:5px;
+    box-shadow:0 20px 50px rgba(35,80,107,.16);
+  }
+  .story p{font-weight:300;font-size:15px;line-height:1.85;color:var(--sub);max-width:300px;margin:0 auto;}
+  .story .quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--deep);margin-top:26px;}
+  .nest{width:200px;margin:30px auto 0;}
+  .nest svg{width:100%;height:auto;display:block;}
+
+  /* ---- GALLERY ---- */
+  .gallery{background:var(--section);padding:66px 24px 60px;--wavefill:var(--section);}
+  .grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:100px;gap:10px;}
+  .grid .ph{border-radius:12px;overflow:hidden;border:1px solid var(--line);}
+  .tall{grid-row:span 2;}
+
+  /* ---- SCHEDULE ---- */
+  .schedule{background:var(--page);padding:70px 30px 64px;--wavefill:var(--page);}
+  .row{display:flex;gap:18px;}
+  .row .time{width:74px;text-align:right;font-family:'Cormorant Garamond',serif;font-size:21px;color:var(--deep);padding-top:2px;}
+  .row .body{flex:1;border-left:1px solid var(--line);padding:0 0 30px 20px;position:relative;}
+  .row:last-child .body{border-left:0;padding-bottom:0;}
+  .row .dot{position:absolute;left:-6px;top:5px;width:11px;height:11px;border-radius:50% 0 50% 50%;transform:rotate(45deg);background:var(--primary);}
+  .row .t{font-family:'Cormorant Garamond',serif;font-size:23px;color:var(--ink);margin-bottom:3px;}
+  .row .d{font-weight:300;font-size:13px;color:var(--sub);}
+
+  /* ---- VENUE ---- */
+  .venue{background:var(--section);padding:66px 28px 60px;text-align:center;--wavefill:var(--section);}
+  .venue .addr{font-weight:300;font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:22px;}
+  .venue .map{width:100%;height:210px;border-radius:14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 18px 44px rgba(35,80,107,.14);}
+  .btn{display:inline-block;margin-top:24px;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--deep);border:1px solid var(--primary);border-radius:100px;padding:12px 26px;text-decoration:none;}
+
+  /* ---- DRESS ---- */
+  .dress{background:var(--page);padding:68px 28px 62px;text-align:center;--wavefill:var(--page);}
+  .dress p{font-weight:300;font-size:15px;line-height:1.8;color:var(--sub);max-width:290px;margin:0 auto 28px;}
+  .swatches{display:flex;justify-content:center;gap:14px;}
+  .swatches i{width:42px;height:42px;border-radius:50%;box-shadow:0 6px 16px rgba(35,80,107,.12);display:block;}
+
+  /* ---- FOOTER — deep water, moonlit ---- */
+  .footer{
+    position:relative;background:linear-gradient(170deg,#3d8fb5,#2a6f97 55%,#215a7d);
+    padding:78px 28px 62px;text-align:center;overflow:hidden;--wavefill:#3d8fb5;
+  }
+  .footer .inner{position:relative;z-index:3;}
+  .footer .kick{letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:var(--ondark);opacity:.9;margin-bottom:18px;}
+  .footer .big{font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1.35;color:var(--ondark);margin-bottom:26px;}
+  .footer .names{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:40px;color:var(--ondark);}
+  .footer .rule{width:56px;height:1px;background:var(--ondark);opacity:.5;margin:26px auto;}
+  .footer .date{letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:var(--ondark);opacity:.85;margin-bottom:26px;}
+  .footer .rsvp{display:inline-block;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--deep);background:var(--ondark);border-radius:100px;padding:13px 30px;text-decoration:none;}
+  .footer .tag{font-size:11px;color:var(--ondark);opacity:.75;margin-top:24px;letter-spacing:.1em;}
+  .footer .bubbles i{background:radial-gradient(circle at 34% 30%,rgba(255,255,255,.6),rgba(255,255,255,.14) 60%,transparent);}
+
+  /* ---- Reveal on scroll ---- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ---- Motion gate: everything frozen until the first touch ---- */
+  .invite:not(.started) *{animation-play-state:paused !important;}
+  .taphint{position:absolute;left:50%;bottom:84px;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:9px;letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:var(--ink);background:rgba(247,252,254,.62);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border:1px solid rgba(142,202,230,.65);border-radius:100px;padding:12px 24px;cursor:pointer;transition:opacity .7s ease,transform .7s ease;}
+  .taphint::before,.taphint::after{content:"";width:14px;height:1px;background:var(--deep);opacity:.75;}
+  .taphint.gone{opacity:0;transform:translateX(-50%) translateY(12px);pointer-events:none;}
+  .invite:not(.started) .scrollhint{opacity:0;}
+  .scrollhint{transition:opacity .6s ease;}
+
+  @keyframes drift{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @keyframes sway{0%,100%{transform:rotate(-2.6deg);}50%{transform:rotate(2.6deg);}}
+  @keyframes leafsway{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(3deg);}}
+  @keyframes fall{
+    0%{transform:translate3d(0,-30px,0) rotate(0deg);opacity:0;}
+    12%{opacity:.9;}
+    100%{transform:translate3d(var(--dx,26px),108vh,0) rotate(var(--rot,320deg));opacity:0;}
+  }
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0);opacity:0;}
+    18%{opacity:.85;}
+    100%{transform:translateY(-78vh) translateX(var(--bx,14px));opacity:0;}
+  }
+  @keyframes glow{0%,100%{opacity:.55;transform:translateX(-50%) scale(1);}50%{opacity:.9;transform:translateX(-50%) scale(1.07);}}
+  @keyframes glint{0%,100%{opacity:0;transform:scaleX(.6);}50%{opacity:.8;transform:scaleX(1);}}
+  @keyframes shellin{0%,100%{opacity:.25;transform:scale(.9) translateY(3px);}45%,60%{opacity:1;transform:scale(1) translateY(0);}}
+  @keyframes nudge{0%,100%{transform:translateY(0);opacity:.45;}50%{transform:translateY(7px);opacity:1;}}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+    .reveal{opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- Reusable garden pieces: blooms, leaves, shells, nest -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="sb-bloom">
+    <g opacity=".95">
+      <ellipse cx="0" cy="-8" rx="4.4" ry="7" fill="#8ecae6"/>
+      <ellipse cx="7.6" cy="-2.5" rx="4.4" ry="7" fill="#a8d8ec" transform="rotate(72 7.6 -2.5)"/>
+      <ellipse cx="4.7" cy="6.5" rx="4.4" ry="7" fill="#8ecae6" transform="rotate(144 4.7 6.5)"/>
+      <ellipse cx="-4.7" cy="6.5" rx="4.4" ry="7" fill="#bfe3f5" transform="rotate(216 -4.7 6.5)"/>
+      <ellipse cx="-7.6" cy="-2.5" rx="4.4" ry="7" fill="#a8d8ec" transform="rotate(288 -7.6 -2.5)"/>
+      <circle cx="0" cy="0" r="3.1" fill="#fdf6dc"/>
+    </g>
+  </g>
+  <g id="sb-bloom-w">
+    <g opacity=".97">
+      <ellipse cx="0" cy="-7" rx="3.9" ry="6.2" fill="#ffffff"/>
+      <ellipse cx="6.7" cy="-2.2" rx="3.9" ry="6.2" fill="#f4fbfe" transform="rotate(72 6.7 -2.2)"/>
+      <ellipse cx="4.1" cy="5.8" rx="3.9" ry="6.2" fill="#ffffff" transform="rotate(144 4.1 5.8)"/>
+      <ellipse cx="-4.1" cy="5.8" rx="3.9" ry="6.2" fill="#eef8fd" transform="rotate(216 -4.1 5.8)"/>
+      <ellipse cx="-6.7" cy="-2.2" rx="3.9" ry="6.2" fill="#ffffff" transform="rotate(288 -6.7 -2.2)"/>
+      <circle cx="0" cy="0" r="2.7" fill="#f6d98a"/>
+    </g>
+  </g>
+  <path id="sb-leaf" d="M0 0 C9 -8 22 -8 29 0 C22 8 9 8 0 0 Z"/>
+  <!-- pearly scallop shell -->
+  <g id="sb-shell">
+    <path d="M0 0 C-15 0 -25 -10 -25 -21 C-25 -33 -13 -42 0 -42 C13 -42 25 -33 25 -21 C25 -10 15 0 0 0 Z" fill="#fdf3e6"/>
+    <g stroke="#e7d3bb" stroke-width="1.1" fill="none" stroke-linecap="round">
+      <path d="M0 -1 L0 -40"/><path d="M0 -1 L-9 -38"/><path d="M0 -1 L9 -38"/>
+      <path d="M0 -1 L-17 -33"/><path d="M0 -1 L17 -33"/>
+    </g>
+    <path d="M0 0 C-15 0 -25 -10 -25 -21 C-25 -33 -13 -42 0 -42" fill="rgba(255,255,255,.42)"/>
+    <ellipse cx="0" cy="-2" rx="6" ry="2.6" fill="#eddcc6"/>
+  </g>
+  <!-- soft organic nest with tiny eggs -->
+  <g id="sb-nest">
+    <ellipse cx="0" cy="6" rx="46" ry="17" fill="#b08b62"/>
+    <ellipse cx="0" cy="2" rx="46" ry="18" fill="#c2a077"/>
+    <ellipse cx="0" cy="-1" rx="34" ry="11" fill="#9e7a52"/>
+    <g stroke="#a5825a" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".85">
+      <path d="M-42 2 C-26 -6 -8 -8 6 -5"/><path d="M-34 9 C-16 2 4 1 22 6"/>
+      <path d="M40 3 C26 -6 10 -9 -4 -6"/><path d="M34 11 C18 4 -2 3 -20 8"/>
+      <path d="M-44 -2 C-30 4 -12 7 8 4"/>
+    </g>
+    <ellipse cx="-11" cy="-3" rx="8.5" ry="6.6" fill="#f4fbfe"/>
+    <ellipse cx="1" cy="-5" rx="8.5" ry="6.6" fill="#ffffff"/>
+    <ellipse cx="12" cy="-2" rx="8.5" ry="6.6" fill="#eef8fd"/>
+  </g>
+</defs></svg>
+
+<div class="invite">
+
+  <!-- ============ HERO — where the garden meets the sea ============ -->
+  <section class="hero">
+    <!-- To use your own photo, add: style="background-image:url('your-photo.jpg')" to .hero-bg -->
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-wash"></div>
+    <div class="sunlight"></div>
+
+    <!-- shimmering reflections skimming the water -->
+    <div class="shimmer">
+      <i style="left:12%;bottom:22%;width:46px;animation-delay:0s"></i>
+      <i style="left:38%;bottom:34%;width:64px;animation-delay:1.3s"></i>
+      <i style="left:64%;bottom:18%;width:38px;animation-delay:2.6s"></i>
+      <i style="left:22%;bottom:46%;width:52px;animation-delay:3.4s"></i>
+      <i style="left:72%;bottom:40%;width:58px;animation-delay:4.5s"></i>
+      <i style="left:48%;bottom:10%;width:44px;animation-delay:5.2s"></i>
+    </div>
+
+    <!-- three drifting wave layers -->
+    <div class="sea">
+      <div class="wave w1">
+        <svg viewBox="0 0 480 190" preserveAspectRatio="none"><path fill="#ffffff" d="M0,96 C60,74 120,120 180,102 C240,84 300,116 360,100 C420,84 460,104 480,98 L480,190 L0,190 Z"/></svg>
+        <svg viewBox="0 0 480 190" preserveAspectRatio="none"><path fill="#ffffff" d="M0,96 C60,74 120,120 180,102 C240,84 300,116 360,100 C420,84 460,104 480,98 L480,190 L0,190 Z"/></svg>
+      </div>
+      <div class="wave w2">
+        <svg viewBox="0 0 480 190" preserveAspectRatio="none"><path fill="#a8d8ec" d="M0,120 C70,100 130,142 200,124 C270,106 330,140 400,122 C440,112 466,124 480,120 L480,190 L0,190 Z"/></svg>
+        <svg viewBox="0 0 480 190" preserveAspectRatio="none"><path fill="#a8d8ec" d="M0,120 C70,100 130,142 200,124 C270,106 330,140 400,122 C440,112 466,124 480,120 L480,190 L0,190 Z"/></svg>
+      </div>
+      <div class="wave w3">
+        <svg viewBox="0 0 480 190" preserveAspectRatio="none"><path fill="#7cc0dc" d="M0,146 C64,130 128,166 192,150 C256,134 320,166 384,150 C428,139 462,150 480,146 L480,190 L0,190 Z"/></svg>
+        <svg viewBox="0 0 480 190" preserveAspectRatio="none"><path fill="#7cc0dc" d="M0,146 C64,130 128,166 192,150 C256,134 320,166 384,150 C428,139 462,150 480,146 L480,190 L0,190 Z"/></svg>
+      </div>
+    </div>
+
+    <!-- tiny bubbles drifting up through the water -->
+    <div class="bubbles">
+      <i style="left:14%;width:7px;height:7px;--bx:16px;animation-duration:13s;animation-delay:0s"></i>
+      <i style="left:29%;width:5px;height:5px;--bx:-12px;animation-duration:17s;animation-delay:2.4s"></i>
+      <i style="left:47%;width:9px;height:9px;--bx:20px;animation-duration:15s;animation-delay:5.1s"></i>
+      <i style="left:63%;width:6px;height:6px;--bx:-16px;animation-duration:19s;animation-delay:1.2s"></i>
+      <i style="left:81%;width:8px;height:8px;--bx:12px;animation-duration:14s;animation-delay:6.8s"></i>
+      <i style="left:92%;width:4px;height:4px;--bx:-9px;animation-duration:21s;animation-delay:3.7s"></i>
+    </div>
+
+    <!-- blue & white petals on the sea breeze -->
+    <div class="petals">
+      <i style="left:8%;width:11px;height:15px;background:#8ecae6;opacity:.75;--dx:34px;--rot:300deg;animation-duration:14s"></i>
+      <i style="left:23%;width:9px;height:12px;background:#ffffff;opacity:.85;--dx:-26px;--rot:-260deg;animation-duration:18s;animation-delay:3s"></i>
+      <i style="left:39%;width:13px;height:17px;background:#bfe3f5;opacity:.7;--dx:40px;--rot:340deg;animation-duration:12s;animation-delay:1.4s"></i>
+      <i style="left:55%;width:10px;height:13px;background:#ffffff;opacity:.8;--dx:-32px;--rot:-300deg;animation-duration:16s;animation-delay:5.6s"></i>
+      <i style="left:71%;width:12px;height:16px;background:#a8d8ec;opacity:.72;--dx:28px;--rot:280deg;animation-duration:15s;animation-delay:2.2s"></i>
+      <i style="left:86%;width:8px;height:11px;background:#ffffff;opacity:.8;--dx:-20px;--rot:-330deg;animation-duration:20s;animation-delay:7.1s"></i>
+    </div>
+
+    <!-- the garden along the left shore -->
+    <div class="garden left">
+      <svg viewBox="0 0 172 210">
+        <g stroke="#7fae9e" stroke-width="2.2" fill="none" stroke-linecap="round">
+          <path class="sway" d="M26 210 C22 168 30 140 24 108"/>
+          <path class="sway s2" d="M52 210 C50 172 44 146 54 118"/>
+          <path class="sway s3" d="M80 210 C78 178 86 156 78 132"/>
+          <path class="sway s2" d="M108 210 C110 182 102 164 112 146"/>
+        </g>
+        <g fill="#9ec9c0">
+          <use class="leafsway" href="#sb-leaf" transform="translate(26 168) rotate(-24) scale(.72)"/>
+          <use class="leafsway" href="#sb-leaf" transform="translate(52 176) rotate(18) scale(.66)" opacity=".9"/>
+          <use class="leafsway" href="#sb-leaf" transform="translate(80 186) rotate(-14) scale(.6)"/>
+          <use class="leafsway" href="#sb-leaf" transform="translate(108 190) rotate(22) scale(.55)" opacity=".85"/>
+          <use class="leafsway" href="#sb-leaf" transform="translate(12 194) rotate(-38) scale(.7)" opacity=".8"/>
+        </g>
+        <use class="sway" href="#sb-bloom" transform="translate(24 106) scale(1.35)"/>
+        <use class="sway s2" href="#sb-bloom-w" transform="translate(54 116) scale(1.15)"/>
+        <use class="sway s3" href="#sb-bloom" transform="translate(78 130) scale(1)"/>
+        <use class="sway s2" href="#sb-bloom-w" transform="translate(112 144) scale(.88)"/>
+        <!-- shells resting in the sand among the stems -->
+        <use class="shell-in" href="#sb-shell" transform="translate(46 208) scale(.52)"/>
+        <use class="shell-in d2" href="#sb-shell" transform="translate(94 210) scale(.4) rotate(16)"/>
+      </svg>
+    </div>
+
+    <!-- mirrored garden along the right shore -->
+    <div class="garden right">
+      <svg viewBox="0 0 172 210">
+        <g stroke="#7fae9e" stroke-width="2.2" fill="none" stroke-linecap="round">
+          <path class="sway s3" d="M30 210 C26 172 34 144 28 114"/>
+          <path class="sway" d="M58 210 C56 176 50 150 60 124"/>
+          <path class="sway s2" d="M86 210 C84 180 92 158 84 138"/>
+        </g>
+        <g fill="#9ec9c0">
+          <use class="leafsway" href="#sb-leaf" transform="translate(30 172) rotate(-20) scale(.7)"/>
+          <use class="leafsway" href="#sb-leaf" transform="translate(58 180) rotate(20) scale(.62)" opacity=".9"/>
+          <use class="leafsway" href="#sb-leaf" transform="translate(86 190) rotate(-16) scale(.56)"/>
+        </g>
+        <use class="sway s3" href="#sb-bloom-w" transform="translate(28 112) scale(1.25)"/>
+        <use class="sway" href="#sb-bloom" transform="translate(60 122) scale(1.05)"/>
+        <use class="sway s2" href="#sb-bloom-w" transform="translate(84 136) scale(.9)"/>
+        <use class="shell-in d2" href="#sb-shell" transform="translate(52 209) scale(.46)"/>
+      </svg>
+    </div>
+
+    <div class="hero-inner">
+      <div class="khmer-bless km">ក្រុមគ្រួសារយើងខ្ញុំ សូមគោរពអញ្ជើញ<br>លោក លោកស្រី អ្នកនាងកញ្ញា</div>
+      <div class="kicker">Together with their families</div>
+      <div class="n">Sovatha</div>
+      <div class="amp">and</div>
+      <div class="n">Yousa</div>
+      <div class="rule"></div>
+      <div class="date">23 &middot; 11 &middot; 2026</div>
+    </div>
+
+    <div class="taphint" id="taphint">Tap to begin</div>
+    <div class="scrollhint"><div class="lbl">Scroll</div><div class="bar"></div></div>
+  </section>
+
+  <!-- ============ COUNTDOWN ============ -->
+  <section class="countdown">
+    <div class="wavesep"><svg viewBox="0 0 480 34" preserveAspectRatio="none"><path d="M0,20 C80,2 160,32 240,18 C320,4 400,28 480,14 L480,34 L0,34 Z"/></svg></div>
+    <div class="reveal">
+      <div class="eyebrow">The tide is turning</div>
+      <h2>Counting down<br>to our seaside vows</h2>
+      <div class="clock">
+        <div class="unit"><div class="num" id="cd-d">--</div><div class="lab">Days</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-h">--</div><div class="lab">Hours</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-m">--</div><div class="lab">Mins</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-s">--</div><div class="lab">Secs</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STORY ============ -->
+  <section class="story">
+    <div class="wavesep"><svg viewBox="0 0 480 34" preserveAspectRatio="none"><path d="M0,16 C70,30 150,2 230,16 C310,30 390,6 480,20 L480,34 L0,34 Z"/></svg></div>
+    <div class="reveal">
+      <div class="eyebrow">Our story</div>
+      <h2>Two shores,<br>one horizon</h2>
+      <div class="frame"><div class="ph" style="width:100%;height:100%"><span>your photo</span></div></div>
+      <p>It began by the water &mdash; a borrowed umbrella, a long walk, and a tide that kept bringing us back to the same shore. Piece by piece, like a nest built twig by twig, we made a home of each other.</p>
+      <div class="quote">&ldquo;You are my calm and my current.&rdquo;</div>
+      <!-- the nest: home, warmth, a life built together -->
+      <div class="nest">
+        <svg viewBox="0 0 200 90">
+          <g transform="translate(100 58)">
+            <use href="#sb-nest"/>
+            <use class="sway s3" href="#sb-bloom" transform="translate(-44 -14) scale(.62)"/>
+            <use class="sway" href="#sb-bloom-w" transform="translate(-30 -22) scale(.5)"/>
+            <use class="sway s2" href="#sb-bloom" transform="translate(38 -16) scale(.58)"/>
+            <use class="sway s3" href="#sb-bloom-w" transform="translate(26 -24) scale(.46)"/>
+            <g fill="#9ec9c0">
+              <use class="leafsway" href="#sb-leaf" transform="translate(-56 -4) rotate(-28) scale(.5)"/>
+              <use class="leafsway" href="#sb-leaf" transform="translate(44 -6) rotate(150) scale(.46)"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="gallery">
+    <div class="wavesep"><svg viewBox="0 0 480 34" preserveAspectRatio="none"><path d="M0,22 C90,6 170,30 250,16 C330,2 410,26 480,12 L480,34 L0,34 Z"/></svg></div>
+    <div class="reveal" style="text-align:center;margin-bottom:26px">
+      <div class="eyebrow">Moments</div>
+      <h2 style="margin:0">Gathered like<br>shells on the shore</h2>
+    </div>
+    <div class="reveal grid">
+      <div class="ph tall"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph tall"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SCHEDULE ============ -->
+  <section class="schedule">
+    <div class="wavesep"><svg viewBox="0 0 480 34" preserveAspectRatio="none"><path d="M0,14 C80,28 160,4 240,18 C320,32 400,8 480,22 L480,34 L0,34 Z"/></svg></div>
+    <div class="reveal" style="text-align:center;margin-bottom:34px">
+      <div class="eyebrow">The day</div>
+      <h2 style="margin:0">Order of the day</h2>
+    </div>
+    <div class="reveal">
+      <div class="row"><div class="time">7:00 AM</div><div class="body"><div class="dot"></div><div class="t">Monks&rsquo; Blessing</div><div class="d">Sot Mun &middot; morning prayers by the water</div></div></div>
+      <div class="row"><div class="time">9:00 AM</div><div class="body"><div class="dot"></div><div class="t">Hair Cutting Ceremony</div><div class="d">Gaat Sah &middot; a fresh start for the couple</div></div></div>
+      <div class="row"><div class="time">10:30 AM</div><div class="body"><div class="dot"></div><div class="t">Knot-Tying Ceremony</div><div class="d">Sompeas Ptem &middot; blessings from family &amp; elders</div></div></div>
+      <div class="row"><div class="time">6:00 PM</div><div class="body"><div class="dot"></div><div class="t">Reception &amp; Dinner</div><div class="d">Seaside terrace &middot; toasts, feasting &amp; dancing</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ VENUE ============ -->
+  <section class="venue">
+    <div class="wavesep"><svg viewBox="0 0 480 34" preserveAspectRatio="none"><path d="M0,20 C70,4 150,28 230,14 C310,0 390,24 480,10 L480,34 L0,34 Z"/></svg></div>
+    <div class="reveal">
+      <div class="eyebrow">Where</div>
+      <h2 style="margin:0 0 6px">Blue Harbour Pavilion</h2>
+      <div class="addr">Street 123<br>Kep, Cambodia</div>
+      <div class="map"><div class="ph" style="width:100%;height:100%"><span>map / venue photo</span></div></div>
+      <a class="btn" href="#">Get directions</a>
+    </div>
+  </section>
+
+  <!-- ============ DRESS ============ -->
+  <section class="dress">
+    <div class="wavesep"><svg viewBox="0 0 480 34" preserveAspectRatio="none"><path d="M0,16 C90,32 170,6 250,20 C330,34 410,10 480,24 L480,34 L0,34 Z"/></svg></div>
+    <div class="reveal">
+      <div class="eyebrow">Attire</div>
+      <h2 style="margin:0 0 16px">Seaside elegant</h2>
+      <p>We&rsquo;d love to see you in soft ocean tones &mdash; think powder blue, sea glass, pearl white, aqua and sand.</p>
+      <div class="swatches">
+        <i style="background:var(--primary)"></i>
+        <i style="background:var(--deep)"></i>
+        <i style="background:var(--accent)"></i>
+        <i style="background:var(--sand)"></i>
+        <i style="background:#fdfdff;border:1px solid var(--line);box-shadow:0 6px 16px rgba(35,80,107,.08)"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <section class="footer">
+    <div class="wavesep"><svg viewBox="0 0 480 34" preserveAspectRatio="none"><path d="M0,18 C80,2 160,30 240,16 C320,2 400,26 480,12 L480,34 L0,34 Z"/></svg></div>
+    <div class="bubbles">
+      <i style="left:18%;width:6px;height:6px;--bx:12px;animation-duration:16s"></i>
+      <i style="left:44%;width:8px;height:8px;--bx:-14px;animation-duration:20s;animation-delay:3s"></i>
+      <i style="left:70%;width:5px;height:5px;--bx:10px;animation-duration:18s;animation-delay:6s"></i>
+      <i style="left:88%;width:7px;height:7px;--bx:-11px;animation-duration:22s;animation-delay:1.5s"></i>
+    </div>
+    <div class="reveal inner">
+      <div class="kick">With all our love</div>
+      <div class="big">We can&rsquo;t wait to<br>celebrate with you</div>
+      <div class="names">Sovatha &amp; Yousa</div>
+      <div class="rule"></div>
+      <div class="date">23 &middot; 11 &middot; 2026</div>
+      <a class="rsvp" href="#">RSVP by 1 October</a>
+      <div class="tag">#SovathaMeetsYousa</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  (function(){
+    var invite = document.querySelector('.invite');
+
+    // Countdown (shows a static value immediately; only ticks after start)
+    var target = new Date((window.INVITE && window.INVITE.dateISO) || '2026-11-23T15:00:00').getTime();
+    var pad = function(n){ return String(n).padStart(2,'0'); };
+    function render(){
+      var diff = Math.max(0, target - Date.now());
+      var d = Math.floor(diff/86400000); diff -= d*86400000;
+      var h = Math.floor(diff/3600000); diff -= h*3600000;
+      var m = Math.floor(diff/60000); diff -= m*60000;
+      var s = Math.floor(diff/1000);
+      document.getElementById('cd-d').textContent = d;
+      document.getElementById('cd-h').textContent = pad(h);
+      document.getElementById('cd-m').textContent = pad(m);
+      document.getElementById('cd-s').textContent = pad(s);
+    }
+    render();
+
+    // Motion gate: nothing animates until the first user interaction
+    var started = false;
+    function start(){
+      if(started) return; started = true;
+      invite.classList.add('started');
+      var hint = document.getElementById('taphint'); if(hint) hint.classList.add('gone');
+      setInterval(render, 1000);
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold:0.14 });
+      document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+    }
+    ['touchstart','pointerdown','click','keydown','wheel'].forEach(function(ev){
+      window.addEventListener(ev, start, { passive:true });
+    });
+  })();
+</script>
+
+<p style="text-align:center; font-size:0.75rem; color:#999; padding:1rem 0; margin:0;">
+  Template © <a href="/" style="color:inherit;">Wedding Templates</a> — licensed for personal use only.
+</p>
+</body>
+</html>
