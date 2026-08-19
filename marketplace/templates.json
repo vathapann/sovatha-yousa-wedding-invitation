@@ -1,5 +1,16 @@
 [
   {
+    "id": "angkor-royal",
+    "name": "Angkor Royal",
+    "description": "The temple across the moat as a full-bleed photograph, framed in gold kbach ornament — jungle green, sandstone and antique gold, with Khmer ceremony details.",
+    "descriptionKm": "ប្រាសាទអង្គរវត្តមើលឆ្លងកាត់គូទឹក ជារូបភាពពេញអេក្រង់ ស៊ុមដោយក្បាច់ខ្មែរមាស — ពណ៌បៃតងព្រៃ ថ្មភក់ និងមាសបុរាណ ជាមួយពិធីបុណ្យខ្មែរ។",
+    "price": "$49",
+    "previewUrl": "/templates/angkor-royal/",
+    "stripePriceId": "price_REPLACE_ME_ANGKOR",
+    "accent": "#c9a227",
+    "tags": ["khmer", "royal", "photo", "traditional"]
+  },
+  {
     "id": "highland-reverie",
     "name": "Highland Reverie",
     "description": "An arched garden window onto misty lavender mountains — drifting cloud, blooms spilling over the arch, and butterflies streaming through from the first screen to the last.",
