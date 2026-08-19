@@ -1,5 +1,16 @@
 [
   {
+    "id": "highland-reverie",
+    "name": "Highland Reverie",
+    "description": "An arched garden window onto misty lavender mountains — drifting cloud, blooms spilling over the arch, and butterflies streaming through from the first screen to the last.",
+    "descriptionKm": "បង្អួចធ្នូសួនច្បារមើលទៅភ្នំពណ៌ស្វាយអ័ព្ទ — ពពកអណ្តែត ផ្កាព្យួរលើធ្នូ និងមេអំបៅហើរឆ្លងកាត់ ពីអេក្រង់ដំបូងរហូតដល់ចុងក្រោយ។",
+    "price": "$49",
+    "previewUrl": "/templates/highland-reverie/",
+    "stripePriceId": "price_REPLACE_ME_HIGHLAND",
+    "accent": "#cbb8e6",
+    "tags": ["mountain", "butterfly", "floral", "romantic", "animated"]
+  },
+  {
     "id": "butterfly-vale",
     "name": "Butterfly Vale",
     "description": "A hidden garden high in misty blue mountains — drifting clouds, sunlight through the peaks, wildflowers, and butterflies that never stop fluttering from the first screen to the last.",

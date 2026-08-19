@@ -1,0 +1,727 @@
+<!--
+  © Wedding Templates (sovathapann@gmail.com). "Highland Reverie" template.
+  Licensed for single-event personal use by the purchasing couple only.
+  Redistribution, resale, or reuse of this source as a template for other
+  couples/events is prohibited without written permission. See /LICENSE.md.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sovatha &amp; Yousa · 23 Nov 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@300;400;500&family=Noto+Serif+Khmer:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     PALETTE — "Highland Reverie" — dawn in a hidden highland
+     garden, seen through an arched window: lavender and soft
+     green forward, powder blue behind, pastel blooms throughout.
+     Swap these values to re-theme the whole invitation.
+     ============================================================ */
+  :root{
+    --page:#fcfbff; --section:#f2f0fa; --ink:#43405c; --sub:#8b87a6;
+    --primary:#b9c9e8; --blush:#cbb8e6; --deep:#6d6a94;
+    --accent:#a9cbb0; --line:#e5e2f2; --ondark:#faf8ff;
+    --sky-1:#f6f8fe; --sky-2:#e3ebf9; --sky-3:#c9d9f0;
+    --ridge-far:#d6dcf1; --ridge-mid:#b0bade; --ridge-near:#8a94c0;
+    --lav:#cbb8e6; --pastel:#f0d9e8; --leaf:#93b89c;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:#ddd8ec;
+    font-family:'Jost',sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .km{font-family:'Noto Serif Khmer',serif;}
+  /* Phone-width column, centered; full-bleed on small screens */
+  .invite{
+    max-width:480px;margin:0 auto;background:var(--page);
+    position:relative;overflow:hidden;
+    box-shadow:0 30px 80px rgba(67,64,92,.28);
+  }
+  h2{font-family:'Marcellus',serif;font-weight:400;font-size:33px;line-height:1.18;color:var(--ink);margin:0 0 18px;}
+  .eyebrow{letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:var(--deep);margin-bottom:14px;}
+  section{position:relative;}
+
+  /* ---- Photo placeholder. To use a real photo: set a background-image,
+         e.g. style="background-image:url('me.jpg')" on the .ph element. ---- */
+  .ph{
+    background-color:var(--section);
+    background-image:linear-gradient(135deg,rgba(109,106,148,.07) 25%,transparent 25%,transparent 50%,rgba(109,106,148,.07) 50%,rgba(109,106,148,.07) 75%,transparent 75%);
+    background-size:18px 18px;background-position:center;background-repeat:no-repeat;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ph[style*="url"]{background-size:cover;}
+  .ph span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);opacity:.8;}
+  .ph[style*="url"] span{display:none;}
+
+  /* ---- Cloud dividers: a soft bank of cloud between sections ---- */
+  .cloudsep{position:absolute;top:0;left:0;width:100%;height:52px;pointer-events:none;z-index:2;overflow:hidden;}
+  .cloudsep i{position:absolute;border-radius:50%;filter:blur(10px);background:var(--cloudfill,var(--page));}
+  .cloudsep i:nth-child(1){left:-8%;top:-30px;width:46%;height:58px;}
+  .cloudsep i:nth-child(2){left:26%;top:-38px;width:44%;height:66px;}
+  .cloudsep i:nth-child(3){left:58%;top:-28px;width:50%;height:56px;}
+  .cloudsep i:nth-child(4){left:-4%;top:-14px;width:110%;height:34px;border-radius:0;filter:blur(9px);}
+
+  /* ============================================================
+     BUTTERFLIES — present in every section, so they never stop.
+     Three depths and three flight paths (drifting down, crossing,
+     and spiralling) keep the movement natural and dimensional.
+     ============================================================ */
+  .flutter{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:4;}
+  .flutter.burst{bottom:auto;height:50%;}
+  .bf{position:absolute;display:block;will-change:transform;}
+  .bf svg{display:block;width:100%;height:auto;}
+  .bf.far{width:14px;opacity:.42;filter:blur(.8px);}
+  .bf.mid{width:22px;opacity:.7;}
+  .bf.near{width:32px;opacity:.94;}
+  .bf.glass{opacity:.3;}
+  .wg{transform-box:view-box;transform-origin:22px 20px;animation:flap var(--flap,.5s) ease-in-out infinite;}
+  .f-fall{animation:bfFall var(--dur,18s) linear infinite;}
+  .f-cross{animation:bfCross var(--dur,22s) ease-in-out infinite;}
+  .f-spiral{animation:bfSpiral var(--dur,26s) ease-in-out infinite;}
+
+  /* the last butterfly: flies toward you and dissolves into the light */
+  .bf-final{position:absolute;left:50%;bottom:20%;width:26px;margin-left:-13px;z-index:6;pointer-events:none;
+    animation:bfToward 14s ease-in infinite;}
+  .bf-final svg{width:100%;height:auto;display:block;}
+  .final-glow{position:absolute;left:50%;bottom:16%;width:210px;height:210px;margin-left:-105px;z-index:5;pointer-events:none;
+    border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.78),rgba(255,255,255,.16) 45%,transparent 70%);
+    animation:finalGlow 14s ease-in infinite;}
+
+  /* ============ HERO — the arched garden window ============ */
+  .hero{
+    min-height:100vh;padding:54px 22px 96px;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;overflow:hidden;
+    background:linear-gradient(180deg,#f7f5fd 0%,#eceaf7 52%,#ded9ef 100%);
+  }
+  /* couple's uploaded photo sits behind the whole scene */
+  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:1;}
+  .hero-wash{position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:linear-gradient(180deg,rgba(252,251,255,.46),rgba(227,235,249,.22) 52%,rgba(222,217,239,.5));}
+
+  /* the arch itself — a thin double-line frame with a stone sill */
+  .arch{position:relative;z-index:5;width:100%;max-width:330px;margin:0 auto;
+    transform-origin:50% 100%;}
+  .arch-view{
+    position:relative;height:430px;overflow:hidden;
+    border-radius:165px 165px 10px 10px;
+    background:linear-gradient(180deg,var(--sky-1) 0%,var(--sky-2) 48%,var(--sky-3) 100%);
+    box-shadow:inset 0 0 40px rgba(109,106,148,.16), 0 26px 60px rgba(67,64,92,.24);
+  }
+  .arch-trim{position:absolute;inset:-9px;border:1px solid var(--blush);opacity:.85;
+    border-radius:174px 174px 14px 14px;pointer-events:none;z-index:7;}
+  .arch-trim::after{content:"";position:absolute;inset:5px;border:1px solid var(--primary);opacity:.7;
+    border-radius:169px 169px 10px 10px;}
+  .sill{position:relative;z-index:7;width:calc(100% + 34px);margin:-2px -17px 0;height:13px;border-radius:3px;
+    background:linear-gradient(180deg,#efecf8,#d9d4ea);box-shadow:0 6px 16px rgba(67,64,92,.18);}
+
+  /* sunlight coming through the clouds, inside the arch */
+  .sunglow{position:absolute;top:-14%;left:52%;transform:translateX(-50%);
+    width:250px;height:250px;z-index:3;pointer-events:none;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,253,244,.92),rgba(255,250,232,.3) 44%,transparent 72%);
+    animation:glow 10s ease-in-out infinite;}
+  .sunray{position:absolute;top:-8%;left:50%;width:200px;height:74%;margin-left:-100px;z-index:3;pointer-events:none;
+    background:linear-gradient(180deg,rgba(255,255,255,.44),transparent 74%);
+    clip-path:polygon(40% 0,60% 0,90% 100%,10% 100%);animation:glow 13s ease-in-out infinite;}
+
+  /* rounded watercolour ridges, three depths */
+  .layer{position:absolute;left:-6%;right:-6%;transform-origin:50% 100%;}
+  .layer svg{width:100%;height:auto;display:block;}
+  .l-far{bottom:40%;opacity:.9;}
+  .l-mid{bottom:26%;}
+  .l-near{bottom:0;}
+
+  /* clouds drifting between the mountains */
+  .clouds{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden;}
+  .cloud{position:absolute;border-radius:50%;filter:blur(12px);
+    background:radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.96),rgba(255,255,255,.5) 55%,transparent 75%);
+    animation:cloudDrift linear infinite;}
+  .mistband{position:absolute;left:-24%;width:150%;height:44px;filter:blur(11px);pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);
+    animation:cloudDrift linear infinite;}
+
+  /* wildflowers spilling over the arch and along the sill */
+  .arch-garland{position:absolute;top:-26px;left:-30px;right:-30px;z-index:8;pointer-events:none;}
+  .arch-garland svg{width:100%;height:auto;display:block;}
+  .sill-garden{position:absolute;left:-24px;right:-24px;bottom:-16px;z-index:8;pointer-events:none;}
+  .sill-garden svg{width:100%;height:auto;display:block;}
+  /* the meadow that fills the foreground of the whole hero */
+  .fg-flowers{position:absolute;left:0;right:0;bottom:-2px;z-index:6;pointer-events:none;}
+  .fg-flowers svg{width:100%;height:auto;display:block;}
+  .sway{transform-box:fill-box;transform-origin:bottom center;animation:sway 6.5s ease-in-out infinite;}
+  .sway.s2{animation-duration:8s;animation-delay:-1.4s;}
+  .sway.s3{animation-duration:5.4s;animation-delay:-2.6s;}
+
+  .hero-copy{position:relative;z-index:9;margin-top:26px;opacity:0;}
+  .hero .kicker{letter-spacing:.36em;font-size:10px;text-transform:uppercase;color:var(--deep);margin-bottom:12px;}
+  .hero .khmer-bless{font-family:'Noto Serif Khmer',serif;font-size:12.5px;line-height:2.05;color:var(--deep);margin:0 0 12px;}
+  .hero .n{font-family:'Marcellus',serif;font-size:39px;line-height:1.1;color:var(--ink);
+    text-shadow:0 1px 0 rgba(255,255,255,.75);}
+  .hero .amp{font-family:'Marcellus',serif;font-style:italic;font-size:22px;color:var(--blush);margin:3px 0;}
+  .hero .rule{width:56px;height:1px;background:var(--deep);opacity:.45;margin:18px auto;}
+  .hero .date{letter-spacing:.34em;font-size:12px;text-transform:uppercase;color:var(--ink);}
+  .scrollhint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:9;display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .scrollhint .lbl{letter-spacing:.28em;font-size:9px;text-transform:uppercase;color:var(--ink);opacity:.7;}
+  .scrollhint .bar{width:1px;height:22px;background:var(--deep);opacity:.55;animation:nudge 1.8s ease-in-out infinite;}
+
+  /* ---- The opening: the window draws you in, the meadow rises,
+         then the names settle in among the flowers. ---- */
+  .invite.started .arch{animation:archIn 7s ease-out both;}
+  .invite.started .l-far{animation:push1 8s ease-out both;}
+  .invite.started .l-mid{animation:push2 8s ease-out both;}
+  .invite.started .l-near{animation:push3 8s ease-out both;}
+  .invite.started .fg-flowers{animation:bloomUp 3.6s ease-out 1.2s both;}
+  .invite.started .sill-garden{animation:bloomUp 3.4s ease-out 1.6s both;}
+  .invite.started .hero-copy{animation:nameIn 2.8s ease-out 2.4s both;}
+
+  /* ---- COUNTDOWN ---- */
+  .countdown{background:var(--section);padding:70px 28px 66px;text-align:center;--cloudfill:var(--section);}
+  .clock{display:flex;justify-content:center;gap:14px;position:relative;z-index:5;}
+  .clock .unit{display:flex;flex-direction:column;gap:6px;min-width:56px;}
+  .clock .num{font-family:'Marcellus',serif;font-size:41px;color:var(--deep);line-height:1;}
+  .clock .lab{letter-spacing:.2em;font-size:10px;text-transform:uppercase;color:var(--sub);}
+  .clock .sep{font-family:'Marcellus',serif;font-size:36px;color:var(--blush);line-height:1.1;}
+
+  /* ---- STORY ---- */
+  .story{background:var(--page);padding:74px 28px 64px;text-align:center;--cloudfill:var(--page);}
+  .story .frame{
+    width:222px;height:284px;margin:0 auto 26px;overflow:hidden;
+    border-radius:111px 111px 12px 12px;
+    border:1px solid var(--blush);outline:1px solid var(--line);outline-offset:5px;
+    box-shadow:0 20px 50px rgba(67,64,92,.16);
+  }
+  .story p{font-weight:300;font-size:15px;line-height:1.85;color:var(--sub);max-width:300px;margin:0 auto;}
+  .story .quote{font-family:'Marcellus',serif;font-style:italic;font-size:20px;color:var(--deep);margin-top:26px;}
+
+  /* ---- GALLERY ---- */
+  .gallery{background:var(--section);padding:70px 24px 60px;--cloudfill:var(--section);}
+  .grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:100px;gap:10px;position:relative;z-index:5;}
+  .grid .ph{border-radius:12px 12px 12px 12px;overflow:hidden;border:1px solid var(--line);}
+  .grid .ph:first-child{border-radius:70px 70px 12px 12px;}
+  .tall{grid-row:span 2;}
+
+  /* ---- SCHEDULE ---- */
+  .schedule{background:var(--page);padding:74px 30px 64px;--cloudfill:var(--page);}
+  .row{display:flex;gap:18px;position:relative;z-index:5;}
+  .row .time{width:74px;text-align:right;font-family:'Marcellus',serif;font-size:20px;color:var(--deep);padding-top:3px;}
+  .row .body{flex:1;border-left:1px solid var(--line);padding:0 0 30px 20px;position:relative;}
+  .row:last-child .body{border-left:0;padding-bottom:0;}
+  .row .dot{position:absolute;left:-6px;top:5px;width:11px;height:11px;border-radius:50% 0 50% 50%;transform:rotate(45deg);background:var(--blush);}
+  .row .t{font-family:'Marcellus',serif;font-size:22px;color:var(--ink);margin-bottom:3px;}
+  .row .d{font-weight:300;font-size:13px;color:var(--sub);}
+
+  /* ---- VENUE ---- */
+  .venue{background:var(--section);padding:70px 28px 60px;text-align:center;--cloudfill:var(--section);}
+  .venue .addr{font-weight:300;font-size:14px;color:var(--sub);line-height:1.7;margin-bottom:22px;}
+  .venue .map{width:100%;height:210px;border-radius:70px 70px 14px 14px;overflow:hidden;border:1px solid var(--line);box-shadow:0 18px 44px rgba(67,64,92,.14);}
+  .btn{display:inline-block;margin-top:24px;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--deep);border:1px solid var(--blush);border-radius:100px;padding:12px 26px;text-decoration:none;}
+
+  /* ---- DRESS ---- */
+  .dress{background:var(--page);padding:72px 28px 62px;text-align:center;--cloudfill:var(--page);}
+  .dress p{font-weight:300;font-size:15px;line-height:1.8;color:var(--sub);max-width:290px;margin:0 auto 28px;}
+  .swatches{display:flex;justify-content:center;gap:14px;position:relative;z-index:5;}
+  .swatches i{width:42px;height:42px;border-radius:50%;box-shadow:0 6px 16px rgba(67,64,92,.12);display:block;}
+
+  /* ---- FOOTER — dusk over the highland, the air full of wings ---- */
+  .footer{
+    position:relative;background:linear-gradient(170deg,#8f8ab4,#6d6a94 55%,#585676);
+    padding:86px 28px 66px;text-align:center;overflow:hidden;--cloudfill:#8f8ab4;
+  }
+  .footer .inner{position:relative;z-index:7;}
+  .footer .kick{letter-spacing:.34em;font-size:11px;text-transform:uppercase;color:var(--ondark);opacity:.9;margin-bottom:18px;}
+  .footer .big{font-family:'Marcellus',serif;font-size:29px;line-height:1.4;color:var(--ondark);margin-bottom:26px;}
+  .footer .names{font-family:'Marcellus',serif;font-size:38px;color:var(--ondark);}
+  .footer .rule{width:56px;height:1px;background:var(--ondark);opacity:.5;margin:26px auto;}
+  .footer .date{letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:var(--ondark);opacity:.85;margin-bottom:26px;}
+  .footer .rsvp{display:inline-block;letter-spacing:.16em;font-size:11px;text-transform:uppercase;color:var(--deep);background:var(--ondark);border-radius:100px;padding:13px 30px;text-decoration:none;}
+  .footer .tag{font-size:11px;color:var(--ondark);opacity:.75;margin-top:24px;letter-spacing:.1em;}
+
+  /* ---- Reveal on scroll ---- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s ease;position:relative;z-index:5;}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ---- Motion gate: everything frozen until the first touch ---- */
+  .invite:not(.started) *{animation-play-state:paused !important;}
+  .taphint{position:absolute;left:50%;bottom:88px;transform:translateX(-50%);z-index:10;display:flex;align-items:center;gap:9px;letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:var(--ink);background:rgba(252,251,255,.66);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border:1px solid rgba(203,184,230,.75);border-radius:100px;padding:12px 24px;cursor:pointer;transition:opacity .7s ease,transform .7s ease;}
+  .taphint::before,.taphint::after{content:"";width:14px;height:1px;background:var(--blush);opacity:.85;}
+  .taphint.gone{opacity:0;transform:translateX(-50%) translateY(12px);pointer-events:none;}
+  .invite:not(.started) .scrollhint{opacity:0;}
+  .scrollhint{transition:opacity .6s ease;}
+
+  @keyframes flap{0%,100%{transform:scaleX(1);}50%{transform:scaleX(.26);}}
+  @keyframes bfFall{
+    0%{top:-9%;opacity:0;transform:translateX(0) rotate(0deg);}
+    9%{opacity:1;}
+    50%{transform:translateX(calc(var(--dx,40px) * .55)) rotate(calc(var(--rot,22deg) * .6));}
+    90%{opacity:1;}
+    100%{top:106%;opacity:0;transform:translateX(var(--dx,40px)) rotate(var(--rot,22deg));}
+  }
+  @keyframes bfCross{
+    0%{left:-14%;opacity:0;transform:translateY(0) rotate(-6deg);}
+    8%{opacity:1;}
+    25%{transform:translateY(-30px) rotate(5deg);}
+    50%{transform:translateY(18px) rotate(-6deg);}
+    75%{transform:translateY(-22px) rotate(6deg);}
+    92%{opacity:1;}
+    100%{left:110%;opacity:0;transform:translateY(0) rotate(-4deg);}
+  }
+  /* a slow looping arc — butterflies circling through the scene */
+  @keyframes bfSpiral{
+    0%{top:-8%;opacity:0;transform:translateX(0) rotate(0deg) scale(.8);}
+    10%{opacity:1;}
+    30%{transform:translateX(64px) rotate(16deg) scale(1);}
+    55%{transform:translateX(-46px) rotate(-14deg) scale(1.08);}
+    80%{transform:translateX(38px) rotate(12deg) scale(.94);}
+    92%{opacity:1;}
+    100%{top:104%;opacity:0;transform:translateX(0) rotate(-8deg) scale(.86);}
+  }
+  @keyframes bfToward{
+    0%{transform:scale(.45) translateY(10px);opacity:0;}
+    14%{opacity:.95;}
+    68%{transform:scale(1.7) translateY(-96px);opacity:1;filter:blur(0);}
+    100%{transform:scale(7.5) translateY(-210px);opacity:0;filter:blur(7px);}
+  }
+  @keyframes finalGlow{0%,55%{opacity:0;transform:scale(.7);}84%{opacity:.9;transform:scale(1.25);}100%{opacity:0;transform:scale(1.7);}}
+  @keyframes cloudDrift{from{transform:translateX(-34%);}to{transform:translateX(134%);}}
+  @keyframes glow{0%,100%{opacity:.55;}50%{opacity:.95;}}
+  @keyframes sway{0%,100%{transform:rotate(-2.6deg);}50%{transform:rotate(2.6deg);}}
+  @keyframes archIn{from{transform:scale(.93);}to{transform:scale(1);}}
+  @keyframes push1{from{transform:scale(1);}to{transform:scale(1.08);}}
+  @keyframes push2{from{transform:scale(1.02);}to{transform:scale(1.18);}}
+  @keyframes push3{from{transform:scale(1.05);}to{transform:scale(1.34) translateY(10px);}}
+  @keyframes bloomUp{from{opacity:0;transform:translateY(48px) scale(.94);}to{opacity:1;transform:none;}}
+  @keyframes nameIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+  @keyframes nudge{0%,100%{transform:translateY(0);opacity:.45;}50%{transform:translateY(7px);opacity:1;}}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+    .reveal,.hero-copy{opacity:1;transform:none;}
+  }
+</style>
+<noscript><style>.hero-copy{opacity:1;}.reveal{opacity:1;transform:none;}</style></noscript>
+</head>
+<body>
+
+<!-- Reusable garden pieces -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <g id="hr-bloom">
+    <g opacity=".95">
+      <ellipse cx="0" cy="-7" rx="4" ry="6.4" fill="#b9c9e8"/>
+      <ellipse cx="6.9" cy="-2.2" rx="4" ry="6.4" fill="#d2dcf2" transform="rotate(72 6.9 -2.2)"/>
+      <ellipse cx="4.3" cy="6" rx="4" ry="6.4" fill="#b9c9e8" transform="rotate(144 4.3 6)"/>
+      <ellipse cx="-4.3" cy="6" rx="4" ry="6.4" fill="#cbb8e6" transform="rotate(216 -4.3 6)"/>
+      <ellipse cx="-6.9" cy="-2.2" rx="4" ry="6.4" fill="#d2dcf2" transform="rotate(288 -6.9 -2.2)"/>
+      <circle cx="0" cy="0" r="2.8" fill="#fdf6dc"/>
+    </g>
+  </g>
+  <g id="hr-bloom-l">
+    <g opacity=".95">
+      <ellipse cx="0" cy="-7" rx="4" ry="6.4" fill="#cbb8e6"/>
+      <ellipse cx="6.9" cy="-2.2" rx="4" ry="6.4" fill="#ddcef1" transform="rotate(72 6.9 -2.2)"/>
+      <ellipse cx="4.3" cy="6" rx="4" ry="6.4" fill="#cbb8e6" transform="rotate(144 4.3 6)"/>
+      <ellipse cx="-4.3" cy="6" rx="4" ry="6.4" fill="#f0d9e8" transform="rotate(216 -4.3 6)"/>
+      <ellipse cx="-6.9" cy="-2.2" rx="4" ry="6.4" fill="#ddcef1" transform="rotate(288 -6.9 -2.2)"/>
+      <circle cx="0" cy="0" r="2.8" fill="#fdf6dc"/>
+    </g>
+  </g>
+  <g id="hr-bloom-w">
+    <g opacity=".97">
+      <ellipse cx="0" cy="-6.4" rx="3.6" ry="5.8" fill="#ffffff"/>
+      <ellipse cx="6.2" cy="-2" rx="3.6" ry="5.8" fill="#f7f9ff" transform="rotate(72 6.2 -2)"/>
+      <ellipse cx="3.8" cy="5.4" rx="3.6" ry="5.8" fill="#ffffff" transform="rotate(144 3.8 5.4)"/>
+      <ellipse cx="-3.8" cy="5.4" rx="3.6" ry="5.8" fill="#f1f4fd" transform="rotate(216 -3.8 5.4)"/>
+      <ellipse cx="-6.2" cy="-2" rx="3.6" ry="5.8" fill="#ffffff" transform="rotate(288 -6.2 -2)"/>
+      <circle cx="0" cy="0" r="2.5" fill="#f6d98a"/>
+    </g>
+  </g>
+  <path id="hr-leaf" d="M0 0 C9 -8 22 -8 29 0 C22 8 9 8 0 0 Z"/>
+  <!-- a sprig of tiny buds, for the garland -->
+  <g id="hr-sprig">
+    <path d="M0 0 C6 -8 14 -12 22 -13" stroke="#93b89c" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <circle cx="22" cy="-13" r="3" fill="#cbb8e6"/>
+    <circle cx="14" cy="-9" r="2.4" fill="#ffffff"/>
+    <circle cx="7" cy="-4" r="2.1" fill="#b9c9e8"/>
+  </g>
+</defs></svg>
+
+<div class="invite">
+
+  <!-- ============ HERO — the arched garden window ============ -->
+  <section class="hero">
+    <!-- To use your own photo, add: style="background-image:url('your-photo.jpg')" to .hero-bg -->
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-wash"></div>
+
+    <div class="arch">
+      <div class="arch-view">
+        <div class="sunglow"></div>
+        <div class="sunray"></div>
+
+        <!-- rounded watercolour ridges seen through the window -->
+        <div class="layer l-far">
+          <svg viewBox="0 0 360 130" preserveAspectRatio="none">
+            <path fill="#d6dcf1" d="M0,130 L0,84 C34,50 62,74 96,52 C130,30 158,66 196,48 C234,30 266,70 300,52 C326,38 344,58 360,46 L360,130 Z"/>
+          </svg>
+        </div>
+        <div class="layer l-mid">
+          <svg viewBox="0 0 360 150" preserveAspectRatio="none">
+            <path fill="#b0bade" d="M0,150 L0,100 C30,66 60,96 92,64 C124,32 154,74 190,54 C226,34 258,84 292,60 C318,42 340,72 360,58 L360,150 Z"/>
+            <path fill="#c2cbe8" opacity=".55" d="M190,54 C204,66 214,78 222,90 L158,90 C168,76 178,64 190,54 Z"/>
+          </svg>
+        </div>
+        <div class="layer l-near">
+          <svg viewBox="0 0 360 190" preserveAspectRatio="none">
+            <path fill="#8a94c0" d="M0,190 L0,130 C34,92 66,130 100,92 C134,54 166,106 202,80 C238,54 272,112 306,86 C330,68 344,98 360,84 L360,190 Z"/>
+            <path fill="#98a1ca" opacity=".6" d="M202,80 C216,96 228,112 236,128 L168,128 C180,110 190,94 202,80 Z"/>
+          </svg>
+        </div>
+
+        <!-- clouds and mist moving slowly between the mountains -->
+        <div class="clouds">
+          <div class="cloud" style="top:16%;left:-30%;width:150px;height:52px;animation-duration:50s"></div>
+          <div class="cloud" style="top:30%;left:-40%;width:118px;height:42px;animation-duration:66s;animation-delay:-18s;opacity:.82"></div>
+          <div class="cloud" style="top:9%;left:-25%;width:92px;height:34px;animation-duration:42s;animation-delay:-28s;opacity:.7"></div>
+          <div class="mistband" style="top:48%;animation-duration:72s"></div>
+          <div class="mistband" style="top:60%;animation-duration:56s;animation-delay:-22s;opacity:.7"></div>
+        </div>
+
+        <!-- butterflies drifting through the window itself -->
+        <div class="flutter" data-bf="8" data-bf-stagger="1"></div>
+      </div>
+
+      <div class="arch-trim"></div>
+
+      <!-- blooms draped over the crown of the arch -->
+      <div class="arch-garland">
+        <svg viewBox="0 0 390 120">
+          <g fill="#93b89c" opacity=".95">
+            <use class="sway" href="#hr-leaf" transform="translate(64 68) rotate(-42) scale(.62)"/>
+            <use class="sway s2" href="#hr-leaf" transform="translate(96 42) rotate(-28) scale(.56)"/>
+            <use class="sway s3" href="#hr-leaf" transform="translate(150 24) rotate(-12) scale(.6)"/>
+            <use class="sway" href="#hr-leaf" transform="translate(216 22) rotate(10) scale(.58)"/>
+            <use class="sway s2" href="#hr-leaf" transform="translate(272 40) rotate(28) scale(.56)"/>
+            <use class="sway s3" href="#hr-leaf" transform="translate(306 66) rotate(44) scale(.62)"/>
+          </g>
+          <g opacity=".95">
+            <use class="sway s2" href="#hr-sprig" transform="translate(70 74) rotate(-30) scale(.9)"/>
+            <use class="sway s3" href="#hr-sprig" transform="translate(300 72) rotate(150) scale(.9)"/>
+          </g>
+          <use class="sway" href="#hr-bloom-l" transform="translate(78 62) scale(1.05)"/>
+          <use class="sway s2" href="#hr-bloom-w" transform="translate(112 38) scale(.9)"/>
+          <use class="sway s3" href="#hr-bloom" transform="translate(158 22) scale(1)"/>
+          <use class="sway" href="#hr-bloom-w" transform="translate(196 16) scale(.82)"/>
+          <use class="sway s2" href="#hr-bloom-l" transform="translate(232 24) scale(.95)"/>
+          <use class="sway s3" href="#hr-bloom" transform="translate(278 40) scale(.92)"/>
+          <use class="sway" href="#hr-bloom-w" transform="translate(312 64) scale(.86)"/>
+        </svg>
+      </div>
+
+      <div class="sill"></div>
+
+      <!-- flowers gathered along the sill -->
+      <div class="sill-garden">
+        <svg viewBox="0 0 380 74">
+          <g stroke="#93b89c" stroke-width="1.9" fill="none" stroke-linecap="round">
+            <path class="sway" d="M34 74 C30 54 38 42 32 28"/>
+            <path class="sway s2" d="M78 74 C76 56 70 44 80 32"/>
+            <path class="sway s3" d="M300 74 C298 56 306 44 298 30"/>
+            <path class="sway" d="M346 74 C344 54 352 42 344 30"/>
+          </g>
+          <g fill="#93b89c" opacity=".9">
+            <use class="sway" href="#hr-leaf" transform="translate(34 54) rotate(-26) scale(.46)"/>
+            <use class="sway s2" href="#hr-leaf" transform="translate(78 58) rotate(22) scale(.42)"/>
+            <use class="sway s3" href="#hr-leaf" transform="translate(300 56) rotate(-20) scale(.44)"/>
+            <use class="sway" href="#hr-leaf" transform="translate(346 54) rotate(24) scale(.46)"/>
+          </g>
+          <use class="sway" href="#hr-bloom" transform="translate(32 26) scale(.95)"/>
+          <use class="sway s2" href="#hr-bloom-w" transform="translate(80 30) scale(.82)"/>
+          <use class="sway s3" href="#hr-bloom-l" transform="translate(298 28) scale(.9)"/>
+          <use class="sway" href="#hr-bloom-w" transform="translate(344 28) scale(.8)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- the meadow filling the foreground of the hero -->
+    <div class="fg-flowers">
+      <svg viewBox="0 0 480 120">
+        <g stroke="#93b89c" stroke-width="2" fill="none" stroke-linecap="round" opacity=".95">
+          <path class="sway" d="M24 120 C20 94 28 78 22 58"/>
+          <path class="sway s2" d="M72 120 C70 96 64 80 74 62"/>
+          <path class="sway s3" d="M126 120 C124 98 132 82 124 66"/>
+          <path class="sway" d="M182 120 C180 94 172 78 184 58"/>
+          <path class="sway s2" d="M242 120 C240 98 248 80 238 64"/>
+          <path class="sway s3" d="M300 120 C298 94 306 78 296 60"/>
+          <path class="sway" d="M356 120 C354 98 346 82 358 66"/>
+          <path class="sway s2" d="M412 120 C410 94 418 78 408 62"/>
+          <path class="sway s3" d="M456 120 C454 100 462 84 454 70"/>
+        </g>
+        <g fill="#93b89c" opacity=".9">
+          <use class="sway" href="#hr-leaf" transform="translate(24 94) rotate(-26) scale(.48)"/>
+          <use class="sway s2" href="#hr-leaf" transform="translate(72 98) rotate(20) scale(.44)"/>
+          <use class="sway s3" href="#hr-leaf" transform="translate(182 94) rotate(-18) scale(.48)"/>
+          <use class="sway" href="#hr-leaf" transform="translate(300 92) rotate(22) scale(.44)"/>
+          <use class="sway s2" href="#hr-leaf" transform="translate(412 96) rotate(-20) scale(.46)"/>
+        </g>
+        <use class="sway" href="#hr-bloom" transform="translate(22 56) scale(1)"/>
+        <use class="sway s2" href="#hr-bloom-w" transform="translate(74 60) scale(.86)"/>
+        <use class="sway s3" href="#hr-bloom-l" transform="translate(124 64) scale(.96)"/>
+        <use class="sway" href="#hr-bloom-w" transform="translate(184 56) scale(.82)"/>
+        <use class="sway s2" href="#hr-bloom" transform="translate(238 62) scale(1)"/>
+        <use class="sway s3" href="#hr-bloom-l" transform="translate(296 58) scale(.92)"/>
+        <use class="sway" href="#hr-bloom-w" transform="translate(358 64) scale(.84)"/>
+        <use class="sway s2" href="#hr-bloom" transform="translate(408 60) scale(.96)"/>
+        <use class="sway s3" href="#hr-bloom-l" transform="translate(454 68) scale(.78)"/>
+      </svg>
+    </div>
+
+    <!-- butterflies out in front of the window too -->
+    <div class="flutter" data-bf="6" data-bf-stagger="1"></div>
+
+    <div class="hero-copy">
+      <div class="khmer-bless km">ក្រុមគ្រួសារយើងខ្ញុំ សូមគោរពអញ្ជើញ<br>លោក លោកស្រី អ្នកនាងកញ្ញា</div>
+      <div class="kicker">Together with their families</div>
+      <div class="n">Sovatha</div>
+      <div class="amp">and</div>
+      <div class="n">Yousa</div>
+      <div class="rule"></div>
+      <div class="date">23 &middot; 11 &middot; 2026</div>
+    </div>
+
+    <div class="taphint" id="taphint">Tap to begin</div>
+    <div class="scrollhint"><div class="lbl">Scroll</div><div class="bar"></div></div>
+  </section>
+
+  <!-- ============ COUNTDOWN ============ -->
+  <section class="countdown">
+    <div class="cloudsep"><i></i><i></i><i></i><i></i></div>
+    <div class="flutter burst" data-bf="6" data-bf-fast="1"></div>
+    <div class="flutter" data-bf="6"></div>
+    <div class="reveal">
+      <div class="eyebrow">The wait begins</div>
+      <h2>Counting down to<br>our morning in the hills</h2>
+      <div class="clock">
+        <div class="unit"><div class="num" id="cd-d">--</div><div class="lab">Days</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-h">--</div><div class="lab">Hours</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-m">--</div><div class="lab">Mins</div></div>
+        <div class="sep">:</div>
+        <div class="unit"><div class="num" id="cd-s">--</div><div class="lab">Secs</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STORY ============ -->
+  <section class="story">
+    <div class="cloudsep"><i></i><i></i><i></i><i></i></div>
+    <div class="flutter burst" data-bf="7" data-bf-fast="1"></div>
+    <div class="flutter" data-bf="8"></div>
+    <div class="reveal">
+      <div class="eyebrow">Our story</div>
+      <h2>A window onto<br>the same horizon</h2>
+      <div class="frame"><div class="ph" style="width:100%;height:100%"><span>your photo</span></div></div>
+      <p>We climbed for the view and stayed for the quiet. Somewhere above the cloud line, between the wildflowers and the butterflies, we stopped talking about someday and started planning it.</p>
+      <div class="quote">&ldquo;With you, every altitude feels like home.&rdquo;</div>
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="gallery">
+    <div class="cloudsep"><i></i><i></i><i></i><i></i></div>
+    <div class="flutter burst" data-bf="8" data-bf-fast="1"></div>
+    <div class="flutter" data-bf="10"></div>
+    <div class="reveal" style="text-align:center;margin-bottom:26px">
+      <div class="eyebrow">Moments</div>
+      <h2 style="margin:0">Gathered above<br>the cloud line</h2>
+    </div>
+    <div class="reveal grid">
+      <div class="ph tall"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph tall"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SCHEDULE ============ -->
+  <section class="schedule">
+    <div class="cloudsep"><i></i><i></i><i></i><i></i></div>
+    <div class="flutter burst" data-bf="9" data-bf-fast="1"></div>
+    <div class="flutter" data-bf="12"></div>
+    <div class="reveal" style="text-align:center;margin-bottom:34px">
+      <div class="eyebrow">The day</div>
+      <h2 style="margin:0">Order of the day</h2>
+    </div>
+    <div class="reveal">
+      <div class="row"><div class="time">7:00 AM</div><div class="body"><div class="dot"></div><div class="t">Monks&rsquo; Blessing</div><div class="d">Sot Mun &middot; prayers as the mist lifts</div></div></div>
+      <div class="row"><div class="time">9:00 AM</div><div class="body"><div class="dot"></div><div class="t">Hair Cutting Ceremony</div><div class="d">Gaat Sah &middot; a fresh start for the couple</div></div></div>
+      <div class="row"><div class="time">10:30 AM</div><div class="body"><div class="dot"></div><div class="t">Knot-Tying Ceremony</div><div class="d">Sompeas Ptem &middot; blessings from family &amp; elders</div></div></div>
+      <div class="row"><div class="time">6:00 PM</div><div class="body"><div class="dot"></div><div class="t">Reception &amp; Dinner</div><div class="d">Highland terrace &middot; toasts, feasting &amp; dancing</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ VENUE ============ -->
+  <section class="venue">
+    <div class="cloudsep"><i></i><i></i><i></i><i></i></div>
+    <div class="flutter burst" data-bf="10" data-bf-fast="1"></div>
+    <div class="flutter" data-bf="12"></div>
+    <div class="reveal">
+      <div class="eyebrow">Where</div>
+      <h2 style="margin:0 0 6px">The Orchard Gate</h2>
+      <div class="addr">Street 123<br>Mondulkiri, Cambodia</div>
+      <div class="map"><div class="ph" style="width:100%;height:100%"><span>map / venue photo</span></div></div>
+      <a class="btn" href="#">Get directions</a>
+    </div>
+  </section>
+
+  <!-- ============ DRESS ============ -->
+  <section class="dress">
+    <div class="cloudsep"><i></i><i></i><i></i><i></i></div>
+    <div class="flutter burst" data-bf="11" data-bf-fast="1"></div>
+    <div class="flutter" data-bf="14"></div>
+    <div class="reveal">
+      <div class="eyebrow">Attire</div>
+      <h2 style="margin:0 0 16px">Highland elegant</h2>
+      <p>We&rsquo;d love to see you in soft highland tones &mdash; think lavender, powder blue, white, sage and the palest pink.</p>
+      <div class="swatches">
+        <i style="background:var(--lav)"></i>
+        <i style="background:var(--primary)"></i>
+        <i style="background:var(--accent)"></i>
+        <i style="background:var(--pastel)"></i>
+        <i style="background:#fdfdff;border:1px solid var(--line);box-shadow:0 6px 16px rgba(67,64,92,.08)"></i>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER — the air at its fullest, then one last flight ============ -->
+  <section class="footer">
+    <div class="cloudsep"><i></i><i></i><i></i><i></i></div>
+    <div class="flutter burst" data-bf="12" data-bf-fast="1"></div>
+    <div class="flutter" data-bf="22"></div>
+    <div class="final-glow"></div>
+    <div class="bf-final" id="bfFinal"></div>
+    <div class="reveal inner">
+      <div class="kick">With all our love</div>
+      <div class="big">We can&rsquo;t wait to<br>celebrate with you</div>
+      <div class="names">Sovatha &amp; Yousa</div>
+      <div class="rule"></div>
+      <div class="date">23 &middot; 11 &middot; 2026</div>
+      <a class="rsvp" href="#">RSVP by 1 October</a>
+      <div class="tag">#SovathaMeetsYousa</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  (function(){
+    var invite = document.querySelector('.invite');
+
+    /* ---- Butterflies ------------------------------------------------
+       Each section declares how many it wants via data-bf, so the swarm
+       thickens naturally from the opening window through to the last
+       screen and never empties. Wings are soft blue, white, lavender
+       and pastel, with a few translucent. */
+    var WINGS = [
+      ['#b9c9e8','#9fb2da'], ['#ffffff','#eceff9'], ['#cbb8e6','#b7a1d8'],
+      ['#d2dcf2','#b6c5e6'], ['#f0d9e8','#dcbcd2'], ['#e2e6f6','#c7cfec']
+    ];
+    function wingSvg(a, b){
+      return '<svg viewBox="0 0 44 36" aria-hidden="true">' +
+        '<g class="wg">' +
+          '<path fill="' + a + '" d="M22 18 C20 6 10 2 5 7 C1 11 6 18 14 20 Z"/>' +
+          '<path fill="' + b + '" d="M22 19 C18 22 11 25 10 30 C9 34 15 34 18 30 C20 27 21 22 22 19 Z"/>' +
+        '</g>' +
+        '<g class="wg">' +
+          '<path fill="' + a + '" d="M22 18 C24 6 34 2 39 7 C43 11 38 18 30 20 Z"/>' +
+          '<path fill="' + b + '" d="M22 19 C26 22 33 25 34 30 C35 34 29 34 26 30 C24 27 23 22 22 19 Z"/>' +
+        '</g>' +
+        '<ellipse cx="22" cy="20" rx="1.5" ry="7" fill="#7f7c9b"/>' +
+        '<path d="M22 13 C20.5 9.5 19 8 17 7 M22 13 C23.5 9.5 25 8 27 7" stroke="#7f7c9b" stroke-width=".9" fill="none" stroke-linecap="round"/>' +
+      '</svg>';
+    }
+    function rand(a, b){ return a + Math.random() * (b - a); }
+
+    function makeButterfly(i, opts){
+      var el = document.createElement('i');
+      var depth = ['far','mid','near'][i % 3];
+      var pair = WINGS[i % WINGS.length];
+      // most drift down; some cross sideways; some arc through in a slow spiral
+      var path = (i % 5 === 3) ? 'cross' : (i % 7 === 6 ? 'spiral' : 'fall');
+      var glass = (i % 8 === 5);
+      el.className = 'bf ' + depth + ' f-' + path + (glass ? ' glass' : '');
+      el.style.setProperty('--flap', rand(0.34, 0.72).toFixed(2) + 's');
+      el.style.setProperty('--dx', Math.round(rand(-70, 70)) + 'px');
+      el.style.setProperty('--rot', Math.round(rand(-40, 40)) + 'deg');
+      var dur = opts.fast ? rand(9, 16) : rand(14, 30);
+      el.style.setProperty('--dur', dur.toFixed(1) + 's');
+      if(path === 'cross'){ el.style.top = rand(6, 78).toFixed(1) + '%'; }
+      else { el.style.left = rand(-2, 96).toFixed(1) + '%'; }
+      // Stagger positively in the hero so they arrive a few at a time;
+      // elsewhere start mid-flight so no section is ever empty.
+      el.style.animationDelay = opts.stagger
+        ? (i * 1.6 + rand(0, 1.2)).toFixed(1) + 's'
+        : (-rand(0, 22)).toFixed(1) + 's';
+      el.innerHTML = wingSvg(pair[0], pair[1]);
+      return el;
+    }
+
+    document.querySelectorAll('[data-bf]').forEach(function(layer){
+      var n = parseInt(layer.dataset.bf, 10) || 0;
+      var opts = { stagger: !!layer.dataset.bfStagger, fast: !!layer.dataset.bfFast };
+      var frag = document.createDocumentFragment();
+      for(var i = 0; i < n; i++) frag.appendChild(makeButterfly(i, opts));
+      layer.appendChild(frag);
+    });
+    // The last butterfly, which flies toward you and dissolves into the light.
+    var fin = document.getElementById('bfFinal');
+    if(fin) fin.innerHTML = wingSvg('#ffffff', '#e8e6f6');
+
+    // Countdown (shows a static value immediately; only ticks after start)
+    var target = new Date((window.INVITE && window.INVITE.dateISO) || '2026-11-23T15:00:00').getTime();
+    var pad = function(n){ return String(n).padStart(2,'0'); };
+    function render(){
+      var diff = Math.max(0, target - Date.now());
+      var d = Math.floor(diff/86400000); diff -= d*86400000;
+      var h = Math.floor(diff/3600000); diff -= h*3600000;
+      var m = Math.floor(diff/60000); diff -= m*60000;
+      var s = Math.floor(diff/1000);
+      document.getElementById('cd-d').textContent = d;
+      document.getElementById('cd-h').textContent = pad(h);
+      document.getElementById('cd-m').textContent = pad(m);
+      document.getElementById('cd-s').textContent = pad(s);
+    }
+    render();
+
+    // Motion gate: the window opens on the first interaction
+    var started = false;
+    function start(){
+      if(started) return; started = true;
+      invite.classList.add('started');
+      var hint = document.getElementById('taphint'); if(hint) hint.classList.add('gone');
+      setInterval(render, 1000);
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold:0.14 });
+      document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+    }
+    ['touchstart','pointerdown','click','keydown','wheel'].forEach(function(ev){
+      window.addEventListener(ev, start, { passive:true });
+    });
+  })();
+</script>
+
+<p style="text-align:center; font-size:0.75rem; color:#999; padding:1rem 0; margin:0;">
+  Template © <a href="/" style="color:inherit;">Wedding Templates</a> — licensed for personal use only.
+</p>
+</body>
+</html>
