@@ -211,11 +211,25 @@
 
   /* ---- Motion gate: everything frozen until the first touch ---- */
   .invite:not(.started) *{animation-play-state:paused !important;}
-  .taphint{position:absolute;left:50%;bottom:86px;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:9px;letter-spacing:.28em;font-size:11px;text-transform:uppercase;color:#f6efdc;background:rgba(26,42,30,.5);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);border:1px solid rgba(201,162,39,.7);border-radius:100px;padding:12px 24px;cursor:pointer;transition:opacity .7s ease,transform .7s ease;}
-  .taphint::before,.taphint::after{content:"";width:14px;height:1px;background:var(--gold);opacity:.9;}
-  .taphint.gone{opacity:0;transform:translateX(-50%) translateY(12px);pointer-events:none;}
-  .invite:not(.started) .scrollhint{opacity:0;}
-  .scrollhint{transition:opacity .6s ease;}
+  /* ---- "បើកធៀប" — the single call to action on the cover ---- */
+  .openbtn{
+    position:absolute;left:50%;bottom:52px;transform:translateX(-50%);z-index:10;
+    display:flex;flex-direction:column;align-items:center;gap:5px;
+    font-family:'Noto Serif Khmer',serif;color:#f6efdc;
+    background:linear-gradient(180deg,rgba(31,61,43,.72),rgba(20,40,26,.82));
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    border:1px solid rgba(201,162,39,.85);border-radius:100px;
+    padding:14px 34px;cursor:pointer;
+    box-shadow:0 10px 30px rgba(10,20,12,.45), inset 0 1px 0 rgba(255,244,206,.22);
+    transition:opacity .6s ease,transform .25s ease,box-shadow .25s ease;
+    animation:breathe 3.4s ease-in-out infinite;
+  }
+  .openbtn .km{font-size:17px;line-height:1.5;}
+  .openbtn-en{font-family:'Jost',sans-serif;letter-spacing:.26em;font-size:9px;text-transform:uppercase;opacity:.82;}
+  .openbtn:hover{box-shadow:0 14px 38px rgba(10,20,12,.55), inset 0 1px 0 rgba(255,244,206,.3);}
+  .openbtn:active{transform:translateX(-50%) scale(.97);}
+  .openbtn.gone{opacity:0;transform:translateX(-50%) translateY(14px);pointer-events:none;}
+  @keyframes breathe{0%,100%{transform:translateX(-50%) scale(1);}50%{transform:translateX(-50%) scale(1.035);}}
 
   @keyframes kenburns{
     from{transform:scale(1.08) translate3d(0,0,0);}
@@ -318,8 +332,12 @@
       <div class="date">23 &middot; 11 &middot; 2026</div>
     </div>
 
-    <div class="taphint" id="taphint">Tap to begin</div>
-    <div class="scrollhint"><div class="lbl">Scroll</div><div class="bar"></div></div>
+    <!-- One button opens the invitation: it starts the scene and carries the
+         guest down to the countdown. -->
+    <button class="openbtn" id="openBtn" type="button">
+      <span class="km">បើកធៀប</span>
+      <span class="openbtn-en">Open invitation</span>
+    </button>
   </section>
 
   <!-- ============ COUNTDOWN ============ -->
@@ -460,7 +478,7 @@
     function start(){
       if(started) return; started = true;
       invite.classList.add('started');
-      var hint = document.getElementById('taphint'); if(hint) hint.classList.add('gone');
+      var btn = document.getElementById('openBtn'); if(btn) btn.classList.add('gone');
       setInterval(render, 1000);
       var io = new IntersectionObserver(function(entries){
         entries.forEach(function(e){
@@ -469,6 +487,17 @@
       }, { threshold:0.14 });
       document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
     }
+    // "បើកធៀប" — start the scene, then glide down to the countdown. The
+    // scroll waits a beat so the opening animation is visible first.
+    var openBtn = document.getElementById('openBtn');
+    if(openBtn) openBtn.addEventListener('click', function(){
+      start();
+      setTimeout(function(){
+        var target = document.querySelector('.countdown');
+        if(target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+      }, 420);
+    });
+
     ['touchstart','pointerdown','click','keydown','wheel'].forEach(function(ev){
       window.addEventListener(ev, start, { passive:true });
     });

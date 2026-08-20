@@ -25,6 +25,21 @@
     $$(sel).forEach(function (el) { el.textContent = value; });
   }
 
+  // The couple's story is a real multi-paragraph text now, but templates ship
+  // a single <p>. Keep their blank lines as paragraph breaks and single
+  // newlines as line breaks, escaping first so typed text can't inject markup.
+  function setStory(sel, value) {
+    if (!value) return;
+    // Spans, not <p> — the target is already a <p> and nesting one inside
+    // another makes the browser close it early and leave a stray empty node.
+    var html = String(value).replace(/\r\n?/g, '\n').split(/\n{2,}/)
+      .map(function (para) {
+        return '<span class="iv-story-p">' + para.split('\n').map(esc).join('<br>') + '</span>';
+      })
+      .join('');
+    $$(sel).forEach(function (el) { el.innerHTML = html; });
+  }
+
   // classic-elegance runs its own bilingual data-en/data-km system and has
   // native RSVP/wishes forms. Its script.js reads the story/schedule/photo
   // fields from window.INVITE itself; the remaining text is hydrated by
@@ -137,6 +152,7 @@
     if (Array.isArray(INV.schedule) && INV.schedule.length) hydrateSchedule(INV.schedule);
     if (Array.isArray(INV.gallery) && INV.gallery.length) hydrateGallery(INV.gallery);
     injectStyles();
+    injectMusic();
     greetGuest();
     if (!document.getElementById('rsvpForm')) injectRsvpSection();
     injectGiftSection();
@@ -193,7 +209,7 @@
     }
 
     hydrateText();
-    if (d.story) setText('.story p', d.story);
+    if (d.story) setStory('.story p', d.story);
     if (Array.isArray(d.schedule) && d.schedule.length) hydrateSchedule(d.schedule);
     hydrateHero(d.heroImage || '');
     hydrateStory(d.storyImage || '');
@@ -251,9 +267,15 @@
   // carry no query, so they stay on the "Get directions" button instead.
   function mapQuery() {
     var link = String(INV.mapsUrl || '');
-    var at = link.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/) ||
-             link.match(/[?&]q=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
-    if (at) return at[1] + ',' + at[2];
+    var N = '(-?\\d+(?:\\.\\d+)?)';
+    // !3d/!4d is the place's true pin; @lat,lng is only the camera centre, so
+    // prefer the former. ?q=, ?ll= and a bare "lat,lng" paste also work.
+    var pin = link.match(new RegExp('!3d' + N + '!4d' + N)) ||
+              link.match(new RegExp('[?&](?:q|ll|daddr|destination)=' + N + '%2C' + N)) ||
+              link.match(new RegExp('[?&](?:q|ll|daddr|destination)=' + N + ',' + N)) ||
+              link.match(new RegExp('@' + N + ',' + N)) ||
+              link.match(new RegExp('^\\s*' + N + ',\\s*' + N + '\\s*$'));
+    if (pin) return pin[1] + ',' + pin[2];
     var written = [INV.venueName, INV.venueAddress].filter(Boolean).join(', ');
     written = written.replace(/\s*\n\s*/g, ', ').trim();
     return written || null;
@@ -405,7 +427,7 @@
     }
     if (INV.hashtag) setText('.footer .tag', '#' + String(INV.hashtag).replace(/^#/, ''));
     if (INV.rsvpBy) setText('.footer .rsvp', 'RSVP by ' + INV.rsvpBy);
-    if (INV.story) setText('.story p', INV.story);
+    if (INV.story) setStory('.story p', INV.story);
   }
 
   /* ── Text hydration for classic-elegance ──────────────────────
@@ -598,6 +620,42 @@
       .catch(function () { wall.innerHTML = ''; });
   }
 
+  /* ── Background music ──────────────────────────────────────
+       Browsers block autoplay with sound, so this is always a
+       user-initiated toggle rather than an autostart. Templates that
+       ship their own player (classic-elegance) are left alone. */
+  function injectMusic() {
+    if (!INV.musicUrl) return;
+    if (document.getElementById('bgMusic')) return; // template has its own
+
+    var audio = document.createElement('audio');
+    audio.id = 'ivMusic';
+    audio.loop = true;
+    audio.preload = 'none';
+    audio.src = INV.musicUrl;
+    document.body.appendChild(audio);
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'iv-music';
+    btn.setAttribute('aria-label', 'Play music');
+    btn.innerHTML = '<span class="iv-music-ico">♪</span>';
+    document.body.appendChild(btn);
+
+    btn.addEventListener('click', function () {
+      if (audio.paused) {
+        audio.play().then(function () {
+          btn.classList.add('on');
+          btn.setAttribute('aria-label', 'Pause music');
+        }).catch(function () { /* blocked or still loading — leave it off */ });
+      } else {
+        audio.pause();
+        btn.classList.remove('on');
+        btn.setAttribute('aria-label', 'Play music');
+      }
+    });
+  }
+
   /* ── KHQR digital gift section ────────────────────────────── */
   function injectGiftSection() {
     if (!INV.khqrImage) return;
@@ -682,6 +740,18 @@
       // default sparse flow; dense back-fills them. Scoped to galleries we
       // actually reshaped, so a template's own sample grid is left alone.
       '.gallery .grid.iv-shaped{grid-auto-flow:dense;}' +
+      '.iv-music{position:fixed;right:16px;bottom:16px;z-index:60;width:46px;height:46px;border-radius:50%;' +
+      'display:flex;align-items:center;justify-content:center;cursor:pointer;' +
+      'background:var(--page,#fff);color:var(--deep,#8a7f6a);border:1px solid var(--line,#e3ddd2);' +
+      'box-shadow:0 8px 22px rgba(0,0,0,.18);transition:transform .2s ease;}' +
+      '.iv-music:hover{transform:scale(1.06);}' +
+      '.iv-music .iv-music-ico{font-size:19px;line-height:1;}' +
+      '.iv-music.on{background:var(--deep,#8a7f6a);color:var(--page,#fff);}' +
+      '.iv-music.on .iv-music-ico{animation:ivPulse 1.6s ease-in-out infinite;}' +
+      '@keyframes ivPulse{0%,100%{opacity:1;}50%{opacity:.45;}}' +
+      // Paragraph spacing for the couple's longer story text.
+      '.iv-story-p{display:block;}' +
+      '.iv-story-p + .iv-story-p{margin-top:1em;}' +
       // Khmer runs ~30% larger than Latin at a given size and needs more line
       // height; scale the schedule's Khmer cells down so rows stay one line.
       '.schedule .row .t.iv-km{font-size:17px;line-height:1.6;}' +

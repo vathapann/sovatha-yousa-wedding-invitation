@@ -950,7 +950,7 @@ async function myInvitePost(request, env, ctx, url) {
   // Always overwrite: empty style/schedule/story means "back to template defaults".
   fields.style = sanitizeStyle(body.style) || {};
   fields.schedule = sanitizeSchedule(body.schedule);
-  fields.story = String(body.story || "").trim().slice(0, 600);
+  fields.story = String(body.story || "").trim().slice(0, 4000);
 
   await updateInviteConfig(env, invite, fields);
   await env.DB.prepare("UPDATE orders SET intake_json = ? WHERE id = ?")
@@ -963,6 +963,7 @@ async function myInvitePost(request, env, ctx, url) {
 }
 
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024; // 10 MB — generous for a phone camera shot
+const MAX_MUSIC_BYTES = 8 * 1024 * 1024;  // 8 MB — a few minutes of compressed audio
 const MAX_GALLERY_PHOTOS = 20;
 
 // POST /api/my-invite/photo — multipart upload: { slot: "hero"|"gallery", file }
@@ -979,20 +980,33 @@ async function myInvitePhotoUpload(request, env, url) {
   const slot = String(form.get("slot") || "");
   const file = form.get("file");
   if (!(file instanceof File)) return json({ error: "No file uploaded" }, 400);
-  if (!file.type.startsWith("image/")) return json({ error: "Please upload an image" }, 400);
-  if (file.size > MAX_PHOTO_BYTES) {
-    return json({ error: "Photo too large — please upload one under 10 MB" }, 400);
+  if (!["hero", "story", "gallery", "music"].includes(slot)) {
+    return json({ error: "Unknown upload slot" }, 400);
   }
-  if (!["hero", "story", "gallery"].includes(slot)) {
-    return json({ error: "Unknown photo slot" }, 400);
+
+  // Music is the one audio slot; everything else must be an image.
+  const isMusic = slot === "music";
+  if (isMusic) {
+    if (!file.type.startsWith("audio/")) {
+      return json({ error: "Please upload an audio file (mp3, m4a or ogg)" }, 400);
+    }
+    if (file.size > MAX_MUSIC_BYTES) {
+      return json({ error: "Track too large — please upload one under 8 MB" }, 400);
+    }
+  } else {
+    if (!file.type.startsWith("image/")) return json({ error: "Please upload an image" }, 400);
+    if (file.size > MAX_PHOTO_BYTES) {
+      return json({ error: "Photo too large — please upload one under 10 MB" }, 400);
+    }
   }
 
   const config = JSON.parse(invite.config_json);
-  const ext = (file.type.split("/")[1] || "jpg").replace(/[^a-z0-9]/gi, "").slice(0, 8) || "jpg";
-  // Single-photo slots share one shape: fresh key each upload, old object
+  const ext = (file.type.split("/")[1] || (isMusic ? "mp3" : "jpg"))
+    .replace(/[^a-z0-9]/gi, "").slice(0, 8) || (isMusic ? "mp3" : "jpg");
+  // Single-file slots share one shape: fresh key each upload, old object
   // dropped. /photos/ is served `immutable`, so reusing a fixed key left
-  // browsers showing the previous photo forever.
-  const SINGLE = { hero: "heroImage", story: "storyImage" };
+  // browsers showing the previous file forever.
+  const SINGLE = { hero: "heroImage", story: "storyImage", music: "musicUrl" };
   let key;
 
   if (SINGLE[slot]) {
@@ -1040,6 +1054,8 @@ async function myInvitePhotoDelete(request, env, url) {
     delete config.heroImage;
   } else if (config.storyImage === photoUrl) {
     delete config.storyImage;
+  } else if (config.musicUrl === photoUrl) {
+    delete config.musicUrl;
   } else if (Array.isArray(config.gallery)) {
     config.gallery = config.gallery.filter((u) => u !== photoUrl);
   }
