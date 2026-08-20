@@ -207,8 +207,12 @@
   // Khmer script sets much larger than Latin at the same font-size, so a
   // schedule typed in Khmer overflows the row and wraps. Tag those cells and
   // let the injected CSS bring them back down.
-  var KHMER_RE = /[ក-៿]/;
-  function kmClass(text) { return KHMER_RE.test(text || '') ? ' iv-km' : ''; }
+  // The pattern lives inside the function on purpose: ready() runs
+  // synchronously from higher up in this file, before any `var` down here has
+  // been assigned, so a module-level regex would still be undefined here.
+  function kmClass(text) {
+    return /[ក-៿]/.test(text || '') ? ' iv-km' : '';
+  }
 
   function hydrateSchedule(items) {
     var rows = $$('.schedule .row');
@@ -293,8 +297,6 @@
      Each photo is measured once, then the tile is reshaped to match it and the
      crop is biased upward. Everything degrades to the old behaviour if the
      image can't be measured. */
-  var MAX_SPAN = 3;
-
   // How tall a tile of N rows actually is, read from the template's own grid
   // rather than assumed — row height and gap differ between templates.
   function slotRatio(grid, frame, span) {
@@ -316,6 +318,7 @@
       // Pick the row span whose resulting slot is closest in shape to the
       // photo, so the crop is as shallow as possible. Compared in log space so
       // "twice as tall" and "half as tall" count as equally wrong.
+      var MAX_SPAN = 3; // kept local — see the hoisting note on kmClass above
       var best = null, bestErr = Infinity;
       for (var span = 1; span <= MAX_SPAN; span++) {
         var sr = slotRatio(grid, frame, span);
