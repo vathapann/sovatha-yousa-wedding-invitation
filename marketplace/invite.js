@@ -222,11 +222,66 @@
   // Tracks how many .ph tiles the template shipped with, so clearing the
   // couple's photos reverts to those placeholders instead of deleting them.
   var galleryBaseline = null;
+  /* Templates lay the gallery out on fixed rows (grid-auto-rows), so a photo
+     dropped into a mismatched slot gets centre-cropped — and since faces sit
+     in the upper third, centre-cropping is exactly what beheads people.
+     Each photo is measured once, then the tile is reshaped to match it and the
+     crop is biased upward. Everything degrades to the old behaviour if the
+     image can't be measured. */
+  var MAX_SPAN = 3;
+
+  // How tall a tile of N rows actually is, read from the template's own grid
+  // rather than assumed — row height and gap differ between templates.
+  function slotRatio(grid, frame, span) {
+    var cs = window.getComputedStyle(grid);
+    var rowH = parseFloat(cs.gridAutoRows);
+    var gap = parseFloat(cs.rowGap);
+    var colW = frame.offsetWidth;
+    if (!rowH || !colW) return null;
+    return (span * rowH + (span - 1) * (gap || 0)) / colW;
+  }
+
+  function shapeFrame(grid, frame, photoUrl) {
+    var probe = new Image();
+    probe.onload = function () {
+      var w = probe.naturalWidth, h = probe.naturalHeight;
+      if (!w || !h) return;
+      var ratio = h / w;
+
+      // Pick the row span whose resulting slot is closest in shape to the
+      // photo, so the crop is as shallow as possible. Compared in log space so
+      // "twice as tall" and "half as tall" count as equally wrong.
+      var best = null, bestErr = Infinity;
+      for (var span = 1; span <= MAX_SPAN; span++) {
+        var sr = slotRatio(grid, frame, span);
+        if (!sr) continue;
+        var err = Math.abs(Math.log(ratio / sr));
+        if (err < bestErr) { bestErr = err; best = span; }
+      }
+      if (best) {
+        frame.style.gridRow = 'span ' + best;
+        frame.classList.toggle('iv-tall', best > 1);
+      }
+
+      // Faces cluster above centre, so bias the crop upward — but only as far
+      // as the leftover overflow allows, otherwise we'd pan past the subject.
+      var slot = best ? slotRatio(grid, frame, best) : null;
+      var focus = 50;
+      if (slot && ratio > slot) {
+        var overflow = 1 - slot / ratio;              // fraction cropped away
+        focus = Math.max(25, 50 - overflow * 100);    // never above 25%
+      }
+      frame.style.backgroundPosition = 'center ' + Math.round(focus) + '%';
+    };
+    probe.src = photoUrl;
+  }
+
   function hydrateGallery(urls) {
     var grid = $('.gallery .grid');
     if (!grid) return;
     var frames = Array.prototype.slice.call(grid.querySelectorAll('.ph'));
     if (galleryBaseline === null) galleryBaseline = frames.length;
+    grid.classList.toggle('iv-shaped', urls.length > 0);
     urls.forEach(function (photoUrl, i) {
       var frame = frames[i];
       if (!frame) {
@@ -236,10 +291,18 @@
         frames.push(frame);
       }
       frame.style.backgroundImage = 'url(' + JSON.stringify(photoUrl) + ')';
+      shapeFrame(grid, frame, photoUrl);
     });
     for (var j = urls.length; j < frames.length; j++) {
-      if (j < galleryBaseline) frames[j].style.backgroundImage = '';
-      else frames[j].remove();
+      if (j < galleryBaseline) {
+        // Back to the template's own sample tile: drop everything we set.
+        frames[j].style.backgroundImage = '';
+        frames[j].style.gridRow = '';
+        frames[j].style.backgroundPosition = '';
+        frames[j].classList.remove('iv-tall');
+      } else {
+        frames[j].remove();
+      }
     }
   }
 
@@ -546,6 +609,10 @@
         through its CSS variables, with neutral fallbacks) ────── */
   function injectStyles() {
     var css =
+      // Reshaped gallery tiles vary in row span, which leaves holes under the
+      // default sparse flow; dense back-fills them. Scoped to galleries we
+      // actually reshaped, so a template's own sample grid is left alone.
+      '.gallery .grid.iv-shaped{grid-auto-flow:dense;}' +
       '.iv-greet{margin:18px auto 0;display:flex;flex-direction:column;gap:2px;align-items:center;' +
       'font-size:15px;letter-spacing:.06em;color:var(--ink,#333);}' +
       '.iv-greet .iv-km{font-family:"Noto Sans Khmer","Jost",sans-serif;}' +
