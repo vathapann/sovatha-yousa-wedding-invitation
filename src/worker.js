@@ -983,18 +983,21 @@ async function myInvitePhotoUpload(request, env, url) {
   if (file.size > MAX_PHOTO_BYTES) {
     return json({ error: "Photo too large — please upload one under 10 MB" }, 400);
   }
-  if (slot !== "hero" && slot !== "gallery") return json({ error: "Unknown photo slot" }, 400);
+  if (!["hero", "story", "gallery"].includes(slot)) {
+    return json({ error: "Unknown photo slot" }, 400);
+  }
 
   const config = JSON.parse(invite.config_json);
   const ext = (file.type.split("/")[1] || "jpg").replace(/[^a-z0-9]/gi, "").slice(0, 8) || "jpg";
+  // Single-photo slots share one shape: fresh key each upload, old object
+  // dropped. /photos/ is served `immutable`, so reusing a fixed key left
+  // browsers showing the previous photo forever.
+  const SINGLE = { hero: "heroImage", story: "storyImage" };
   let key;
 
-  if (slot === "hero") {
-    // A fresh key per upload, exactly like the gallery below. /photos/ is
-    // served `immutable`, so a fixed "hero.<ext>" key meant re-uploading the
-    // same format reused the URL and browsers kept showing the old photo.
-    key = `${invite.slug}/hero-${randHex(6)}.${ext}`;
-    const oldKey = photoUrlToKey(url.origin, config.heroImage);
+  if (SINGLE[slot]) {
+    key = `${invite.slug}/${slot}-${randHex(6)}.${ext}`;
+    const oldKey = photoUrlToKey(url.origin, config[SINGLE[slot]]);
     if (oldKey && oldKey !== key) await env.PHOTOS.delete(oldKey).catch(() => {});
   } else {
     const gallery = Array.isArray(config.gallery) ? config.gallery : [];
@@ -1007,8 +1010,8 @@ async function myInvitePhotoUpload(request, env, url) {
   await env.PHOTOS.put(key, file.stream(), { httpMetadata: { contentType: file.type } });
   const photoUrl = `${url.origin}/photos/${key}`;
 
-  if (slot === "hero") {
-    config.heroImage = photoUrl;
+  if (SINGLE[slot]) {
+    config[SINGLE[slot]] = photoUrl;
   } else {
     config.gallery = [...(Array.isArray(config.gallery) ? config.gallery : []), photoUrl];
   }
@@ -1035,6 +1038,8 @@ async function myInvitePhotoDelete(request, env, url) {
   const config = JSON.parse(invite.config_json);
   if (config.heroImage === photoUrl) {
     delete config.heroImage;
+  } else if (config.storyImage === photoUrl) {
+    delete config.storyImage;
   } else if (Array.isArray(config.gallery)) {
     config.gallery = config.gallery.filter((u) => u !== photoUrl);
   }

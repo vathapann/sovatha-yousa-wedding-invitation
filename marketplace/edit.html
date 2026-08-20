@@ -127,6 +127,21 @@
       </div>
     </div>
 
+    <div id="storyPhotoSection">
+      <label>Story photo · រូបថតរឿងរ៉ាវ</label>
+      <div class="photo-hero">
+        <img id="storyPhotoImg" hidden>
+        <div class="photo-empty" id="storyPhotoEmpty">No story photo yet — the portrait frame stays empty.</div>
+        <div class="photo-actions">
+          <label class="sched-btn photo-upload-btn">Upload or take photo
+            <input type="file" id="storyPhotoInput" accept="image/*" capture="environment" hidden>
+          </label>
+          <button type="button" class="sched-btn" id="storyPhotoRemove" hidden>Remove</button>
+        </div>
+        <div class="photo-status" id="storyPhotoStatus"></div>
+      </div>
+    </div>
+
     <label>Gallery photos · វិចិត្រសាល</label>
     <div class="photo-grid" id="galleryGrid"></div>
     <div class="photo-actions">
@@ -315,6 +330,7 @@
       schedule: schedule,
       story: form.elements.story ? form.elements.story.value : '',
       heroImage: heroPhotoUrl,
+      storyImage: storyPhotoUrl,
       gallery: galleryPhotos,
     };
     PREVIEW_FIELDS.forEach(function (k) {
@@ -323,9 +339,10 @@
     previewFrame.contentWindow.postMessage(msg, location.origin);
   }
 
-  // Hero + gallery photos — uploaded straight to R2 as soon as the couple
-  // picks a file, so there's nothing extra to "save" for these.
+  // Hero, story and gallery photos — uploaded straight to R2 as soon as the
+  // couple picks a file, so there's nothing extra to "save" for these.
   var heroPhotoUrl = '';
+  var storyPhotoUrl = '';
   var galleryPhotos = [];
 
   function setPhotoStatus(el, msg, isErr) {
@@ -367,6 +384,16 @@
     removeBtn.hidden = !heroPhotoUrl;
   }
 
+  function renderStoryPhotoBox() {
+    var img = document.getElementById('storyPhotoImg');
+    var empty = document.getElementById('storyPhotoEmpty');
+    var removeBtn = document.getElementById('storyPhotoRemove');
+    img.src = storyPhotoUrl || '';
+    img.hidden = !storyPhotoUrl;
+    empty.hidden = !!storyPhotoUrl;
+    removeBtn.hidden = !storyPhotoUrl;
+  }
+
   function renderGalleryGrid() {
     var host = document.getElementById('galleryGrid');
     host.innerHTML = galleryPhotos.map(function (photoUrl) {
@@ -394,6 +421,28 @@
     deletePhoto(url).then(function () {
       heroPhotoUrl = '';
       renderHeroPhotoBox();
+      pushPreviewData();
+    });
+  });
+
+  document.getElementById('storyPhotoInput').addEventListener('change', function () {
+    var file = this.files[0];
+    this.value = '';
+    if (!file) return;
+    var statusEl = document.getElementById('storyPhotoStatus');
+    uploadPhoto('story', file, statusEl).then(function (d) {
+      if (!d) return;
+      storyPhotoUrl = d.url;
+      renderStoryPhotoBox();
+      pushPreviewData();
+    });
+  });
+
+  document.getElementById('storyPhotoRemove').addEventListener('click', function () {
+    if (!storyPhotoUrl) return;
+    deletePhoto(storyPhotoUrl).then(function () {
+      storyPhotoUrl = '';
+      renderStoryPhotoBox();
       pushPreviewData();
     });
   });
@@ -471,8 +520,10 @@
         document.getElementById('heroPhotoSection').hidden = true;
       }
       heroPhotoUrl = c.heroImage || '';
+      storyPhotoUrl = c.storyImage || '';
       galleryPhotos = Array.isArray(c.gallery) ? c.gallery.slice() : [];
       renderHeroPhotoBox();
+      renderStoryPhotoBox();
       renderGalleryGrid();
 
       previewFrame.src = d.inviteUrl;

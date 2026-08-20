@@ -132,6 +132,8 @@
     if (isClassic) hydrateClassic();
     else hydrateText();
     if (INV.heroImage) hydrateHero(INV.heroImage);
+    if (INV.storyImage) hydrateStory(INV.storyImage);
+    hydrateVenueMap();
     if (Array.isArray(INV.schedule) && INV.schedule.length) hydrateSchedule(INV.schedule);
     if (Array.isArray(INV.gallery) && INV.gallery.length) hydrateGallery(INV.gallery);
     injectStyles();
@@ -194,20 +196,29 @@
     if (d.story) setText('.story p', d.story);
     if (Array.isArray(d.schedule) && d.schedule.length) hydrateSchedule(d.schedule);
     hydrateHero(d.heroImage || '');
+    hydrateStory(d.storyImage || '');
+    hydrateVenueMap();
     if (Array.isArray(d.gallery)) hydrateGallery(d.gallery);
   }
 
   /* ── Order-of-the-day schedule (couple's custom event list) ──
        Templates ship 4 sample rows under .schedule .row; when the
        couple has customized their schedule, replace them wholesale. */
+  // Khmer script sets much larger than Latin at the same font-size, so a
+  // schedule typed in Khmer overflows the row and wraps. Tag those cells and
+  // let the injected CSS bring them back down.
+  var KHMER_RE = /[ក-៿]/;
+  function kmClass(text) { return KHMER_RE.test(text || '') ? ' iv-km' : ''; }
+
   function hydrateSchedule(items) {
     var rows = $$('.schedule .row');
     if (!rows.length) return;
     var container = rows[0].parentNode;
     container.innerHTML = items.map(function (it) {
-      return '<div class="row"><div class="time">' + esc(it.time) + '</div>' +
-        '<div class="body"><div class="dot"></div><div class="t">' + esc(it.title) + '</div>' +
-        '<div class="d">' + esc(it.desc) + '</div></div></div>';
+      return '<div class="row"><div class="time' + kmClass(it.time) + '">' + esc(it.time) + '</div>' +
+        '<div class="body"><div class="dot"></div>' +
+        '<div class="t' + kmClass(it.title) + '">' + esc(it.title) + '</div>' +
+        '<div class="d' + kmClass(it.desc) + '">' + esc(it.desc) + '</div></div></div>';
     }).join('');
   }
 
@@ -215,6 +226,60 @@
        Both slots are placeholder .ph boxes with a CSS rule that
        hides the "photo" label as soon as a background-image is
        set inline — so we only ever need to touch .style. */
+  // The story section's portrait frame. Templates ship it as a .ph
+  // placeholder reading "your photo"; without this it stayed on screen for
+  // guests, since nothing ever filled it.
+  function hydrateStory(photoUrl) {
+    var frame = $('.story .frame .ph') || $('.story .frame');
+    if (!frame) return;
+    frame.style.backgroundImage = photoUrl ? 'url(' + JSON.stringify(photoUrl) + ')' : '';
+    frame.style.backgroundSize = photoUrl ? 'cover' : '';
+    frame.style.backgroundPosition = photoUrl ? 'center 38%' : '';
+  }
+
+  /* ── Venue map ────────────────────────────────────────────
+       Templates ship a "map / venue photo" placeholder that nothing filled.
+       Google's embed endpoint needs no API key (classic-elegance already
+       uses it), so the couple's own address is enough to draw a real map. */
+
+  // Coordinates from the couple's pasted link are the most precise thing we
+  // have; fall back to the written address. Short links (maps.app.goo.gl)
+  // carry no query, so they stay on the "Get directions" button instead.
+  function mapQuery() {
+    var link = String(INV.mapsUrl || '');
+    var at = link.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/) ||
+             link.match(/[?&]q=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+    if (at) return at[1] + ',' + at[2];
+    var written = [INV.venueName, INV.venueAddress].filter(Boolean).join(', ');
+    written = written.replace(/\s*\n\s*/g, ', ').trim();
+    return written || null;
+  }
+
+  var lastMapQuery = null;
+  function hydrateVenueMap() {
+    var box = $('.venue .map');
+    if (!box) return;
+    var q = mapQuery();
+    // Leave the template's placeholder alone when there's nothing to show,
+    // and don't rebuild the iframe on every keystroke in the live preview.
+    if (!q || q === lastMapQuery) return;
+    lastMapQuery = q;
+
+    var frame = box.querySelector('iframe.iv-map');
+    if (!frame) {
+      frame = document.createElement('iframe');
+      frame.className = 'iv-map';
+      frame.title = 'Venue map';
+      frame.loading = 'lazy';
+      frame.referrerPolicy = 'no-referrer-when-downgrade';
+      frame.setAttribute('allowfullscreen', '');
+      frame.style.cssText = 'width:100%;height:100%;border:0;display:block;';
+      box.innerHTML = '';
+      box.appendChild(frame);
+    }
+    frame.src = 'https://www.google.com/maps?q=' + encodeURIComponent(q) + '&output=embed';
+  }
+
   function hydrateHero(photoUrl) {
     var bg = document.getElementById('heroBg') || $('.hero-bg');
     if (bg) bg.style.backgroundImage = photoUrl ? 'url(' + JSON.stringify(photoUrl) + ')' : '';
@@ -423,11 +488,12 @@
       }
     }
 
-    var place = INV.venueAddress || INV.venueName;
+    // classic ships its own <iframe class="map-embed">, so it only needs a
+    // new src — same query rules as every other template.
+    var q = mapQuery();
     var map = $('.map-embed');
-    if (place && map) {
-      map.src = 'https://www.google.com/maps?q=' +
-        encodeURIComponent(place.replace(/\n/g, ', ')) + '&output=embed';
+    if (q && map) {
+      map.src = 'https://www.google.com/maps?q=' + encodeURIComponent(q) + '&output=embed';
     }
   }
 
@@ -613,6 +679,11 @@
       // default sparse flow; dense back-fills them. Scoped to galleries we
       // actually reshaped, so a template's own sample grid is left alone.
       '.gallery .grid.iv-shaped{grid-auto-flow:dense;}' +
+      // Khmer runs ~30% larger than Latin at a given size and needs more line
+      // height; scale the schedule's Khmer cells down so rows stay one line.
+      '.schedule .row .t.iv-km{font-size:17px;line-height:1.6;}' +
+      '.schedule .row .d.iv-km{font-size:12px;line-height:1.7;}' +
+      '.schedule .row .time.iv-km{font-size:15px;line-height:1.5;}' +
       '.iv-greet{margin:18px auto 0;display:flex;flex-direction:column;gap:2px;align-items:center;' +
       'font-size:15px;letter-spacing:.06em;color:var(--ink,#333);}' +
       '.iv-greet .iv-km{font-family:"Noto Sans Khmer","Jost",sans-serif;}' +
