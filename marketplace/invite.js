@@ -621,9 +621,11 @@
   }
 
   /* ── Background music ──────────────────────────────────────
-       Browsers block autoplay with sound, so this is always a
-       user-initiated toggle rather than an autostart. Templates that
-       ship their own player (classic-elegance) are left alone. */
+       Plays by default. Browsers refuse to start audio before the
+       visitor has interacted with the page, so we attempt it straight
+       away and then retry on the first gesture — the "បើកធៀប" tap,
+       a scroll, anything. Templates shipping their own player
+       (classic-elegance) are left alone. */
   function injectMusic() {
     if (!INV.musicUrl) return;
     if (document.getElementById('bgMusic')) return; // template has its own
@@ -631,29 +633,53 @@
     var audio = document.createElement('audio');
     audio.id = 'ivMusic';
     audio.loop = true;
-    audio.preload = 'none';
+    audio.preload = 'auto';
     audio.src = INV.musicUrl;
     document.body.appendChild(audio);
 
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'iv-music';
-    btn.setAttribute('aria-label', 'Play music');
     btn.innerHTML = '<span class="iv-music-ico">♪</span>';
     document.body.appendChild(btn);
 
+    // Drive the button off the audio's real state, so it can never claim to
+    // be playing when the browser quietly refused to start.
+    function sync() {
+      var on = !audio.paused;
+      btn.classList.toggle('on', on);
+      btn.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+    }
+    audio.addEventListener('play', sync);
+    audio.addEventListener('pause', sync);
+    sync();
+
+    // Once a guest turns it off it stays off — no gesture may restart it.
+    var mutedByGuest = false;
+
+    function tryPlay() {
+      if (mutedByGuest || !audio.paused) return;
+      var p = audio.play();
+      if (p && p.catch) p.catch(function () { /* needs a gesture; retried below */ });
+    }
+
     btn.addEventListener('click', function () {
-      if (audio.paused) {
-        audio.play().then(function () {
-          btn.classList.add('on');
-          btn.setAttribute('aria-label', 'Pause music');
-        }).catch(function () { /* blocked or still loading — leave it off */ });
-      } else {
-        audio.pause();
-        btn.classList.remove('on');
-        btn.setAttribute('aria-label', 'Play music');
-      }
+      if (audio.paused) { mutedByGuest = false; tryPlay(); }
+      else { mutedByGuest = true; audio.pause(); }
     });
+
+    var GESTURES = ['pointerdown', 'touchstart', 'click', 'keydown', 'scroll'];
+    function onGesture() {
+      tryPlay();
+      if (!audio.paused || mutedByGuest) {
+        GESTURES.forEach(function (ev) { window.removeEventListener(ev, onGesture, true); });
+      }
+    }
+    GESTURES.forEach(function (ev) {
+      window.addEventListener(ev, onGesture, { passive: true, capture: true });
+    });
+
+    tryPlay(); // desktop browsers with prior engagement start here
   }
 
   /* ── KHQR digital gift section ────────────────────────────── */
