@@ -407,6 +407,9 @@
     }
     setText('.wreath-text .names', both);
     setText('.footer .names', both);
+    // Some covers repeat the pair on one line as a greeting, alongside the
+    // stacked .hero .n names.
+    setText('.hero .names', both);
     setText('.hero .date', INV.dateDisplay);
     setText('.footer .date', INV.dateDisplay);
     setText('.wreath-text .when', INV.dateDisplay);
