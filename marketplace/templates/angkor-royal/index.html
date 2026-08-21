@@ -168,14 +168,16 @@
   /* ---- GALLERY ---- */
   /* ---- The couple ----
          Two childhood portraits with the illustrated pair between them —
-         a small "and this is us now" in the middle. Symmetrical rather than
-         staggered, so the two names sit on one baseline; the middle tucks in
-         front of both, its page-coloured ring separating it from them. */
+         a small "and this is us now" in the middle. Set on a diagonal: groom
+         highest, illustration between, bride lowest. The middle tucks in front
+         of both, its page-coloured ring separating it from them. */
   .couple{background:var(--page);padding:64px 20px 62px;}
   .couple-row{position:relative;display:flex;align-items:flex-start;justify-content:center;}
   .cp{position:relative;margin:0;flex:1 1 0;min-width:0;text-align:center;}
   /* middle portrait: smaller, centred, overlapping the two in front */
-  .cp-anime{flex:.6 1 0;margin:0 -5%;align-self:center;z-index:2;}
+  .cp-groom{padding-top:0;}
+  .cp-anime{flex:.6 1 0;margin:0 -5%;padding-top:52px;z-index:2;}
+  .cp-bride{padding-top:88px;}
   .cp-oval{
     position:relative;width:100%;aspect-ratio:3/4;
     border-radius:50% 50% 50% 50% / 42% 42% 58% 58%;
@@ -205,13 +207,8 @@
     content:"";display:block;width:26px;height:1px;margin:10px auto 0;
     background:var(--gold);opacity:.65;
   }
-  .cp-label{
-    margin-top:12px;font-family:'Cormorant Garamond',serif;font-style:italic;
-    font-size:15px;letter-spacing:.04em;color:var(--gold-deep);opacity:.9;
-  }
   @media (max-width:400px){
     .cp-name{font-size:19px;}
-    .cp-label{font-size:13px;}
     .cp-anime{margin:0 -7%;}
   }
 
@@ -235,6 +232,17 @@
     background-position:center 34%;   /* faces sit above centre */
   }
   .timeline .ph + .ph{margin-top:22px;}
+  /* the caption sits in the empty half opposite its photo */
+  .timeline .ph .iv-cap{
+    position:absolute;top:50%;transform:translateY(-50%);
+    width:84%;font-family:'Cormorant Garamond',serif;font-size:15px;
+    line-height:1.55;color:var(--ink);opacity:.92;
+  }
+  .timeline .ph:nth-child(odd) .iv-cap{left:118%;text-align:left;}
+  .timeline .ph:nth-child(even) .iv-cap{right:118%;text-align:right;}
+  @media (max-width:400px){
+    .timeline .ph .iv-cap{font-size:13.5px;width:80%;}
+  }
   /* odd cards to the left of the spine, even to the right */
   .timeline .ph:nth-child(odd){margin-right:auto;}
   .timeline .ph:nth-child(even){margin-left:auto;}
@@ -474,7 +482,6 @@
       </figure>
       <figure class="cp cp-anime">
         <div class="ph cp-oval" id="animePh"><span>anim&eacute;</span></div>
-        <figcaption class="cp-label">Anim&eacute;</figcaption>
       </figure>
       <figure class="cp cp-bride">
         <div class="ph cp-oval" id="bridePh"><span>bride</span></div>

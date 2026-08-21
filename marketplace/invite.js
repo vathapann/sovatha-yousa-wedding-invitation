@@ -194,6 +194,9 @@
     ['groomImage', 'brideImage', 'animeImage'].forEach(function (k) {
       if (typeof d[k] === 'string') INV[k] = d[k];
     });
+    if (d.galleryCaptions && typeof d.galleryCaptions === 'object') {
+      INV.galleryCaptions = d.galleryCaptions;
+    }
     if (typeof d.dateISO === 'string') {
       INV.dateDisplay = previewDateDisplay(d.dateISO) || INV.dateDisplay;
     }
@@ -392,9 +395,24 @@
     probe.src = photoUrl;
   }
 
+  // A caption lives inside its own tile, so it travels with the photo however
+  // the template lays the gallery out. Keyed by URL, so reordering is free.
+  function setCaption(frame, text) {
+    var cap = frame.querySelector('.iv-cap');
+    if (!text) { if (cap) cap.remove(); return; }
+    if (!cap) {
+      cap = document.createElement('div');
+      cap.className = 'iv-cap';
+      frame.appendChild(cap);
+    }
+    cap.textContent = text;
+  }
+
   function hydrateGallery(urls) {
     var grid = $('.gallery .grid');
     if (!grid) return;
+    var caps = (INV.galleryCaptions && typeof INV.galleryCaptions === 'object')
+      ? INV.galleryCaptions : {};
     var frames = Array.prototype.slice.call(grid.querySelectorAll('.ph'));
     if (galleryBaseline === null) galleryBaseline = frames.length;
     grid.classList.toggle('iv-shaped', urls.length > 0);
@@ -407,12 +425,14 @@
         frames.push(frame);
       }
       frame.style.backgroundImage = 'url(' + JSON.stringify(photoUrl) + ')';
+      setCaption(frame, caps[photoUrl]);
       shapeFrame(grid, frame, photoUrl);
     });
     for (var j = urls.length; j < frames.length; j++) {
       if (j < galleryBaseline) {
         // Back to the template's own sample tile: drop everything we set.
         frames[j].style.backgroundImage = '';
+        setCaption(frames[j], '');
         frames[j].style.gridRow = '';
         frames[j].style.backgroundPosition = '';
         frames[j].classList.remove('iv-tall');
@@ -792,6 +812,7 @@
       // default sparse flow; dense back-fills them. Scoped to galleries we
       // actually reshaped, so a template's own sample grid is left alone.
       '.gallery .grid.iv-shaped{grid-auto-flow:dense;}' +
+      '.iv-cap{font-size:12.5px;line-height:1.6;color:var(--sub,#888);}' +
       '.iv-music{position:fixed;right:16px;bottom:16px;z-index:60;width:46px;height:46px;border-radius:50%;' +
       'display:flex;align-items:center;justify-content:center;cursor:pointer;' +
       'background:var(--page,#fff);color:var(--deep,#8a7f6a);border:1px solid var(--line,#e3ddd2);' +

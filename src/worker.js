@@ -498,6 +498,19 @@ function sanitizeStyle(raw) {
   return Object.keys(style).length ? style : null;
 }
 
+// Gallery captions, keyed by photo URL rather than by position — a caption
+// then survives the couple deleting or reordering their photos. Keys that no
+// longer match a photo are simply ignored when rendering.
+function sanitizeCaptions(raw) {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  const out = {};
+  for (const [url, text] of Object.entries(raw).slice(0, 40)) {
+    const caption = String(text == null ? "" : text).trim().slice(0, 180);
+    if (caption && typeof url === "string" && url.length <= 500) out[url] = caption;
+  }
+  return out;
+}
+
 // Couple's custom order-of-day (from the /edit editor's sample dropdown +
 // their own add/edit/delete/reorder). Rows without a title are dropped.
 function sanitizeSchedule(raw) {
@@ -951,6 +964,7 @@ async function myInvitePost(request, env, ctx, url) {
   fields.style = sanitizeStyle(body.style) || {};
   fields.schedule = sanitizeSchedule(body.schedule);
   fields.story = String(body.story || "").trim().slice(0, 4000);
+  fields.galleryCaptions = sanitizeCaptions(body.galleryCaptions);
 
   await updateInviteConfig(env, invite, fields);
   await env.DB.prepare("UPDATE orders SET intake_json = ? WHERE id = ?")
@@ -1067,6 +1081,7 @@ async function myInvitePhotoDelete(request, env, url) {
     delete config.animeImage;
   } else if (Array.isArray(config.gallery)) {
     config.gallery = config.gallery.filter((u) => u !== photoUrl);
+    if (config.galleryCaptions) delete config.galleryCaptions[photoUrl];
   }
 
   await env.PHOTOS.delete(key).catch(() => {});
