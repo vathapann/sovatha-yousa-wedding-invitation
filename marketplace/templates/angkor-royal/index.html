@@ -166,11 +166,45 @@
   .story .quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--gold-deep);margin-top:26px;}
 
   /* ---- GALLERY ---- */
-  .gallery{background:var(--section);padding:60px 24px;}
-  .grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:100px;gap:10px;}
-  .grid .ph{border-radius:8px;overflow:hidden;border:1px solid var(--line);box-shadow:0 0 0 1px rgba(201,162,39,.22) inset;}
-  .grid .ph:first-child{border-radius:60px 60px 8px 8px;}
-  .tall{grid-row:span 2;}
+  .gallery{background:var(--section);padding:60px 24px 70px;}
+
+  /* ---- Timeline gallery ----
+         A gold spine down the middle with photos alternating either side,
+         each tethered to the spine by a short arm and a dot. */
+  .timeline{position:relative;display:block;padding:14px 0 6px;}
+  /* the spine, stopping short of the first and last card */
+  .timeline::before{
+    content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
+    background:linear-gradient(180deg,transparent,var(--gold) 8%,var(--gold) 92%,transparent);
+    opacity:.75;
+  }
+  .timeline .ph{
+    position:relative;width:46%;aspect-ratio:4/5;
+    border-radius:10px;
+    border:1px solid var(--line);
+    box-shadow:0 10px 26px rgba(31,61,43,.18), 0 0 0 1px rgba(201,162,39,.28) inset;
+    background-position:center 34%;   /* faces sit above centre */
+  }
+  .timeline .ph + .ph{margin-top:22px;}
+  /* odd cards to the left of the spine, even to the right */
+  .timeline .ph:nth-child(odd){margin-right:auto;}
+  .timeline .ph:nth-child(even){margin-left:auto;}
+  /* the arm reaching from each card to the spine */
+  .timeline .ph::after{
+    content:"";position:absolute;top:38px;width:calc(4% + 10px);height:1px;
+    background:var(--gold);opacity:.7;
+  }
+  .timeline .ph:nth-child(odd)::after{left:100%;}
+  .timeline .ph:nth-child(even)::after{right:100%;}
+  /* the dot where the arm meets the spine */
+  .timeline .ph::before{
+    content:"";position:absolute;top:34px;width:9px;height:9px;z-index:2;
+    border-radius:50% 0 50% 50%;transform:rotate(45deg);
+    background:var(--gold);box-shadow:0 0 0 3px var(--section);
+  }
+  .timeline .ph:nth-child(odd)::before{left:calc(100% + 4% + 1px);}
+  .timeline .ph:nth-child(even)::before{right:calc(100% + 4% + 1px);}
+
 
   /* ---- SCHEDULE ---- */
   .schedule{background:var(--page);padding:64px 30px;}
@@ -394,14 +428,17 @@
     <div class="reveal" style="text-align:center;margin-bottom:26px">
       <div class="kbach"><svg viewBox="0 0 180 40"><use href="#ar-kbach"/></svg></div>
       <div class="eyebrow">Moments</div>
-      <h2 style="margin:0">A few of our<br>favorite frames</h2>
+      <h2 style="margin:0">Our journey<br>through the years</h2>
     </div>
-    <div class="reveal grid">
-      <div class="ph tall"><span>photo</span></div>
+    <!-- Timeline gallery: photos alternate either side of a gold spine.
+         Kept as .grid so the shared hydrator still finds and fills the .ph
+         tiles; any extra photo the couple adds continues the zigzag. -->
+    <div class="reveal grid timeline">
       <div class="ph"><span>photo</span></div>
       <div class="ph"><span>photo</span></div>
       <div class="ph"><span>photo</span></div>
-      <div class="ph tall"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
+      <div class="ph"><span>photo</span></div>
       <div class="ph"><span>photo</span></div>
     </div>
   </section>

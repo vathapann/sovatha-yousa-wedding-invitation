@@ -154,7 +154,9 @@
     injectStyles();
     injectMusic();
     greetGuest();
-    if (!document.getElementById('rsvpForm')) injectRsvpSection();
+    // RSVP + wishes section removed at the couple's request. Restore by
+    // re-enabling this line; injectRsvpSection() is left intact below.
+    // if (!document.getElementById('rsvpForm')) injectRsvpSection();
     injectGiftSection();
     injectActionBar();
     pointRsvpLinks();
@@ -355,13 +357,15 @@
 
       // Faces cluster above centre, so bias the crop upward — but only as far
       // as the leftover overflow allows, otherwise we'd pan past the subject.
+      // Only steer the crop when we actually know the slot's shape. Templates
+      // that lay the gallery out some other way (a timeline, say) set their own
+      // focal point in CSS, and an inline value here would override it.
       var slot = best ? slotRatio(grid, frame, best) : null;
-      var focus = 50;
       if (slot && ratio > slot) {
         var overflow = 1 - slot / ratio;              // fraction cropped away
-        focus = Math.max(25, 50 - overflow * 100);    // never above 25%
+        var focus = Math.max(25, 50 - overflow * 100);
+        frame.style.backgroundPosition = 'center ' + Math.round(focus) + '%';
       }
-      frame.style.backgroundPosition = 'center ' + Math.round(focus) + '%';
     };
     probe.src = photoUrl;
   }
