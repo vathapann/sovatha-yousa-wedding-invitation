@@ -142,6 +142,51 @@
       </div>
     </div>
 
+    <div id="groomPhotoSection">
+      <label>Groom's photo · រូបកូនកំលោះ</label>
+      <div class="photo-hero">
+        <img id="groomPhotoImg" hidden>
+        <div class="photo-empty" id="groomPhotoEmpty">No groom photo yet.</div>
+        <div class="photo-actions">
+          <label class="sched-btn photo-upload-btn">Upload or take photo
+            <input type="file" id="groomPhotoInput" accept="image/*" capture="environment" hidden>
+          </label>
+          <button type="button" class="sched-btn" id="groomPhotoRemove" hidden>Remove</button>
+        </div>
+        <div class="photo-status" id="groomPhotoStatus"></div>
+      </div>
+    </div>
+
+    <div id="bridePhotoSection">
+      <label>Bride's photo · រូបកូនក្រមុំ</label>
+      <div class="photo-hero">
+        <img id="bridePhotoImg" hidden>
+        <div class="photo-empty" id="bridePhotoEmpty">No bride photo yet.</div>
+        <div class="photo-actions">
+          <label class="sched-btn photo-upload-btn">Upload or take photo
+            <input type="file" id="bridePhotoInput" accept="image/*" capture="environment" hidden>
+          </label>
+          <button type="button" class="sched-btn" id="bridePhotoRemove" hidden>Remove</button>
+        </div>
+        <div class="photo-status" id="bridePhotoStatus"></div>
+      </div>
+    </div>
+
+    <div id="animePhotoSection">
+      <label>Anim&eacute; portrait · រូបគំនូរ</label>
+      <div class="photo-hero">
+        <img id="animePhotoImg" hidden>
+        <div class="photo-empty" id="animePhotoEmpty">No animé portrait yet — the drawn picture of you both.</div>
+        <div class="photo-actions">
+          <label class="sched-btn photo-upload-btn">Upload or take photo
+            <input type="file" id="animePhotoInput" accept="image/*" capture="environment" hidden>
+          </label>
+          <button type="button" class="sched-btn" id="animePhotoRemove" hidden>Remove</button>
+        </div>
+        <div class="photo-status" id="animePhotoStatus"></div>
+      </div>
+    </div>
+
     <div id="musicSection">
       <label>Background music · តន្ត្រី</label>
       <p class="design-sub">Guests tap a button to play it — browsers don't allow music to start on its own.
@@ -348,6 +393,9 @@
       story: form.elements.story ? form.elements.story.value : '',
       heroImage: heroPhotoUrl,
       storyImage: storyPhotoUrl,
+      groomImage: groomPhotoUrl,
+      brideImage: bridePhotoUrl,
+      animeImage: animePhotoUrl,
       gallery: galleryPhotos,
     };
     PREVIEW_FIELDS.forEach(function (k) {
@@ -360,6 +408,9 @@
   // couple picks a file, so there's nothing extra to "save" for these.
   var heroPhotoUrl = '';
   var storyPhotoUrl = '';
+  var groomPhotoUrl = '';
+  var bridePhotoUrl = '';
+  var animePhotoUrl = '';
   var musicUrl = '';
   var galleryPhotos = [];
 
@@ -411,6 +462,100 @@
     empty.hidden = !!musicUrl;
     removeBtn.hidden = !musicUrl;
   }
+
+
+  function renderGroomPhotoBox() {
+    var img = document.getElementById('groomPhotoImg');
+    var empty = document.getElementById('groomPhotoEmpty');
+    var removeBtn = document.getElementById('groomPhotoRemove');
+    img.src = groomPhotoUrl || '';
+    img.hidden = !groomPhotoUrl;
+    empty.hidden = !!groomPhotoUrl;
+    removeBtn.hidden = !groomPhotoUrl;
+  }
+
+  document.getElementById('groomPhotoInput').addEventListener('change', function () {
+    var file = this.files[0];
+    this.value = '';
+    if (!file) return;
+    uploadPhoto('groom', file, document.getElementById('groomPhotoStatus')).then(function (d) {
+      if (!d) return;
+      groomPhotoUrl = d.url;
+      renderGroomPhotoBox();
+      pushPreviewData();
+    });
+  });
+
+  document.getElementById('groomPhotoRemove').addEventListener('click', function () {
+    if (!groomPhotoUrl) return;
+    deletePhoto(groomPhotoUrl).then(function () {
+      groomPhotoUrl = '';
+      renderGroomPhotoBox();
+      pushPreviewData();
+    });
+  });
+
+  function renderBridePhotoBox() {
+    var img = document.getElementById('bridePhotoImg');
+    var empty = document.getElementById('bridePhotoEmpty');
+    var removeBtn = document.getElementById('bridePhotoRemove');
+    img.src = bridePhotoUrl || '';
+    img.hidden = !bridePhotoUrl;
+    empty.hidden = !!bridePhotoUrl;
+    removeBtn.hidden = !bridePhotoUrl;
+  }
+
+  document.getElementById('bridePhotoInput').addEventListener('change', function () {
+    var file = this.files[0];
+    this.value = '';
+    if (!file) return;
+    uploadPhoto('bride', file, document.getElementById('bridePhotoStatus')).then(function (d) {
+      if (!d) return;
+      bridePhotoUrl = d.url;
+      renderBridePhotoBox();
+      pushPreviewData();
+    });
+  });
+
+  document.getElementById('bridePhotoRemove').addEventListener('click', function () {
+    if (!bridePhotoUrl) return;
+    deletePhoto(bridePhotoUrl).then(function () {
+      bridePhotoUrl = '';
+      renderBridePhotoBox();
+      pushPreviewData();
+    });
+  });
+
+  function renderAnimePhotoBox() {
+    var img = document.getElementById('animePhotoImg');
+    var empty = document.getElementById('animePhotoEmpty');
+    var removeBtn = document.getElementById('animePhotoRemove');
+    img.src = animePhotoUrl || '';
+    img.hidden = !animePhotoUrl;
+    empty.hidden = !!animePhotoUrl;
+    removeBtn.hidden = !animePhotoUrl;
+  }
+
+  document.getElementById('animePhotoInput').addEventListener('change', function () {
+    var file = this.files[0];
+    this.value = '';
+    if (!file) return;
+    uploadPhoto('anime', file, document.getElementById('animePhotoStatus')).then(function (d) {
+      if (!d) return;
+      animePhotoUrl = d.url;
+      renderAnimePhotoBox();
+      pushPreviewData();
+    });
+  });
+
+  document.getElementById('animePhotoRemove').addEventListener('click', function () {
+    if (!animePhotoUrl) return;
+    deletePhoto(animePhotoUrl).then(function () {
+      animePhotoUrl = '';
+      renderAnimePhotoBox();
+      pushPreviewData();
+    });
+  });
 
   function renderStoryPhotoBox() {
     var img = document.getElementById('storyPhotoImg');
@@ -482,6 +627,9 @@
       if (!d) return;
       storyPhotoUrl = d.url;
       renderStoryPhotoBox();
+      renderGroomPhotoBox();
+      renderBridePhotoBox();
+      renderAnimePhotoBox();
       renderMusicBox();
       pushPreviewData();
     });
@@ -492,6 +640,9 @@
     deletePhoto(storyPhotoUrl).then(function () {
       storyPhotoUrl = '';
       renderStoryPhotoBox();
+      renderGroomPhotoBox();
+      renderBridePhotoBox();
+      renderAnimePhotoBox();
       renderMusicBox();
       pushPreviewData();
     });
@@ -571,10 +722,16 @@
       }
       heroPhotoUrl = c.heroImage || '';
       storyPhotoUrl = c.storyImage || '';
+      groomPhotoUrl = c.groomImage || '';
+      bridePhotoUrl = c.brideImage || '';
+      animePhotoUrl = c.animeImage || '';
       musicUrl = c.musicUrl || '';
       galleryPhotos = Array.isArray(c.gallery) ? c.gallery.slice() : [];
       renderHeroPhotoBox();
       renderStoryPhotoBox();
+      renderGroomPhotoBox();
+      renderBridePhotoBox();
+      renderAnimePhotoBox();
       renderMusicBox();
       renderGalleryGrid();
 

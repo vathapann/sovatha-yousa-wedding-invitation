@@ -980,7 +980,7 @@ async function myInvitePhotoUpload(request, env, url) {
   const slot = String(form.get("slot") || "");
   const file = form.get("file");
   if (!(file instanceof File)) return json({ error: "No file uploaded" }, 400);
-  if (!["hero", "story", "gallery", "music"].includes(slot)) {
+  if (!["hero", "story", "groom", "bride", "anime", "gallery", "music"].includes(slot)) {
     return json({ error: "Unknown upload slot" }, 400);
   }
 
@@ -1006,7 +1006,10 @@ async function myInvitePhotoUpload(request, env, url) {
   // Single-file slots share one shape: fresh key each upload, old object
   // dropped. /photos/ is served `immutable`, so reusing a fixed key left
   // browsers showing the previous file forever.
-  const SINGLE = { hero: "heroImage", story: "storyImage", music: "musicUrl" };
+  const SINGLE = {
+    hero: "heroImage", story: "storyImage", music: "musicUrl",
+    groom: "groomImage", bride: "brideImage", anime: "animeImage",
+  };
   let key;
 
   if (SINGLE[slot]) {
@@ -1056,6 +1059,12 @@ async function myInvitePhotoDelete(request, env, url) {
     delete config.storyImage;
   } else if (config.musicUrl === photoUrl) {
     delete config.musicUrl;
+  } else if (config.groomImage === photoUrl) {
+    delete config.groomImage;
+  } else if (config.brideImage === photoUrl) {
+    delete config.brideImage;
+  } else if (config.animeImage === photoUrl) {
+    delete config.animeImage;
   } else if (Array.isArray(config.gallery)) {
     config.gallery = config.gallery.filter((u) => u !== photoUrl);
   }

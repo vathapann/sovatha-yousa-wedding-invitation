@@ -148,6 +148,7 @@
     else hydrateText();
     if (INV.heroImage) hydrateHero(INV.heroImage);
     if (INV.storyImage) hydrateStory(INV.storyImage);
+    hydrateCouple();
     hydrateVenueMap();
     if (Array.isArray(INV.schedule) && INV.schedule.length) hydrateSchedule(INV.schedule);
     if (Array.isArray(INV.gallery) && INV.gallery.length) hydrateGallery(INV.gallery);
@@ -190,6 +191,9 @@
     PREVIEW_FIELDS.forEach(function (k) {
       if (typeof d[k] === 'string') INV[k] = d[k];
     });
+    ['groomImage', 'brideImage', 'animeImage'].forEach(function (k) {
+      if (typeof d[k] === 'string') INV[k] = d[k];
+    });
     if (typeof d.dateISO === 'string') {
       INV.dateDisplay = previewDateDisplay(d.dateISO) || INV.dateDisplay;
     }
@@ -215,6 +219,7 @@
     if (Array.isArray(d.schedule) && d.schedule.length) hydrateSchedule(d.schedule);
     hydrateHero(d.heroImage || '');
     hydrateStory(d.storyImage || '');
+    hydrateCouple();
     hydrateVenueMap();
     if (Array.isArray(d.gallery)) hydrateGallery(d.gallery);
   }
@@ -306,6 +311,23 @@
       box.appendChild(frame);
     }
     frame.src = 'https://www.google.com/maps?q=' + encodeURIComponent(q) + '&output=embed';
+  }
+
+  // Single-slot photos that live in their own element (the couple section's
+  // groom / bride / illustrated portrait). Untouched when no photo is set, so
+  // the template's placeholder stays.
+  function hydrateSlotPhoto(id, photoUrl) {
+    var el = document.getElementById(id);
+    if (!el || !photoUrl) return;
+    el.style.backgroundImage = 'url(' + JSON.stringify(photoUrl) + ')';
+  }
+
+  function hydrateCouple() {
+    hydrateSlotPhoto('groomPh', INV.groomImage);
+    hydrateSlotPhoto('bridePh', INV.brideImage);
+    hydrateSlotPhoto('animePh', INV.animeImage);
+    setText('.couple .groom-name', A);
+    setText('.couple .bride-name', B);
   }
 
   function hydrateHero(photoUrl) {
