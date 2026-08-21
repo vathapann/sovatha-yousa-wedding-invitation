@@ -166,36 +166,53 @@
   .story .quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--gold-deep);margin-top:26px;}
 
   /* ---- GALLERY ---- */
-  /* ---- The couple: groom and bride flanking their illustrated portrait ---- */
-  .couple{background:var(--page);padding:64px 22px 60px;}
-  .couple-row{display:flex;align-items:flex-start;justify-content:center;gap:10px;}
-  .cp{margin:0;flex:1 1 0;min-width:0;text-align:center;}
-  /* the outer two sit a little lower, so the middle portrait leads */
-  .cp-groom{padding-top:16px;}
-  .cp-bride{padding-top:44px;}
-  /* the illustrated portrait is the smaller accent between the two of them,
-     dropped down so it nests between the staggered outer ovals */
-  .cp-anime{flex:.66 1 0;padding-top:58px;}
+  /* ---- The couple ----
+         Two childhood portraits with the illustrated pair between them —
+         a small "and this is us now" in the middle. Symmetrical rather than
+         staggered, so the two names sit on one baseline; the middle tucks in
+         front of both, its page-coloured ring separating it from them. */
+  .couple{background:var(--page);padding:64px 20px 62px;}
+  .couple-row{position:relative;display:flex;align-items:flex-start;justify-content:center;}
+  .cp{position:relative;margin:0;flex:1 1 0;min-width:0;text-align:center;}
+  /* middle portrait: smaller, centred, overlapping the two in front */
+  .cp-anime{flex:.6 1 0;margin:0 -5%;align-self:center;z-index:2;}
   .cp-oval{
-    width:100%;aspect-ratio:3/4;
+    position:relative;width:100%;aspect-ratio:3/4;
     border-radius:50% 50% 50% 50% / 42% 42% 58% 58%;
     border:1px solid var(--gold);
     outline:1px solid var(--line);outline-offset:4px;
-    box-shadow:0 14px 32px rgba(31,61,43,.18);
-    background-position:center 32%;
+    background-color:var(--section);
+    background-position:center 28%;
+    box-shadow:0 16px 34px rgba(31,61,43,.20);
+  }
+  /* a soft inner vignette, so snapshots of different ages and quality
+     settle into the same frame */
+  .cp-oval::after{
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    box-shadow:inset 0 0 26px rgba(31,61,43,.22), inset 0 0 6px rgba(250,246,236,.30);
+  }
+  /* the middle sits on the page, not behind the outer two */
+  .cp-anime .cp-oval{
+    box-shadow:0 12px 26px rgba(31,61,43,.24), 0 0 0 6px var(--page);
+    background-position:center 26%;
   }
   .cp-name{
-    margin-top:16px;font-family:'Cormorant Garamond',serif;font-size:22px;
+    margin-top:18px;font-family:'Cormorant Garamond',serif;font-size:23px;
     line-height:1.25;color:var(--ink);word-break:break-word;
   }
+  /* a hairline under each name, echoing the hero's rule */
+  .cp-name::after{
+    content:"";display:block;width:26px;height:1px;margin:10px auto 0;
+    background:var(--gold);opacity:.65;
+  }
   .cp-label{
-    margin-top:16px;font-family:'Cormorant Garamond',serif;font-style:italic;
-    font-size:18px;color:var(--gold-deep);
+    margin-top:12px;font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:15px;letter-spacing:.04em;color:var(--gold-deep);opacity:.9;
   }
   @media (max-width:400px){
-    .cp-name{font-size:18px;}
-    .cp-label{font-size:16px;}
-    .couple-row{gap:7px;}
+    .cp-name{font-size:19px;}
+    .cp-label{font-size:13px;}
+    .cp-anime{margin:0 -7%;}
   }
 
   .gallery{background:var(--section);padding:60px 24px 70px;}
