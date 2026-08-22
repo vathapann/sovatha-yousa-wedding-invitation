@@ -1065,9 +1065,18 @@ async function myInvitePhotoDelete(request, env, url) {
   try { body = await request.json(); } catch { return json({ error: "Bad JSON" }, 400); }
   const photoUrl = String(body.url || "");
   const key = photoUrlToKey(url.origin, photoUrl);
-  if (!key || !key.startsWith(`${invite.slug}/`)) return json({ error: "Invalid photo" }, 400);
-
   const config = JSON.parse(invite.config_json);
+
+  // Ownership is "this URL is in your own config", not "the R2 key starts with
+  // your slug". Photos keep the key they were uploaded under, so a renamed
+  // invitation would otherwise be unable to delete anything it already had.
+  const owned = [
+    config.heroImage, config.storyImage, config.musicUrl,
+    config.groomImage, config.brideImage, config.animeImage,
+    config.groomNowImage, config.brideNowImage,
+  ].concat(Array.isArray(config.gallery) ? config.gallery : []);
+  if (!key || !owned.includes(photoUrl)) return json({ error: "Invalid photo" }, 400);
+
   if (config.heroImage === photoUrl) {
     delete config.heroImage;
   } else if (config.storyImage === photoUrl) {

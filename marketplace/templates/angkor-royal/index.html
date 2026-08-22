@@ -135,6 +135,41 @@
     position:absolute;top:52px;left:0;right:0;padding:0 32px;text-align:center;
     transition:opacity .7s ease;
   }
+  /* Personalised guest greeting, injected above the cover copy.
+     Given its own nameplate — gold rules, a diamond either side, and the
+     guest's Khmer name carrying the weight — so it reads as addressed to
+     them rather than as a caption. The shared style colours it with --ink,
+     near-black against this photograph, so everything is restated here. */
+  .hero .iv-greet{
+    position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;
+    width:fit-content;max-width:380px;margin:0 auto 26px;padding:17px 36px 18px;
+  }
+  .hero .iv-greet::before,
+  .hero .iv-greet::after{
+    content:"";position:absolute;left:8%;right:8%;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold) 22%,var(--gold) 78%,transparent);
+    opacity:.9;
+  }
+  .hero .iv-greet::before{top:0;}
+  .hero .iv-greet::after{bottom:0;}
+  .hero .iv-greet .iv-km{
+    font-family:'Noto Serif Khmer',serif;line-height:1.6;letter-spacing:0;
+    color:#fdf7e6;text-shadow:0 2px 12px rgba(10,20,12,.9);
+  }
+  /* the honorific sits quieter above the name it introduces */
+  .hero .iv-greet .iv-greet-lead{font-size:15px;color:var(--gold-light);opacity:.95;}
+  .hero .iv-greet .iv-greet-name{font-size:26px;}
+  .hero .iv-greet span:last-child{
+    letter-spacing:.24em;font-size:13.5px;text-transform:uppercase;
+    color:var(--gold-light);opacity:.95;
+    text-shadow:0 2px 10px rgba(10,20,12,.85);
+  }
+  @media (max-width:400px){
+    .hero .iv-greet{padding:13px 22px 14px;}
+    .hero .iv-greet .iv-greet-lead{font-size:13px;}
+    .hero .iv-greet .iv-greet-name{font-size:22px;}
+    .hero .iv-greet span:last-child{font-size:12px;}
+  }
   .hero-top,.hero-bottom{
     position:absolute;left:0;right:0;text-align:center;
     opacity:0;pointer-events:none;transition:opacity .9s ease .35s;

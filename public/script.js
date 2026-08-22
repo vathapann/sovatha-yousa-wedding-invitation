@@ -37,7 +37,7 @@ document.getElementById('langToggle').addEventListener('click', () => {
    ───────────────────────────────────────────── */
 // EDIT: add your guests, or wire this to a Google Sheet CSV (see previous version).
 const GUESTS = {
-  'a3f9': { en: 'Dear Sophea Family', km: 'ជូនចំពោះ គ្រួសារ សុភា' },
+  'a3f9': { en: 'Dear Sophea Family', km: 'ជូនចំពោះ គ្រួសារ សុភា' }, 
   'b1c7': { en: 'Dear Dara & Lin',    km: 'ជូនចំពោះ ដារ៉ា និង លីន' },
 };
 function applyGreeting(){

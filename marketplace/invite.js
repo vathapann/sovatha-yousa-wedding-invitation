@@ -598,14 +598,26 @@
 
     var chip = document.createElement('div');
     chip.className = 'iv-greet';
+    // Three lines: the honorific, then the guest's Khmer name on its own line,
+    // then the English form. .iv-greet is a flex column, so each span is a line.
     chip.innerHTML =
-      (g.nameKm ? '<span class="iv-km">ជូនចំពោះ ' + esc(g.nameKm) + '</span>' : '') +
-      '<span>Dear ' + esc(g.nameEn) + '</span>';
+      (g.nameKm
+        ? '<span class="iv-km iv-greet-lead">សូមគោរពអញ្ជើញ</span>' +
+          '<span class="iv-km iv-greet-name">' + esc(g.nameKm) + '</span>'
+        : '') +
+      '<span class="iv-greet-en">Dear ' + esc(g.nameEn) + '</span>';
 
+    // Land the greeting inside the template's own cover. The last resort used
+    // to be document.body, which dropped it outside the invitation card
+    // entirely on any template without .hero-title or .wreath-text.
+    var front = $('.hero-front');            // covers that lead with a greeting
     var kicker = $('.hero-title .kicker');
     var wreath = $('.wreath-text');
-    if (kicker) kicker.insertAdjacentElement('afterend', chip);
+    var heroCopy = $('.hero .hero-copy') || $('.hero');
+    if (front) front.insertAdjacentElement('afterbegin', chip);
+    else if (kicker) kicker.insertAdjacentElement('afterend', chip);
     else if (wreath) wreath.insertAdjacentElement('afterbegin', chip);
+    else if (heroCopy) heroCopy.insertAdjacentElement('afterbegin', chip);
     else document.body.insertAdjacentElement('afterbegin', chip);
   }
 
