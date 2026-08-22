@@ -149,6 +149,7 @@
     if (INV.heroImage) hydrateHero(INV.heroImage);
     if (INV.storyImage) hydrateStory(INV.storyImage);
     hydrateCouple();
+    hydrateFarewell();
     hydrateVenueMap();
     if (Array.isArray(INV.schedule) && INV.schedule.length) hydrateSchedule(INV.schedule);
     if (Array.isArray(INV.gallery) && INV.gallery.length) hydrateGallery(INV.gallery);
@@ -223,6 +224,7 @@
     hydrateHero(d.heroImage || '');
     hydrateStory(d.storyImage || '');
     hydrateCouple();
+    hydrateFarewell();
     hydrateVenueMap();
     if (Array.isArray(d.gallery)) hydrateGallery(d.gallery);
   }
@@ -331,6 +333,22 @@
     hydrateSlotPhoto('animePh', INV.animeImage);
     setText('.couple .groom-name', A);
     setText('.couple .bride-name', B);
+  }
+
+  // Cover's farewell state (templates that have one). Fills from the couple's
+  // own data; the hashtag line disappears when they haven't set one.
+  function hydrateFarewell() {
+    var box = $('.hero-farewell');
+    if (!box) return;
+    setText('.hero-farewell .fw-names', both);
+    var meta = [INV.dateDisplay, INV.venueName].filter(Boolean).join(' \u00b7 ');
+    setText('.hero-farewell .fw-meta', meta);
+    var tag = box.querySelector('.fw-tag');
+    if (tag) {
+      var hashtag = String(INV.hashtag || '').replace(/^#/, '');
+      tag.hidden = !hashtag;
+      if (hashtag) tag.textContent = '#' + hashtag;
+    }
   }
 
   function hydrateHero(photoUrl) {
