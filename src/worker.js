@@ -994,7 +994,7 @@ async function myInvitePhotoUpload(request, env, url) {
   const slot = String(form.get("slot") || "");
   const file = form.get("file");
   if (!(file instanceof File)) return json({ error: "No file uploaded" }, 400);
-  if (!["hero", "story", "groom", "bride", "anime", "gallery", "music"].includes(slot)) {
+  if (!["hero", "story", "groom", "bride", "anime", "groomnow", "bridenow", "gallery", "music"].includes(slot)) {
     return json({ error: "Unknown upload slot" }, 400);
   }
 
@@ -1023,6 +1023,7 @@ async function myInvitePhotoUpload(request, env, url) {
   const SINGLE = {
     hero: "heroImage", story: "storyImage", music: "musicUrl",
     groom: "groomImage", bride: "brideImage", anime: "animeImage",
+    groomnow: "groomNowImage", bridenow: "brideNowImage",
   };
   let key;
 
@@ -1079,6 +1080,10 @@ async function myInvitePhotoDelete(request, env, url) {
     delete config.brideImage;
   } else if (config.animeImage === photoUrl) {
     delete config.animeImage;
+  } else if (config.groomNowImage === photoUrl) {
+    delete config.groomNowImage;
+  } else if (config.brideNowImage === photoUrl) {
+    delete config.brideNowImage;
   } else if (Array.isArray(config.gallery)) {
     config.gallery = config.gallery.filter((u) => u !== photoUrl);
     if (config.galleryCaptions) delete config.galleryCaptions[photoUrl];

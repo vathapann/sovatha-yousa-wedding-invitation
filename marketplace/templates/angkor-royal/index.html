@@ -66,7 +66,7 @@
   /* ============ HERO — the temple across the moat ============ */
   .hero{
     min-height:100vh;padding:0;position:relative;overflow:hidden;
-    display:flex;flex-direction:column;justify-content:space-between;align-items:center;
+    display:flex;flex-direction:column;justify-content:flex-start;align-items:center;
     text-align:center;background:#1a2a1e;
   }
   /* The photograph. A couple's own upload replaces it via #heroBg. */
@@ -83,11 +83,12 @@
      names. */
   .hero-wash{position:absolute;inset:0;z-index:2;pointer-events:none;
     background:linear-gradient(180deg,
-      rgba(16,28,20,.78) 0%,
-      rgba(16,28,20,.62) 20%,
-      rgba(16,28,20,.22) 40%,
-      rgba(16,28,20,.30) 60%,
-      rgba(16,28,20,.90) 100%);}
+      rgba(16,28,20,.80) 0%,
+      rgba(16,28,20,.70) 26%,
+      rgba(16,28,20,.58) 44%,
+      rgba(16,28,20,.20) 60%,
+      rgba(16,28,20,.26) 74%,
+      rgba(16,28,20,.82) 100%);}
   /* a slow drift of mist over the moat */
   .mist{position:absolute;left:-25%;width:150%;height:120px;z-index:3;pointer-events:none;filter:blur(18px);
     background:linear-gradient(90deg,transparent,rgba(226,236,228,.30),transparent);
@@ -124,58 +125,61 @@
     background:linear-gradient(90deg,transparent,rgba(255,244,206,.42),transparent);
     animation:sheen 9s ease-in-out infinite;}
 
+  /* ---- Cover copy ----
+         Two states layered in the same space so they crossfade:
+           on load  — the couple's greeting (.hero-front)
+           on tap   — the Khmer invitation (.hero-top + .hero-bottom)
+         The បើកធៀប button hides itself once tapped. */
   .hero-copy{position:relative;z-index:7;width:100%;}
-  /* sits in the sky band above the towers */
-  .hero-top{padding:58px 30px 0;}
-  /* clears the បើកធៀប button, which is absolutely positioned above it */
-  .hero-bottom{padding:0 30px 152px;}
-  .hero .khmer-bless{font-family:'Noto Serif Khmer',serif;font-size:15.5px;line-height:1.95;color:var(--gold-light);opacity:.96;margin:0 0 16px;}
-  .hero .khmer-title{font-family:'Moul',serif;font-size:24px;line-height:1.7;color:var(--gold-light);margin-bottom:18px;}
-  .hero .kicker{letter-spacing:.34em;font-size:11.5px;text-transform:uppercase;color:var(--gold-light);opacity:.92;margin-bottom:14px;}
-  .hero .n{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:44px;line-height:1.06;color:#fbf7ea;
-    text-shadow:0 2px 18px rgba(10,20,12,.75);}
-  .hero .amp{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;color:var(--gold-light);margin:3px 0;}
+  .hero-front{
+    position:absolute;top:52px;left:0;right:0;padding:0 32px;text-align:center;
+    transition:opacity .7s ease;
+  }
+  .hero-top,.hero-bottom{
+    position:absolute;left:0;right:0;text-align:center;
+    opacity:0;pointer-events:none;transition:opacity .9s ease .35s;
+  }
+  .hero-top{top:58px;padding:0 30px;}
+  .hero-bottom{bottom:150px;padding:0 30px;}
+  .hero.opened .hero-front{opacity:0;pointer-events:none;}
+  .hero.opened .hero-top,
+  .hero.opened .hero-bottom{opacity:1;pointer-events:auto;}
+
+  .hero .khmer-bless{font-family:'Noto Serif Khmer',serif;font-size:15.5px;line-height:1.95;
+    color:var(--gold-light);opacity:.96;margin:0 0 16px;text-shadow:0 2px 10px rgba(10,20,12,.8);}
+  .hero .khmer-title{font-family:'Moul',serif;font-size:24px;line-height:1.7;
+    color:var(--gold-light);margin-bottom:18px;text-shadow:0 2px 10px rgba(10,20,12,.8);}
+  .hero .kicker{letter-spacing:.34em;font-size:11.5px;text-transform:uppercase;
+    color:var(--gold-light);opacity:.92;text-shadow:0 2px 10px rgba(10,20,12,.7);}
+  .hero .n{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:44px;line-height:1.06;
+    color:#fbf7ea;text-shadow:0 2px 10px rgba(10,20,12,.85),0 4px 26px rgba(10,20,12,.7);}
+  .hero .amp{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;
+    color:var(--gold-light);margin:3px 0;}
   .hero .rule{width:64px;height:1px;background:var(--gold);opacity:.9;margin:20px auto;}
-  .hero .date{letter-spacing:.34em;font-size:12px;text-transform:uppercase;color:#f3ecd9;}
-  /* ---- Cover, second state: the farewell ---- */
-  .hero-farewell{
-    position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
-    z-index:8;padding:0 32px;text-align:center;
-    opacity:0;pointer-events:none;
-    transition:opacity 1.1s ease .45s;
-  }
-  .hero-farewell .fw-kick{
-    letter-spacing:.34em;font-size:11px;text-transform:uppercase;
-    color:var(--gold-light);opacity:.95;margin-bottom:18px;
-    text-shadow:0 2px 10px rgba(10,20,12,.8);
-  }
-  .hero-farewell .fw-names{
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:38px;
-    line-height:1.2;color:var(--gold-light);margin-bottom:18px;
-    text-shadow:0 2px 12px rgba(10,20,12,.9);
-  }
-  .hero-farewell .fw-meta{
-    letter-spacing:.26em;font-size:11px;text-transform:uppercase;
-    color:#f3ecd9;opacity:.9;margin-bottom:16px;line-height:1.9;
-    text-shadow:0 2px 10px rgba(10,20,12,.85);
-  }
-  .hero-farewell .fw-tag{
-    font-size:12px;letter-spacing:.1em;color:var(--gold-light);opacity:.85;
-    margin-bottom:22px;text-shadow:0 2px 10px rgba(10,20,12,.85);
-  }
-  .hero-farewell .fw-credit{
-    font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1.45;
-    color:#fbf7ea;max-width:300px;margin:0 auto;
-    text-shadow:0 2px 12px rgba(10,20,12,.9);
+  .hero .date{letter-spacing:.34em;font-size:12px;text-transform:uppercase;color:#f3ecd9;
+    text-shadow:0 2px 10px rgba(10,20,12,.8);}
+  .hero-front .fw-kick{letter-spacing:.34em;font-size:11.5px;text-transform:uppercase;
+    color:var(--gold-light);opacity:.95;margin-bottom:22px;text-shadow:0 2px 10px rgba(10,20,12,.85);}
+  .hero-front .fw-big{font-family:'Cormorant Garamond',serif;font-size:33px;line-height:1.32;
+    color:#fbf7ea;margin-bottom:26px;
+    text-shadow:0 2px 12px rgba(10,20,12,.9),0 4px 26px rgba(10,20,12,.65);}
+  .hero-front .fw-names{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:40px;
+    line-height:1.18;color:var(--gold-light);
+    text-shadow:0 2px 12px rgba(10,20,12,.9),0 4px 26px rgba(10,20,12,.65);}
+  .hero-front .fw-rule{width:64px;height:1px;background:var(--gold);opacity:.85;margin:26px auto;}
+  .hero-front .fw-meta{letter-spacing:.30em;font-size:12px;text-transform:uppercase;
+    color:#f3ecd9;opacity:.92;margin-bottom:18px;text-shadow:0 2px 10px rgba(10,20,12,.85);}
+  .hero-front .fw-tag{font-size:12px;letter-spacing:.08em;color:var(--gold-light);opacity:.82;
+    text-shadow:0 2px 10px rgba(10,20,12,.85);}
+  @media (max-width:400px){
+    .hero-front .fw-big{font-size:28px;}
+    .hero-front .fw-names{font-size:33px;}
   }
   .scrollhint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:8;display:flex;flex-direction:column;align-items:center;gap:8px;}
   .scrollhint .lbl{letter-spacing:.28em;font-size:9px;text-transform:uppercase;color:#efe7d2;opacity:.8;}
   .scrollhint .bar{width:1px;height:22px;background:var(--gold);opacity:.8;animation:nudge 1.8s ease-in-out infinite;}
 
   /* the names settle in once the scene has opened */
-  .hero-copy{opacity:0;}
-  .invite.started .hero-top{animation:nameIn 2.2s ease-out .8s both;}
-  .invite.started .hero-bottom{animation:nameIn 2.4s ease-out 1.5s both;}
 
   /* ---- COUNTDOWN ---- */
   .countdown{background:var(--section);padding:62px 28px 64px;text-align:center;}
@@ -198,49 +202,65 @@
 
   /* ---- GALLERY ---- */
   /* ---- The couple ----
-         Two childhood portraits with the illustrated pair between them —
-         a small "and this is us now" in the middle. Set on a diagonal: groom
-         highest, illustration between, bride lowest. The middle tucks in front
-         of both, its page-coloured ring separating it from them. */
+         Row 1 — the two of them as babies, circles either side of a couple
+         photo. Row 2 — the two of them today, ovals either side of a heart.
+         Both rows use align-items:center so the middle piece lines up on its
+         own, without hand-tuned offsets. */
   .couple{background:var(--page);padding:64px 20px 62px;}
-  .couple-row{position:relative;display:flex;align-items:flex-start;justify-content:center;}
-  .cp{position:relative;margin:0;flex:1 1 0;min-width:0;text-align:center;}
-  /* middle portrait: smaller, centred, overlapping the two in front */
-  .cp-groom{padding-top:0;}
-  .cp-anime{flex:.6 1 0;margin:0 -5%;padding-top:52px;z-index:2;}
-  .cp-bride{padding-top:88px;}
+
+  .couple-row1{display:flex;align-items:flex-start;justify-content:center;gap:12px;}
+  .cp1{margin:0;flex:1 1 0;min-width:0;text-align:center;}
+  .cp1-mid{flex:1.5 1 0;min-width:0;padding-top:16px;}
+  .cp-circle{
+    width:100%;aspect-ratio:1/1;border-radius:50%;
+    border:1px solid var(--gold);
+    outline:1px solid var(--line);outline-offset:4px;
+    background-color:var(--section);background-position:center 26%;
+    box-shadow:0 14px 30px rgba(31,61,43,.20);
+  }
+  .cp-rect{
+    width:100%;aspect-ratio:4/3;border-radius:8px;
+    border:1px solid var(--gold);
+    outline:1px solid var(--line);outline-offset:4px;
+    background-color:var(--section);background-position:center 32%;
+    box-shadow:0 14px 30px rgba(31,61,43,.20);
+  }
+
+  .couple-row2{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:34px;}
+  .cp2{flex:1 1 0;min-width:0;}
   .cp-oval{
-    position:relative;width:100%;aspect-ratio:3/4;
+    width:100%;aspect-ratio:3/4;
     border-radius:50% 50% 50% 50% / 42% 42% 58% 58%;
     border:1px solid var(--gold);
     outline:1px solid var(--line);outline-offset:4px;
-    background-color:var(--section);
-    background-position:center 28%;
+    background-color:var(--section);background-position:center 28%;
     box-shadow:0 16px 34px rgba(31,61,43,.20);
   }
+  .cp2-heart{
+    flex:0 0 46px;text-align:center;
+    font-size:34px;line-height:1;color:var(--gold);
+  }
+
   /* a soft inner vignette, so snapshots of different ages and quality
      settle into the same frame */
-  .cp-oval::after{
+  .cp-circle,.cp-rect,.cp-oval{position:relative;}
+  .cp-circle::after,.cp-rect::after,.cp-oval::after{
     content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
     box-shadow:inset 0 0 26px rgba(31,61,43,.22), inset 0 0 6px rgba(250,246,236,.30);
   }
-  /* the middle sits on the page, not behind the outer two */
-  .cp-anime .cp-oval{
-    box-shadow:0 12px 26px rgba(31,61,43,.24), 0 0 0 6px var(--page);
-    background-position:center 26%;
-  }
+
   .cp-name{
-    margin-top:18px;font-family:'Cormorant Garamond',serif;font-size:23px;
+    margin-top:16px;font-family:'Cormorant Garamond',serif;font-size:21px;
     line-height:1.25;color:var(--ink);word-break:break-word;
   }
-  /* a hairline under each name, echoing the hero's rule */
   .cp-name::after{
-    content:"";display:block;width:26px;height:1px;margin:10px auto 0;
+    content:"";display:block;width:24px;height:1px;margin:9px auto 0;
     background:var(--gold);opacity:.65;
   }
   @media (max-width:400px){
-    .cp-name{font-size:19px;}
-    .cp-anime{margin:0 -7%;}
+    .cp-name{font-size:17px;}
+    .cp2-heart{flex-basis:34px;font-size:26px;}
+    .couple-row1{gap:8px;}
   }
 
   .gallery{background:var(--section);padding:60px 24px 70px;}
@@ -415,6 +435,13 @@
   </g>
   <!-- Khmer kbach divider: a lotus-bud finial after a temple-tower tip,
        flanked by mirrored scrolls with kbach phlerng (flame leaves). -->
+  <!-- Heart clip for the couple's middle photo. objectBoundingBox units, so
+       one path fits the element whatever size it renders at. -->
+  <clipPath id="ar-heart-clip" clipPathUnits="objectBoundingBox">
+    <path d="M0.5,0.88 C0.2,0.66 0.06,0.52 0.06,0.34 C0.06,0.2 0.17,0.1 0.29,0.1
+             C0.38,0.1 0.45,0.15 0.5,0.23 C0.55,0.15 0.62,0.1 0.71,0.1
+             C0.83,0.1 0.94,0.2 0.94,0.34 C0.94,0.52 0.8,0.66 0.5,0.88 Z"/>
+  </clipPath>
   <g id="ar-kbach-arm">
     <path d="M74 21 C63 28 50 31.5 38 30.5 C29.5 29.8 24.5 25.5 26.5 20.8
              C28.2 16.9 34.2 17.4 34.6 21.6 C34.9 25 31 27 28 25.2"
@@ -472,9 +499,21 @@
     <div class="corner bl"><svg viewBox="0 0 52 52"><use href="#ar-corner"/></svg></div>
     <div class="corner br"><svg viewBox="0 0 52 52"><use href="#ar-corner"/></svg></div>
 
-    <!-- The invitation reads top-down: the honorific opening sits in the open
-         sky above the towers, where it stays legible; the couple's names hold
-         the foot of the frame. -->
+    
+    <!-- Front page: the couple's greeting over the temple, with បើកធៀប
+         beneath it. Everything here fills from their own details. -->
+    <div class="hero-copy hero-front" id="heroFront">
+      <div class="fw-kick">With all our love</div>
+      <div class="fw-big">We can&rsquo;t wait to<br>celebrate with you</div>
+      <div class="fw-names">Sovatha &amp; Yousa</div>
+      <div class="fw-rule"></div>
+      <div class="fw-meta">23 &middot; 11 &middot; 2026</div>
+      <div class="fw-tag">#SovathaMeetsYousa</div>
+    </div>
+
+    <!-- Second state: the formal Khmer invitation, revealed when បើកធៀប is
+         tapped and the greeting above fades away. Honorific opening in the
+         open sky, the couple's names holding the foot of the frame. -->
     <div class="hero-copy hero-top">
       <div class="khmer-bless km">ក្រុមគ្រួសារយើងខ្ញុំ មានកិត្តិយសសូមគោរពអញ្ជើញ<br>សម្ដេចទ្រង់ ឯកឧត្តម លោកជំទាវ លោក លោកស្រី</div>
       <div class="khmer-title">សិរីមង្គលអាពាហ៍ពិពាហ៍</div>
@@ -487,17 +526,6 @@
       <div class="n">Yousa</div>
       <div class="rule"></div>
       <div class="date">23 &middot; 11 &middot; 2026</div>
-    </div>
-
-    <!-- The second state of the cover. Hidden until បើកធៀប is tapped, when
-         the opening text fades out and this fades in before the page glides
-         down to the countdown. -->
-    <div class="hero-farewell" id="heroFarewell">
-      <div class="fw-kick">With love</div>
-      <div class="fw-names">Sovatha &amp; Yousa</div>
-      <div class="fw-meta">23 &middot; 11 &middot; 2026</div>
-      <div class="fw-tag">#SovathaMeetsYousa</div>
-      <div class="fw-credit">We can&rsquo;t wait to celebrate with you</div>
     </div>
 
     <!-- One button opens the invitation: it starts the scene and carries the
@@ -515,20 +543,27 @@
       <div class="eyebrow">The couple</div>
       <h2 style="margin:0">You Are Invited<br>To The Wedding</h2>
     </div>
-    <!-- Groom left, bride right, and their illustrated portrait between them.
-         All three fill from /edit; each keeps its placeholder until uploaded. -->
-    <div class="reveal couple-row">
-      <figure class="cp cp-groom">
-        <div class="ph cp-oval" id="groomPh"><span>groom</span></div>
+    <!-- Row 1: the two of them as babies, either side of a couple photo.
+         Row 2: the two of them today, either side of a heart.
+         All five fill from /edit; each keeps its placeholder until uploaded. -->
+    <div class="reveal couple-row1">
+      <figure class="cp1">
+        <div class="ph cp-circle" id="groomPh"><span>baby</span></div>
         <figcaption class="cp-name groom-name">Sovatha</figcaption>
       </figure>
-      <figure class="cp cp-anime">
-        <div class="ph cp-oval" id="animePh"><span>anim&eacute;</span></div>
-      </figure>
-      <figure class="cp cp-bride">
-        <div class="ph cp-oval" id="bridePh"><span>bride</span></div>
+      <div class="cp1-mid">
+        <div class="ph cp-rect" id="animePh"><span>couple photo</span></div>
+      </div>
+      <figure class="cp1">
+        <div class="ph cp-circle" id="bridePh"><span>baby</span></div>
         <figcaption class="cp-name bride-name">Yousa</figcaption>
       </figure>
+    </div>
+
+    <div class="reveal couple-row2">
+      <div class="cp2"><div class="ph cp-oval" id="groomNowPh"><span>photo</span></div></div>
+      <div class="cp2-heart" aria-hidden="true">&#9829;</div>
+      <div class="cp2"><div class="ph cp-oval" id="brideNowPh"><span>photo</span></div></div>
     </div>
   </section>
 
@@ -672,7 +707,6 @@
     function start(){
       if(started) return; started = true;
       invite.classList.add('started');
-      var btn = document.getElementById('openBtn'); if(btn) btn.classList.add('gone');
       setInterval(render, 1000);
       var io = new IntersectionObserver(function(entries){
         entries.forEach(function(e){
@@ -683,26 +717,17 @@
     }
     // "បើកធៀប" — start the scene, then glide down to the countdown. The
     // scroll waits a beat so the opening animation is visible first.
+    // បើកធៀប opens the invitation in place: the greeting fades out and the
+    // Khmer invitation fades in behind it. No auto-scroll — the reveal is the
+    // point, and the guest scrolls on from there.
     var openBtn = document.getElementById('openBtn');
-    function glideToCountdown(){
-      var target = document.querySelector('.countdown');
-      if(target) target.scrollIntoView({ behavior:'smooth', block:'start' });
-    }
     if(openBtn) openBtn.addEventListener('click', function(){
       start();
-      var farewell = document.getElementById('heroFarewell');
-      if(!farewell){ setTimeout(glideToCountdown, 420); return; }
-      // Clear the intro animation first — its fill would otherwise hold these
-      // at full opacity and the fade-out would never show.
-      ['.hero-top', '.hero-bottom'].forEach(function(sel){
-        var el = document.querySelector(sel);
-        if(!el) return;
-        el.style.animation = 'none';
-        el.style.transition = 'opacity .7s ease';
-        el.style.opacity = '0';
-      });
-      farewell.style.opacity = '1';
-      setTimeout(glideToCountdown, 2400);
+      var hero = document.querySelector('.hero');
+      if(hero) hero.classList.add('opened');
+      // hidden here, not in start() — start() runs on pointerdown, and hiding
+      // the button mid-tap would stop it ever receiving this very click.
+      openBtn.classList.add('gone');
     });
 
     ['touchstart','pointerdown','click','keydown','wheel'].forEach(function(ev){

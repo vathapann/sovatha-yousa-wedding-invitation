@@ -149,7 +149,7 @@
     if (INV.heroImage) hydrateHero(INV.heroImage);
     if (INV.storyImage) hydrateStory(INV.storyImage);
     hydrateCouple();
-    hydrateFarewell();
+    hydrateFront();
     hydrateVenueMap();
     if (Array.isArray(INV.schedule) && INV.schedule.length) hydrateSchedule(INV.schedule);
     if (Array.isArray(INV.gallery) && INV.gallery.length) hydrateGallery(INV.gallery);
@@ -192,7 +192,7 @@
     PREVIEW_FIELDS.forEach(function (k) {
       if (typeof d[k] === 'string') INV[k] = d[k];
     });
-    ['groomImage', 'brideImage', 'animeImage'].forEach(function (k) {
+    ['groomImage', 'brideImage', 'animeImage', 'groomNowImage', 'brideNowImage'].forEach(function (k) {
       if (typeof d[k] === 'string') INV[k] = d[k];
     });
     if (d.galleryCaptions && typeof d.galleryCaptions === 'object') {
@@ -224,7 +224,7 @@
     hydrateHero(d.heroImage || '');
     hydrateStory(d.storyImage || '');
     hydrateCouple();
-    hydrateFarewell();
+    hydrateFront();
     hydrateVenueMap();
     if (Array.isArray(d.gallery)) hydrateGallery(d.gallery);
   }
@@ -327,28 +327,32 @@
     el.style.backgroundImage = 'url(' + JSON.stringify(photoUrl) + ')';
   }
 
-  function hydrateCouple() {
-    hydrateSlotPhoto('groomPh', INV.groomImage);
-    hydrateSlotPhoto('bridePh', INV.brideImage);
-    hydrateSlotPhoto('animePh', INV.animeImage);
-    setText('.couple .groom-name', A);
-    setText('.couple .bride-name', B);
-  }
-
-  // Cover's farewell state (templates that have one). Fills from the couple's
-  // own data; the hashtag line disappears when they haven't set one.
-  function hydrateFarewell() {
-    var box = $('.hero-farewell');
+  // Cover copy for templates whose front page carries the couple's greeting
+  // (.hero-front). Fills from their own details; the hashtag line disappears
+  // when they haven't set one.
+  function hydrateFront() {
+    var box = $('.hero-front');
     if (!box) return;
-    setText('.hero-farewell .fw-names', both);
-    var meta = [INV.dateDisplay, INV.venueName].filter(Boolean).join(' \u00b7 ');
-    setText('.hero-farewell .fw-meta', meta);
+    setText('.hero-front .fw-names', both);
+    setText('.hero-front .fw-meta', INV.dateDisplay);
     var tag = box.querySelector('.fw-tag');
     if (tag) {
       var hashtag = String(INV.hashtag || '').replace(/^#/, '');
       tag.hidden = !hashtag;
       if (hashtag) tag.textContent = '#' + hashtag;
     }
+  }
+
+  function hydrateCouple() {
+    // Row 1: the two of them as babies, either side of a couple photo.
+    hydrateSlotPhoto('groomPh', INV.groomImage);
+    hydrateSlotPhoto('animePh', INV.animeImage);
+    hydrateSlotPhoto('bridePh', INV.brideImage);
+    // Row 2: the two of them today.
+    hydrateSlotPhoto('groomNowPh', INV.groomNowImage);
+    hydrateSlotPhoto('brideNowPh', INV.brideNowImage);
+    setText('.couple .groom-name', A);
+    setText('.couple .bride-name', B);
   }
 
   function hydrateHero(photoUrl) {
